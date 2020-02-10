@@ -14,8 +14,10 @@ def get_all_questions():
         for dictionary in DictReader(file):
             questions.append(dictionary)
         file.close()
-    if len(questions) == 0: return False
-    else: return questions
+    if len(questions) == 0:
+        return False
+    else:
+        return questions
 
 
 def get_all_answers():
@@ -24,8 +26,10 @@ def get_all_answers():
         for dictionary in DictReader(file):
             answers.append(dictionary)
         file.close()
-    if len(answers) == 0: return False
-    else: return answers
+    if len(answers) == 0:
+        return False
+    else:
+        return answers
 
 
 def get_question_by_id(question_id):
@@ -54,7 +58,8 @@ def find_next_answer_index():
 
 def add_question_to_file(question_info):
     with open(question_file, "a") as file:
-        fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+        fieldnames = ["id", "submission_time", "view_number",
+                      "vote_number", "title", "message", "image"]
         writer = DictWriter(file, fieldnames=fieldnames)
         if get_all_questions() is False:
             writer.writeheader()
@@ -68,13 +73,16 @@ def find_answers_by_question_id(question_id):
     for answer in all_answers:
         if int(answer['question_id']) == int(question_id):
             answers_for_question.append(answer)
-    if len(answers_for_question) == 0: return None
-    else: return answers_for_question
+    if len(answers_for_question) == 0:
+        return None
+    else:
+        return answers_for_question
 
 
 def add_answer_to_question(answer_info):
     with open(answer_file, "a") as file:
-        fieldnames = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+        fieldnames = ["id", "submission_time",
+                      "vote_number", "question_id", "message", "image"]
         writer = DictWriter(file, fieldnames=fieldnames)
         if get_all_answers() is False:
             writer.writeheader()
@@ -98,3 +106,20 @@ def add_view(question_id):
         for question in updated_questions_data:
             writer.writerow(question)
         file.close()
+
+        
+def sort_questions():
+    ''' 
+    Returns a dictionary with the questions sorted by submitted time
+    '''
+    submission_times = []
+    all_questions = get_all_questions()
+    for question in all_questions:
+        submission_times.append(question['submission_time'])
+    sorted_times = sorted(submission_times, reverse=True)
+    sorted_questions = []
+    for time in sorted_times:
+        for question in all_questions:
+            if question['submission_time'] == time:
+                sorted_questions.append(question)
+    return sorted_questions
