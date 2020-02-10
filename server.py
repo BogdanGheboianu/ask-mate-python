@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import data_manager as dmg
+import time, calendar
 
 app = Flask(__name__)
 
@@ -21,11 +22,19 @@ def home():
 
 @app.route("/question/<question_id>")
 def question(question_id):
-    return render_template(web_pages["question_page"])
+    question = dmg.get_question_by_id(question_id)
+    answers_for_question = dmg.find_answers_by_id(question_id)
+    return render_template(web_pages["question_page"], question=question)
 
 
-@app.route("/list/add-question")
+@app.route("/list/add-question", methods=["GET", "POST"])
 def add_question():
+    if request.method == "POST":
+        question_id = dmg.find_next_question_index()
+        question_info = {"id": question_id, "submission_time": calendar.timegm(time.gmtime()), "view_number": "0", "vote_number": "0", 
+                        "title": request.form["title"], "message": request.form["message"], "image": ""}
+        dmg.add_question_to_file(question_info)
+        return redirect("/question/{0}".format(question_id))
     return render_template(web_pages["add_question_page"])
 
 
