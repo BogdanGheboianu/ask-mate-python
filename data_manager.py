@@ -61,11 +61,11 @@ def add_question_to_file(question_info):
         file.close()
 
 
-def find_answers_by_id(question_id):
+def find_answers_by_question_id(question_id):
     all_answers = get_all_answers()
     answers_for_question = []
     for answer in all_answers:
-        if int(answer['id']) == int(question_id):
+        if int(answer['question_id']) == int(question_id):
             answers_for_question.append(answer)
     if len(answers_for_question) == 0: return None
     else: return answers_for_question

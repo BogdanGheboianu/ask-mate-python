@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html>
-    <head><title>{{ question['title'] }} | AskMate</title></head>
+    <head>
+        
+        <title>{{ question['title'] }} | AskMate</title></head>
     <body>
         <h1>{{ question['title'] }}</h1>
         <h2>{{ question['message'] }}</h2>
+        <hr>
         <p><h3>ANSWERS</h3><br></p>
+    
         <p>
-
+            {% if empty == True: %}
+                <p><strong>There are no answers for this questions yet.</strong></p>
+            {% else: %}
+                {% for answer in answers: %}
+                    <p><strong>Answer ID:</strong> <em>{{ answer["id"] }}</em> | <strong>Posted:</strong> <em>{{ answer["submission_time"] }}</em> | <strong>Votes:</strong> <em>{{ answer["vote_number"] }}</em></p>
+                    <p>{{answer['message']}}</p>
+                    <p>{{answer['image']}}</p>
+                    <hr>
+                {% endfor %}
+            {% endif %}
         </p>
+        <p><button onclick="location.href='/question/{{ question_id }}/new-answer'">POST ANSWER</button></p>
+    </body>
+
+        
 </html>

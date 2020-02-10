@@ -22,9 +22,12 @@ def home():
 
 @app.route("/question/<question_id>")
 def question(question_id):
+    empty = False
     question = dmg.get_question_by_id(question_id)
-    answers_for_question = dmg.find_answers_by_id(question_id)
-    return render_template(web_pages["question_page"], question=question)
+    answers_for_question = dmg.find_answers_by_question_id(question_id)
+    if answers_for_question == None:
+        empty = True
+    return render_template(web_pages["question_page"], question=question, answers=answers_for_question, empty=empty, question_id=question_id)
 
 
 @app.route("/list/add-question", methods=["GET", "POST"])
@@ -38,9 +41,12 @@ def add_question():
     return render_template(web_pages["add_question_page"])
 
 
-@app.route("/question/<question_id>/new-answer")
+@app.route("/question/<question_id>/new-answer", methods=["GET", "POST"])
 def new_answer(question_id):
-    return render_template(web_pages["new_answer_page"])
+    question = dmg.get_question_by_id(question_id)
+    if request.method == "POST":
+        pass
+    return render_template(web_pages["new_answer_page"], question=question)
 
 
 if __name__ == "__main__":
