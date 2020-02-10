@@ -80,3 +80,21 @@ def add_answer_to_question(answer_info):
             writer.writeheader()
         writer.writerow(answer_info)
         file.close()
+
+
+def add_view(question_id):
+    original_questions_data = get_all_questions()
+    updated_questions_data = []
+    for question in original_questions_data:
+        if int(question['id']) == int(question_id):
+            question["view_number"] = str(int(question['view_number']) + 1)
+            updated_questions_data.append(question)
+        else:
+            updated_questions_data.append(question)
+    with open(question_file, "w") as file:
+        fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for question in updated_questions_data:
+            writer.writerow(question)
+        file.close()

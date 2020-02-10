@@ -22,6 +22,7 @@ def home():
 
 @app.route("/question/<question_id>")
 def question(question_id):
+    dmg.add_view(question_id)
     empty = False
     question = dmg.get_question_by_id(question_id)
     answers_for_question = dmg.find_answers_by_question_id(question_id)
