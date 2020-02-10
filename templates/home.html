@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head><title>Home | AskMate</title></head>
+    <body>
+        <h1>AskMate</h1>
+        {% if empty == True: %}
+            <p><strong>There are no questions to show for the moment</strong></p>
+        {% else: %}
+            <table border="1">
+                {% for heading in table_heading: %}
+                    <th>{{ heading }}</th>
+                {% endfor %}
+
+                {% for question in questions: %}
+                    <tr>
+                        {% for key, value in question.items(): %}
+                            {% if key != "title": %}
+                                <td>{{ value }}</td>
+                            {% else: %}
+                                <td><a href="/question/{{ key['id'] }}">{{ value }}</a></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+        {% endif %}
+        <p><button onclick="location.href='/list/add-question'">ASK A QUESTION</button></p>
+
+
+    </body>
+</html>
