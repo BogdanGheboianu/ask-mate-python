@@ -45,7 +45,11 @@ def add_question():
 def new_answer(question_id):
     question = dmg.get_question_by_id(question_id)
     if request.method == "POST":
-        pass
+        answer_id = dmg.find_next_answer_index()
+        answer_info = {"id": answer_id, "submission_time": calendar.timegm(time.gmtime()), 
+                        "vote_number": "0", "question_id": question_id, "message": request.form['answer'], "image": ""}
+        dmg.add_answer_to_question(answer_info)
+        return redirect("/question/{0}".format(question_id))
     return render_template(web_pages["new_answer_page"], question=question)
 
 

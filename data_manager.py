@@ -48,15 +48,16 @@ def find_next_question_index():
     return max([int(story['id']) for story in get_all_questions()]) + 1
 
 
+def find_next_answer_index():
+    return max([int(story['id']) for story in get_all_answers()]) + 1
+
+
 def add_question_to_file(question_info):
     with open(question_file, "a") as file:
-        print(question_info)
         fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
         writer = DictWriter(file, fieldnames=fieldnames)
         if get_all_questions() is False:
             writer.writeheader()
-        else:
-            question_info["id"] = find_next_question_index()
         writer.writerow(question_info)
         file.close()
 
@@ -69,3 +70,13 @@ def find_answers_by_question_id(question_id):
             answers_for_question.append(answer)
     if len(answers_for_question) == 0: return None
     else: return answers_for_question
+
+
+def add_answer_to_question(answer_info):
+    with open(answer_file, "a") as file:
+        fieldnames = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        if get_all_answers() is False:
+            writer.writeheader()
+        writer.writerow(answer_info)
+        file.close()
