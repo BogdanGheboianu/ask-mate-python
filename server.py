@@ -14,8 +14,7 @@ web_pages = {"home_page": "home.html", "question_page": "question.html", "add_qu
 def home():
     if dmg.get_all_questions() is False: return render_template(web_pages["home_page"], questions="", table_heading="", empty=True)
     else:
-        all_questions = dmg.get_all_questions()
-        print(all_questions)
+        all_questions = dmg.sort_questions()
         table_heading = ["ID", "SUBMISSION TIME", "VIEWS", "VOTES", "TITLE", "QUESTION", "IMAGE"]
         return render_template(web_pages["home_page"], questions=all_questions, table_heading=table_heading, empty=False)
 
