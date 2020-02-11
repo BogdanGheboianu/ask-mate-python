@@ -8,9 +8,15 @@
         <hr>
         <h2>{{ question['title'] }}</h2>
         <h3>Q: {{ question['message'] }}</h3>
+        <strong>Question ID:</strong> <em>{{ question["id"] }}</em> | 
+        <strong>Posted:</strong> <em>{{ question["submission_time"] }}</em> | 
+        <strong>Views:</strong> <em>{{ question["view_number"] }}</em> | 
+        <strong>Votes:</strong> <em>{{ question["vote_number"] }}</em> | 
+        <a href="/question/{{ question_id }}/vote-up">UP VOTE</a> ~ 
+        <a href="/question/{{ question_id }}/vote-down">DOWN VOTE</a> |
         <button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
         <button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
-        <hr>
+        <hr><hr>
         <p><h3>ANSWERS</h3><br></p>
     
         <p>

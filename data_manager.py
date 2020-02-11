@@ -206,3 +206,19 @@ def delete_answer(answer_id):
         file.close()
 
 
+def vote_question(question_id, vote):
+    original_questions = get_all_questions()
+    updated_questions = []
+    for question in original_questions:
+        if int(question['id']) == int(question_id):
+            if vote == "vote-up":
+                question['vote_number'] = int(question['vote_number']) + 1
+                updated_questions.append(question)
+            elif vote == "vote-down":
+                question['vote_number'] = int(question['vote_number']) - 1
+                updated_questions.append(question)
+        else:
+            updated_questions.append(question)
+    con.write_data_to_file(updated_questions)
+
+
