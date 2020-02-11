@@ -1,4 +1,5 @@
 from csv import DictReader, DictWriter
+import connection as con
 
 answer_file = "sample_data/answer.csv"
 question_file = "sample_data/question.csv"
@@ -99,13 +100,7 @@ def add_view(question_id):
             updated_questions_data.append(question)
         else:
             updated_questions_data.append(question)
-    with open(question_file, "w") as file:
-        fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-        writer = DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        for question in updated_questions_data:
-            writer.writerow(question)
-        file.close()
+    con.write_data_to_file(updated_questions_data)
 
         
 def sort_questions(sort_factor, order):
@@ -147,13 +142,7 @@ def edit_question(question_id, edited_question_info):
             updated_questions_data.append(question)
         else:
             updated_questions_data.append(question)
-    with open(question_file, "w") as file:
-        fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-        writer = DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        for question in updated_questions_data:
-            writer.writerow(question)
-        file.close()
+    con.write_data_to_file(updated_questions_data)
 
 
 def delete_question(question_id):
@@ -162,10 +151,6 @@ def delete_question(question_id):
     for question in original_questions_data:
         if int(question['id']) != int(question_id):
             updated_questions_data.append(question)
-    with open(question_file, "w") as file:
-        fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-        writer = DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        for question in updated_questions_data:
-            writer.writerow(question)
-        file.close()
+    con.write_data_to_file(updated_questions_data)
+
+
