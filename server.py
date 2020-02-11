@@ -68,5 +68,11 @@ def edit_question(question_id):
     return render_template("edit_question.html", question_info=question_info)
 
 
+@app.route("/question/<question_id>/delete")
+def delete_question(question_id):
+    dmg.delete_question(question_id)
+    return redirect("/")
+
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

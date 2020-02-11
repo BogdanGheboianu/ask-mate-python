@@ -154,3 +154,18 @@ def edit_question(question_id, edited_question_info):
         for question in updated_questions_data:
             writer.writerow(question)
         file.close()
+
+
+def delete_question(question_id):
+    original_questions_data = get_all_questions()
+    updated_questions_data = []
+    for question in original_questions_data:
+        if int(question['id']) != int(question_id):
+            updated_questions_data.append(question)
+    with open(question_file, "w") as file:
+        fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for question in updated_questions_data:
+            writer.writerow(question)
+        file.close()
