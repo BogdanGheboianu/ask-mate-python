@@ -58,7 +58,7 @@ def find_next_answer_index():
 
 def add_question_to_file(question_info):
     with open(question_file, "a") as file:
-        fieldnames = ["id", "submission_time", "view_number",
+        fieldnames = ["id", "submission_factor_occurrence", "view_number",
                       "vote_number", "title", "message", "image"]
         writer = DictWriter(file, fieldnames=fieldnames)
         if get_all_questions() is False:
@@ -108,18 +108,30 @@ def add_view(question_id):
         file.close()
 
         
-def sort_questions():
+def sort_questions(sort_factor, order):
     ''' 
-    Returns a dictionary with the questions sorted by submitted time
+    Returns a dictionary with the questions sorted by a requested factor and by order
     '''
-    submission_times = []
+    sort_factor_occurences = []
     all_questions = get_all_questions()
     for question in all_questions:
-        submission_times.append(question['submission_time'])
-    sorted_times = sorted(submission_times, reverse=True)
+        if sort_factor == "view_number" or sort_factor == "vote_number":
+            sort_factor_occurences.append(int(question[sort_factor]))
+        else:
+            sort_factor_occurences.append(question[sort_factor])
+    if order == "descending":
+        sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=True)
+    else:
+        sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=False)
     sorted_questions = []
-    for time in sorted_times:
+    for factor_occurrence in sorted_factor_occurrences:
         for question in all_questions:
-            if question['submission_time'] == time:
-                sorted_questions.append(question)
+            if sort_factor == "view_number" or sort_factor == "vote_number":
+                if int(question[sort_factor]) == int(factor_occurrence):
+                    if question not in sorted_questions:
+                        sorted_questions.append(question)
+            else:
+                if question[sort_factor] == factor_occurrence:
+                    if question not in sorted_questions:
+                        sorted_questions.append(question)
     return sorted_questions

@@ -9,14 +9,19 @@ web_pages = {"home_page": "home.html", "question_page": "question.html", "add_qu
             }
 
 
-@app.route("/")
-@app.route("/list")
+@app.route("/", methods=["GET", "POST"])
+@app.route("/list", methods=["GET", "POST"])
 def home():
+    if request.method == "POST":
+        sort_info = dict(request.form)
+        all_questions = dmg.sort_questions(sort_info["sort_by"], sort_info["order"])
+        table_heading = ["ID", "SUBMISSION TIME", "VIEWS", "VOTES", "TITLE", "QUESTION", "IMAGE"]
+        return render_template(web_pages["home_page"], questions=all_questions, table_heading=table_heading, empty=False, default_sort_by=sort_info["sort_by"], default_order=sort_info["order"])
     if dmg.get_all_questions() is False: return render_template(web_pages["home_page"], questions="", table_heading="", empty=True)
     else:
-        all_questions = dmg.sort_questions()
+        all_questions = dmg.sort_questions("submission_time", "descending")
         table_heading = ["ID", "SUBMISSION TIME", "VIEWS", "VOTES", "TITLE", "QUESTION", "IMAGE"]
-        return render_template(web_pages["home_page"], questions=all_questions, table_heading=table_heading, empty=False)
+        return render_template(web_pages["home_page"], questions=all_questions, table_heading=table_heading, empty=False, default_sort_by="submission time", default_order="descending")
 
 
 @app.route("/question/<question_id>")

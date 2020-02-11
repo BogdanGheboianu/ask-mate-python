@@ -2,10 +2,26 @@
 <html>
     <head><title>Home | AskMate</title></head>
     <body>
-        <h1>AskMate</h1>
+        <h1>AskMate</h1><hr>
         {% if empty == True: %}
             <p><strong>There are no questions to show for the moment</strong></p>
         {% else: %}
+            <form method="POST">
+                <p><strong>Sort by</strong>
+                    <select name="sort_by" value="{{ default_sort_by }}" aria-selected="true">
+                        <option value="title">title</option>
+                        <option value="submission_time">submission time</option>
+                        <option value="message">message</option>
+                        <option value="vote_number">number of views</option>
+                        <option value="view_number">number of votes</option>
+                    </select>
+                    <select name="order" aria-placeholder="{{ defaul_order }}">
+                        <option value="ascending">ascending</option>
+                        <option value="descending">descending</option>
+                    </select>
+                    <button type="submit">Sort questions</button>
+                </p>
+            </form>
             <table border="1">
                 {% for heading in table_heading: %}
                     <th>{{ heading }}</th>
