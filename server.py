@@ -58,5 +58,15 @@ def new_answer(question_id):
     return render_template(web_pages["new_answer_page"], question=question)
 
 
+@app.route("/question/<question_id>/edit", methods=["GET", "POST"])
+def edit_question(question_id):
+    if request.method == "POST":
+        edited_question_info = dict(request.form)
+        dmg.edit_question(question_id, edited_question_info)
+        return redirect("/question/{0}".format(question_id))
+    question_info = dmg.get_question_by_id(question_id)
+    return render_template("edit_question.html", question_info=question_info)
+
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

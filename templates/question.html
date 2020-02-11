@@ -8,6 +8,8 @@
         <hr>
         <h2>{{ question['title'] }}</h2>
         <h3>Q: {{ question['message'] }}</h3>
+        <button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
+        <button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
         <hr>
         <p><h3>ANSWERS</h3><br></p>
     
@@ -23,7 +25,8 @@
                 {% endfor %}
             {% endif %}
         </p>
-        <p><button onclick="location.href='/question/{{ question_id }}/new-answer'">POST ANSWER</button></p>
+        <p><button onclick="location.href='/question/{{ question_id }}/new-answer'">POST ANSWER</button>
+        </p>
     </body>
 
         

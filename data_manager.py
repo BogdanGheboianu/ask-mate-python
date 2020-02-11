@@ -135,3 +135,22 @@ def sort_questions(sort_factor, order):
                     if question not in sorted_questions:
                         sorted_questions.append(question)
     return sorted_questions
+
+
+def edit_question(question_id, edited_question_info):
+    original_questions_data = get_all_questions()
+    updated_questions_data = []
+    for question in original_questions_data:
+        if int(question['id']) == int(question_id):
+            question["title"] = edited_question_info['title']
+            question['message'] = edited_question_info['message']
+            updated_questions_data.append(question)
+        else:
+            updated_questions_data.append(question)
+    with open(question_file, "w") as file:
+        fieldnames = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for question in updated_questions_data:
+            writer.writerow(question)
+        file.close()
