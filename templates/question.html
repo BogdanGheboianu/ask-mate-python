@@ -18,7 +18,13 @@
                 <p><strong>There are no answers for this questions yet.</strong></p>
             {% else: %}
                 {% for answer in answers: %}
-                    <p><strong>Answer ID:</strong> <em>{{ answer["id"] }}</em> | <strong>Posted:</strong> <em>{{ answer["submission_time"] }}</em> | <strong>Votes:</strong> <em>{{ answer["vote_number"] }}</em></p>
+                    <p><strong>Answer ID:</strong> <em>{{ answer["id"] }}</em> | 
+                        <strong>Posted:</strong> <em>{{ answer["submission_time"] }}</em> | 
+                        <strong>Votes:</strong> <em>{{ answer["vote_number"] }}</em> | 
+                        <a href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up">UP VOTE</a> ~ 
+                        <a href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down">DOWN VOTE</a> |
+                        <a href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
+                    </p>
                     <p>{{answer['message']}}</p>
                     <p>{{answer['image']}}</p>
                     <hr>

@@ -59,7 +59,7 @@ def find_next_answer_index():
 
 def add_question_to_file(question_info):
     with open(question_file, "a") as file:
-        fieldnames = ["id", "submission_factor_occurrence", "view_number",
+        fieldnames = ["id", "submission_time", "view_number",
                       "vote_number", "title", "message", "image"]
         writer = DictWriter(file, fieldnames=fieldnames)
         if get_all_questions() is False:
@@ -152,5 +152,57 @@ def delete_question(question_id):
         if int(question['id']) != int(question_id):
             updated_questions_data.append(question)
     con.write_data_to_file(updated_questions_data)
+    original_answers = get_all_answers()
+    updated_answers = []
+    for answer in original_answers:
+        if int(answer['question_id']) != int(question_id):
+            updated_answers.append(answer)
+    
+    with open(answer_file, "w") as file:
+        fieldnames = ["id", "submission_time",
+                      "vote_number", "question_id", "message", "image"]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for answer in updated_answers:
+            writer.writerow(answer)
+        file.close()
+
+def vote_answer(question_id, answer_id, vote):
+    original_answers = get_all_answers()
+    updated_answers = []
+    for answer in original_answers:
+        if int(answer["id"]) == int(answer_id) and int(answer['question_id']) == int(question_id):
+            if vote == "vote-up":
+                answer['vote_number'] = int(answer['vote_number']) + 1
+            elif vote == "vote-down":
+                answer['vote_number'] = int(answer['vote_number']) - 1
+            updated_answers.append(answer)
+        else:
+            updated_answers.append(answer)
+
+    with open(answer_file, "w") as file:
+        fieldnames = ["id", "submission_time",
+                      "vote_number", "question_id", "message", "image"]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for answer in updated_answers:
+            writer.writerow(answer)
+        file.close()
+
+
+def delete_answer(answer_id):
+    original_answers = get_all_answers()
+    updated_answers = []
+    for answer in original_answers:
+        if int(answer['id']) != int(answer_id):
+            updated_answers.append(answer)
+    with open(answer_file, "w") as file:
+        fieldnames = ["id", "submission_time",
+                      "vote_number", "question_id", "message", "image"]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for answer in updated_answers:
+            writer.writerow(answer)
+        file.close()
 
 

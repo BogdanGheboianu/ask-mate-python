@@ -74,5 +74,17 @@ def delete_question(question_id):
     return redirect("/")
 
 
+@app.route("/answer/<question_id>/<answer_id>/<vote>")
+def vote_answer(question_id, answer_id, vote):
+    dmg.vote_answer(question_id, answer_id, vote)
+    return redirect("/question/{0}".format(question_id))
+
+
+@app.route("/answer/<question_id>/<answer_id>/delete")
+def delete_answer(question_id, answer_id):
+    dmg.delete_answer(answer_id)
+    return redirect("/question/{0}".format(question_id))
+
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
