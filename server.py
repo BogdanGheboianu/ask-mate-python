@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect
 import data_manager as dmg
 import connection as con
 import time, calendar
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -35,7 +36,7 @@ def home():
                                 empty=False, default_sort_by=sort_info["sort_by"], default_order=sort_info["order"])
     if con.get_all(question_file) is False: return render_template(web_pages["home_page"], questions="", table_heading="", empty=True)
     else:
-        all_questions = dmg.sort_questions("submission_time", "descending")
+        all_questions = convert_unix_time_to_readable_format(dmg.sort_questions("submission_time", "descending"))
         table_heading = ["ID", "SUBMISSION TIME", "VIEWS", "VOTES", "TITLE", "QUESTION", "IMAGE"]
         return render_template(web_pages["home_page"], questions=all_questions, table_heading=table_heading, 
                                 empty=False, default_sort_by="submission time", default_order="descending")
@@ -51,7 +52,8 @@ def question(question_id):
     dmg.add_view(question_id)
     empty = False
     question = dmg.get_question_by_id(question_id)
-    answers_for_question = dmg.find_answers_by_question_id(question_id)
+    question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
+    answers_for_question = convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None:
         empty = True
     return render_template(web_pages["question_page"], question=question, answers=answers_for_question, empty=empty, question_id=question_id)
@@ -64,7 +66,6 @@ def add_question():
     "POST": Gets the new question's info, sends it to data_manager and redirects to the home page.
     '''
     if request.method == "POST":
-
         question_id = con.find_next_index(question_file)
         question_info = {"id": question_id, "submission_time": calendar.timegm(time.gmtime()), "view_number": "0", "vote_number": "0", 
                         "title": request.form["title"], "message": request.form["message"], "image": request.form['image']}
@@ -99,6 +100,8 @@ def edit_question(question_id):
     '''
     if request.method == "POST":
         edited_question_info = dict(request.form)
+        edited_question_info['title'] = edited_question_info['title'] + " (Edited)"
+        edited_question_info['submission_time'] = calendar.timegm(time.gmtime())
         dmg.edit_question(question_id, edited_question_info)
         return redirect("/question/{0}".format(question_id))
     question_info = dmg.get_question_by_id(question_id)
@@ -141,6 +144,16 @@ def delete_answer(question_id, answer_id):
     '''
     dmg.delete_answer(answer_id)
     return redirect("/question/{0}".format(question_id))
+
+
+def convert_unix_time_to_readable_format(list_of_dicts):
+    try:
+        for _dict in list_of_dicts:
+            _dict['submission_time'] = datetime.utcfromtimestamp(int(_dict['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
+        return list_of_dicts
+    except TypeError:
+        return None
+
 
 
 # MAIN
