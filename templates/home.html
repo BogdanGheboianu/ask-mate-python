@@ -30,10 +30,18 @@
                 {% for question in questions: %}
                     <tr>
                         {% for key, value in question.items(): %}
-                            {% if key != "title": %}
+                            {% if key != "title" and key != 'image': %}
                                 <td>{{ value }}</td>
                             {% else: %}
-                                <td><a href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
+                                {% if key == 'title': %}
+                                    <td><a href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
+                                {% else: %}
+                                    {% if value != '': %}
+                                        <td><a href="/question/{{ question['id'] }}/show/{{ question['image'] }}">See Image</a></td>
+                                    {% else: %}
+                                        <td></td>
+                                    {% endif %}
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     </tr>

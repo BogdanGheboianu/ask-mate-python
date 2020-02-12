@@ -1,5 +1,6 @@
 from csv import DictReader, DictWriter
 import connection as con
+import os
 
 answer_file = "sample_data/answer.csv"
 question_file = "sample_data/question.csv"

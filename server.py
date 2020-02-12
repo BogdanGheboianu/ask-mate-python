@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for, flash
+from werkzeug.utils import secure_filename
 import data_manager as dmg
 import connection as con
-import time, calendar
+import time, calendar, os
 from datetime import datetime
-
-app = Flask(__name__)
+import uuid
 
 web_pages = {"home_page": "home.html", "question_page": "question.html", "add_question_page": "add_question.html", 
-            "new_answer_page": "new_answer.html"
+            "new_answer_page": "new_answer.html", "show_image_page": "show_image.html"
             }
 
 answer_file = "sample_data/answer.csv"
@@ -18,6 +18,12 @@ answer_fieldnames = ["id", "submission_time",
                       
 questions_fieldnames = ["id", "submission_time", "view_number",
                       "vote_number", "title", "message", "image"]
+
+UPLOAD_FOLDER = "static"
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}   
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # MAIN ROUTES: home, question, add question, add answer            
 
@@ -51,18 +57,39 @@ def question(question_id):
     '''
     empty = False
     question = dmg.get_question_by_id(question_id)
-    print(question)
     question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
     answers_for_question = convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None:
         empty = True
-    return render_template(web_pages["question_page"], question=question, answers=answers_for_question, empty=empty, question_id=question_id)
+    if empty == False:
+        for answer in answers_for_question:
+            if answer['image'] != '':
+                answer['image'] = url_for('static', filename=answer['image'])
+                print(answer['image'])
+    return render_template(web_pages["question_page"], question=question, answers=answers_for_question, 
+                            empty=empty, question_id=question_id)
+
+
+@app.route("/question/<question_id>/show/<image_path>")
+def show_image_for_question(question_id, image_path):
+    question = dmg.get_question_by_id(question_id)
+    image = url_for('static', filename=image_path)
+    print(image)
+    return render_template(web_pages['show_image_page'], question=question, image=image, question_id=question_id)
 
 
 @app.route("/question/<question_id>/view/add")
 def add_view_for_question(question_id):
+    '''
+    Adds a view to the respective question ONLY when clicked from home page.
+    '''
     dmg.add_view(question_id)
     return redirect("/question/{0}".format(question_id))
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route("/list/add-question", methods=["GET", "POST"])
@@ -72,9 +99,20 @@ def add_question():
     "POST": Gets the new question's info, sends it to data_manager and redirects to the home page.
     '''
     if request.method == "POST":
+        if 'image' not in request.files:
+            print("Error")
+            return redirect(request.url)
+        file = request.files['image']
+        if file.filename == '':
+            print("ERROR")
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            f = transform_image_title(filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
         question_id = con.find_next_index(question_file)
         question_info = {"id": question_id, "submission_time": calendar.timegm(time.gmtime()), "view_number": "0", "vote_number": "0", 
-                        "title": request.form["title"], "message": request.form["message"], "image": request.form['image']}
+                        "title": request.form["title"], "message": request.form["message"], "image": f}
         dmg.add(question_info, question_file, questions_fieldnames)
         return redirect("/question/{0}".format(question_id))
     return render_template(web_pages["add_question_page"])
@@ -86,13 +124,25 @@ def new_answer(question_id):
     "GET": Displays the "Add answer for question" page.
     "POST": Gets the new answer's info, sends it to data_manager and redirects to the home page
     '''
-    question = dmg.get_question_by_id(question_id)
     if request.method == "POST":
+        question = dmg.get_question_by_id(question_id)
+        if 'image' not in request.files:
+            print("Error")
+            return redirect(request.url)
+        file = request.files['image']
+        if file.filename == '':
+            print("ERROR")
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            os.rename("static/{0}".format(file.filename), "static/{0}".format(transform_image_title(file.filename)))
         answer_id = con.find_next_index(answer_file)
         answer_info = {"id": answer_id, "submission_time": calendar.timegm(time.gmtime()), 
-                        "vote_number": "0", "question_id": question_id, "message": request.form['answer'], "image": request.form['image']}
+                        "vote_number": "0", "question_id": question_id, "message": request.form['answer'], "image": transform_image_title(file.filename)}
         dmg.add(answer_info, answer_file, answer_fieldnames)
         return redirect("/question/{0}".format(question_id))
+    question = dmg.get_question_by_id(question_id)
     return render_template(web_pages["new_answer_page"], question=question)
 
 
@@ -159,6 +209,15 @@ def convert_unix_time_to_readable_format(list_of_dicts):
         return list_of_dicts
     except TypeError:
         return None
+
+
+def transform_image_title(filename):
+    filename_splited = filename.split(".")
+    filename_splited[0] = str(uuid.uuid4())
+    print(filename_splited)
+    unique_filename = ".".join(filename_splited)
+    return unique_filename
+
 
 
 

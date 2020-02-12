@@ -16,8 +16,8 @@
         <a href="/question/{{ question_id }}/vote-down">DOWN VOTE</a> |
         <button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
         <button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
-        <hr><hr>
-        <p><h3>ANSWERS</h3><br></p>
+        <hr>
+        <p><h2>ANSWERS</h2><br></p>
     
         <p>
             {% if empty == True: %}
@@ -32,7 +32,7 @@
                         <a href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
                     </p>
                     <p>{{answer['message']}}</p>
-                    <p>{{answer['image']}}</p>
+                    <p><img src="{{ answer['image'] }}" height="240" width="480"></p>
                     <hr>
                 {% endfor %}
             {% endif %}

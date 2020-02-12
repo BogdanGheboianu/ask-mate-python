@@ -8,10 +8,10 @@
         <h2>{{ question['message'] }}</h2>
         <hr>
     <h3>Your answer:</h3>
-    <p><form method="POST">
+    <p><form method="POST" enctype="multipart/form-data">
         <textarea name="answer" required placeholder="Type your answer here..." rows=30 cols=100></textarea>
         <p> <label for="img">Select image:</label>
-            <input type="file" id="img" name="image" accept="image/*"></p>
+            <input type="file" id="img" name="image"></p>
         <p><button type="submit">POST ANSWER</button>
         </form></p>
     </body>

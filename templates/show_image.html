@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Image | AskMate</title>
+</head>
+<body><p>
+    <h1><a href="/">AskMate</a></h1>
+        <hr>
+        <h2>{{ question['title'] }}</h2>
+        <h3>Q: {{ question['message'] }}</h3>
+        <strong>Question ID:</strong> <em>{{ question["id"] }}</em> | 
+        <strong>Posted:</strong> <em>{{ question["submission_time"] }}</em> | 
+        <strong>Views:</strong> <em>{{ question["view_number"] }}</em> | 
+        <strong>Votes:</strong> <em>{{ question["vote_number"] }}</em> | 
+        <a href="/question/{{ question_id }}/vote-up">UP VOTE</a> ~ 
+        <a href="/question/{{ question_id }}/vote-down">DOWN VOTE</a> |
+        <button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
+        <button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
+        <hr>
+    <img src="{{ image }}" width="1200" height="800" alt="Image cannot be displayed"></p>
+    <hr>
+    <p>
+        <button onclick="location.href='/question/{{ question_id }}/new-answer'">POST ANSWER</button>
+    </p>
+</body>
+</html>
