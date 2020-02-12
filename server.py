@@ -49,14 +49,20 @@ def question(question_id):
     Displays a "No answers for this question" message if there is the case.
     Every time this route is accessed, the view_number of the respective question gets modified.
     '''
-    dmg.add_view(question_id)
     empty = False
     question = dmg.get_question_by_id(question_id)
+    print(question)
     question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
     answers_for_question = convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None:
         empty = True
     return render_template(web_pages["question_page"], question=question, answers=answers_for_question, empty=empty, question_id=question_id)
+
+
+@app.route("/question/<question_id>/view/add")
+def add_view_for_question(question_id):
+    dmg.add_view(question_id)
+    return redirect("/question/{0}".format(question_id))
 
 
 @app.route("/list/add-question", methods=["GET", "POST"])
