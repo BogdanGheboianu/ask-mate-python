@@ -55,7 +55,7 @@ def add_view(question_id):
 
 def sort_questions(sort_factor, order):
     ''' 
-    Returns a dictionary with the questions sorted by a requested factor and by order
+    Returns a list of dicts with the questions sorted by a requested factor and by order.
     '''
     sort_factor_occurences = []
     all_questions = con.get_all(question_file)
