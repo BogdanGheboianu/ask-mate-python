@@ -2,6 +2,9 @@ from csv import DictReader, DictWriter
 
 
 def write_data_to_file(data, data_file, fieldnames):
+    '''
+    Removes data from the requested file and writes the new recieved list of dicts.
+    '''
     with open(data_file, "w") as file:
         writer = DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()

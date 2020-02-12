@@ -12,6 +12,9 @@ questions_fieldnames = ["id", "submission_time", "view_number",
 
 
 def add(info, data_file, fieldnames):
+    '''
+    Adds new question or new answer to the specific file.
+    '''
     with open(data_file, "a") as file:
         writer = DictWriter(file, fieldnames=fieldnames)
         if con.get_all(data_file) is False:
@@ -35,6 +38,9 @@ def get_question_by_id(question_id):
 
 
 def add_view(question_id):
+    '''
+    Adds +1 to the view_number key of the requested question whenever the question is accessed.
+    '''
     original_questions_data = con.get_all(question_file)
     updated_questions_data = []
     for question in original_questions_data:
@@ -77,6 +83,9 @@ def sort_questions(sort_factor, order):
 
 
 def edit_question(question_id, edited_question_info):
+    '''
+    Edits the title and the message of the requested question.
+    '''
     original_questions_data = con.get_all(question_file)
     updated_questions_data = []
     for question in original_questions_data:
@@ -90,6 +99,9 @@ def edit_question(question_id, edited_question_info):
 
 
 def delete_question(question_id):
+    '''
+    Deletes the requested question and its answers.
+    '''
     original_questions_data = con.get_all(question_file)
     updated_questions_data = []
     for question in original_questions_data:
@@ -106,6 +118,9 @@ def delete_question(question_id):
 
 
 def vote_question(question_id, vote):
+    '''
+    Adds 1 or substratcs 1 (depending on the request) from the vote_number key of a question.
+    '''
     original_questions = con.get_all(question_file)
     updated_questions = []
     for question in original_questions:
@@ -124,6 +139,9 @@ def vote_question(question_id, vote):
 # ANSWERS FUNCTIONS: 
 
 def find_answers_by_question_id(question_id):
+    '''
+    Searches the answer file and extracts the answers for a specific question_id.
+    '''
     all_answers = con.get_all(answer_file)
     answers_for_question = []
     for answer in all_answers:
@@ -134,6 +152,9 @@ def find_answers_by_question_id(question_id):
 
 
 def vote_answer(question_id, answer_id, vote):
+    '''
+    Adds 1 or substratcs 1 (depending on the request) from the vote_number key of an answer.
+    '''
     original_answers = con.get_all(answer_file)
     updated_answers = []
     for answer in original_answers:
@@ -149,6 +170,9 @@ def vote_answer(question_id, answer_id, vote):
 
 
 def delete_answer(answer_id):
+    '''
+    Deletes requested answer.
+    '''
     original_answers = con.get_all(answer_file)
     updated_answers = []
     for answer in original_answers:
