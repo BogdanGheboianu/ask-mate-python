@@ -1,20 +1,22 @@
-<!DOCTYPE html>
-<html>
+{% extends 'framework.html'%}
 
-    <head>
-        <title>{{ question['title'] }} answers | AskMate</title></head>
-    <body>
-        <h1>{{ question['title'] }}</h1>
-        <h2>{{ question['message'] }}</h2>
-        <hr>
-    <h3>Your answer:</h3>
-    <p><form method="POST" enctype="multipart/form-data">
+{% block title %}
+New Answer
+{% endblock %}
+
+{% block content%}
+<h1>{{ question['title'] }}</h1>
+<div class="answer-area">
+    <h4>{{ question['message'] }}</h4>
+</div>
+<hr>
+<h3>Your answer:</h3>
+<p>
+    <form method="POST">
         <textarea name="answer" required placeholder="Type your answer here..." rows=30 cols=100></textarea>
         <p> <label for="img">Select image:</label>
-            <input type="file" id="img" name="image"></p>
-        <p><button type="submit">POST ANSWER</button>
-        </form></p>
-    </body>
-
-
-</html>   
+            <input class="file-button" type="file" id="img" name="image" accept="image/*"></p>
+        <div><button class="ask-question-button" type="submit">post answer</div>
+    </form>
+</p>
+{% endblock %}
