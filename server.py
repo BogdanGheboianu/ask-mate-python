@@ -34,16 +34,14 @@ def home():
     "POST": gets the sorting criteria, sends it to data manager to execute the sorting and displays the home page based on the new result.
     '''
     table_heading = ["ID", "Submission Time", "Views", "Votes", "Title", "Question", "Image"]
-    if request.method == "POST":
+    if request.method == "POST" and dict(request.form)['sort_by'] != 'none' and dict(request.form)['order'] != 'none':
         sort_info = dict(request.form)
         all_questions = utl.prepare_questions_for_html(sort_info)
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, 
-                                empty=False, default_sort_by=sort_info["sort_by"], default_order=sort_info["order"])
+        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False)
     if con.get_all(QUESTION_FILE) is False: return render_template(WEB_PAGES["home_page"], questions="", table_heading="", empty=True)
     else:
         all_questions = utl.prepare_questions_for_html({"sort_by": "submission_time", "order": "descending"})
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, 
-                                empty=False, default_sort_by="submission time", default_order="descending")
+        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False)
 
 
 @app.route("/question/<question_id>")

@@ -12,14 +12,16 @@ Home
 <div class="sort-area">
     <form method="POST">
         <strong class="sort-info">Sort by:</strong>
-        <select name="sort_by" value="{{ default_sort_by }}" aria-selected="true">
+        <select name="sort_by">
+            <option value="none">--Choose option--</option>
             <option value="title">title</option>
             <option value="submission_time">submission time</option>
             <option value="message">message</option>
             <option value="view_number">number of views</option>
             <option value="vote_number">number of votes</option>
         </select>
-        <select name="order" aria-placeholder="{{ defaul_order }}">
+        <select name="order">
+            <option value="none">--Choose order--</option>
             <option value="ascending">ascending</option>
             <option value="descending">descending</option>
         </select>
