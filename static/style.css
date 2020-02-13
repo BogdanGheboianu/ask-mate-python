@@ -251,6 +251,30 @@ hr { display: block; height: 1px;
 }
 
 #delete-answer:hover {
-    color:#f8e7d3;;
+    color:#f8e7d3;
     border: 1px solid #f8e7d3;;
+}
+
+
+input {
+    background-color: #3d3f42;
+    border: 1px solid #e19639;
+    padding: 4px;
+    color:#f8e7d3;
+}
+
+textarea {
+    background-color: #3d3f42;
+    border: 1px solid #e19639;
+    padding: 4px;
+    color:#f8e7d3;
+}
+
+::placeholder {
+    color:#f8e7d3;
+}
+
+
+.ask-question-button [type=submit] {
+    background-color: red;
 }
