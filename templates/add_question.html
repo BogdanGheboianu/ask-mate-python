@@ -1,19 +1,19 @@
-<!DOCTYPE html>
-<html>
-    <head><title>Ask Question | AskMate</title></head>
-    <body>
-        <h2>Ask a question</h2>
-        <form method="POST" enctype="multipart/form-data">
-            <p><input type="text" name="title" required placeholder="Question title" minlength="10"></p>
-            <p><textarea name="message" required placeholder="Your question" rows="30" cols="100"></textarea></p>
-            <p> <label for="img">Select image:</label>
-                <input type="file" id="img" name="image"></p>
-            <p><button type="submit">ASK</button></p>
-        </form>
-    
-    
-    
-    </body>
+{% extends 'framework.html'%}
+
+{% block title %}
+Question
+{% endblock %}
+
+{% block content%}
+
+<h2>Ask a question</h2>
+<form method="POST">
+    <p><input type="text" name="title" required placeholder="Question title" minlength="10"></p>
+    <p><textarea name="message" required placeholder="Your question" rows="10" cols="50"></textarea></p>
+    <p> <label for="img">Select image:</label>
+        <input type="file" id="img" name="image" accept="image/*"></p>
+    <p><button class="ask-question-button" type="submit">ask</button></p>
+</form>
 
 
-</html>
+{% endblock %}
