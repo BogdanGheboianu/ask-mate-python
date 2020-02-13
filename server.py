@@ -33,7 +33,7 @@ def home():
     "GET": displays the table with all the questions, the "ASK" button and the sorting functionality.
     "POST": gets the sorting criteria, sends it to data manager to execute the sorting and displays the home page based on the new result.
     '''
-    table_heading = ["id", "submission time", "views", "votes", "title", "question", "image"]
+    table_heading = ["ID", "Submission Time", "Views", "Votes", "Title", "Question", "Image"]
     if request.method == "POST":
         sort_info = dict(request.form)
         all_questions = utl.prepare_questions_for_html(sort_info)

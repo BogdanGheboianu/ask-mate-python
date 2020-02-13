@@ -41,7 +41,7 @@ Home
         <td>{{ value }}</td>
         {% else: %}
             {% if key == 'title' %}
-                <td class="question-column"><a class="question-links" href="/question/{{ question['id'] }}">{{ value }}</a></td>
+                <td class="question-column"><a class="question-links" href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
             {% else: %}
                 {% if value != "" %}
                     <td><a href="question/{{ question['id'] }}/show/{{ value }}">See Image</a></td>
