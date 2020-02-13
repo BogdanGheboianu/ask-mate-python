@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
+import time, calendar, os, uuid
+from datetime import datetime
 import data_manager as dmg
 import connection as con
-import time, calendar, os
-from datetime import datetime
-import uuid
 import util as utl
 
 web_pages = {"home_page": "home.html", "question_page": "question.html", "add_question_page": "add_question.html", 
