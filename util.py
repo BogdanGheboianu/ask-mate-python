@@ -1,5 +1,7 @@
 import uuid
 from datetime import datetime
+import data_manager as dmg
+from flask import url_for
 
 def convert_unix_time_to_readable_format(list_of_dicts):
     '''
@@ -30,3 +32,18 @@ def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}  
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def prepare_answers_for_hmtl(answers, question_id):
+    for answer in answers:
+        answer['vote_number'] = dmg.vote_percentage_answer(answer['id'], question_id)
+        if answer['image'] != '':
+            answer['image'] = url_for('static', filename=answer['image'])
+    return answers
+
+
+def prepare_questions_for_html(sort_info):
+    all_questions = convert_unix_time_to_readable_format(dmg.sort_questions(sort_info["sort_by"], sort_info["order"]))
+    for question in all_questions:
+        question['vote_number'] = "{0}%".format(dmg.vote_percentage(question['id']))
+    return all_questions
