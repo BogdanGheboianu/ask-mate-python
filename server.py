@@ -54,15 +54,18 @@ def question(question_id):
     Every time this route is accessed, the view_number of the respective question gets modified.
     '''
     empty = False
+    num_answers = 0
     question = dmg.get_question_by_id(question_id)
     question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
     question['image'] = url_for('static', filename=question['image'])
     question['vote_number'] = "{0}%".format(dmg.vote_percentage(question_id))
     answers_for_question = utl.convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None: empty = True
-    if empty == False: answers_for_question = utl.prepare_answers_for_hmtl(answers_for_question, question_id)
+    if empty == False: 
+        answers_for_question = utl.prepare_answers_for_hmtl(answers_for_question, question_id)
+        num_answers = len(answers_for_question)
     return render_template(WEB_PAGES["question_page"], question=question, answers=answers_for_question, 
-                            empty=empty, question_id=question_id)
+                            empty=empty, question_id=question_id, num_answers=num_answers)
 
 
 @app.route("/list/add-question", methods=["GET", "POST"])

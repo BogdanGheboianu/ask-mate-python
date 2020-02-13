@@ -35,7 +35,11 @@ Question
 <img class="title-image" src="{{ question['image'] }}" width="480" height="280">
 {% endif %}
 <div class="answers-section">
+    {% if num_answers != 0: %}
+    <h2>{{ num_answers }} Answers</h2><br>
+    {% else: %}
     <h2>Answers</h2><br>
+    {% endif %}
 </div>
 
 <div class="answer-area">
