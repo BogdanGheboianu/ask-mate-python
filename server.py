@@ -43,6 +43,8 @@ def home():
     if con.get_all(question_file) is False: return render_template(web_pages["home_page"], questions="", table_heading="", empty=True)
     else:
         all_questions = convert_unix_time_to_readable_format(dmg.sort_questions("submission_time", "descending"))
+        for question in all_questions:
+            question['vote_number'] = "{0}%".format(dmg.vote_percentage(question['id']))
         table_heading = ["ID", "SUBMISSION TIME", "VIEWS", "VOTES", "TITLE", "QUESTION", "IMAGE"]
         return render_template(web_pages["home_page"], questions=all_questions, table_heading=table_heading, 
                                 empty=False, default_sort_by="submission time", default_order="descending")
@@ -59,14 +61,15 @@ def question(question_id):
     question = dmg.get_question_by_id(question_id)
     question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
     question['image'] = url_for('static', filename=question['image'])
+    question['vote_number'] = "{0}%".format(dmg.vote_percentage(question_id))
     answers_for_question = convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None:
         empty = True
     if empty == False:
         for answer in answers_for_question:
+            answer['vote_number'] = dmg.vote_percentage_answer(answer['id'], question_id)
             if answer['image'] != '':
                 answer['image'] = url_for('static', filename=answer['image'])
-                print(answer['image'])
     return render_template(web_pages["question_page"], question=question, answers=answers_for_question, 
                             empty=empty, question_id=question_id)
 
@@ -103,15 +106,16 @@ def add_question():
             print("Error")
             return redirect(request.url)
         file = request.files['image']
-        if file.filename == '':
-            print("ERROR")
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            f = transform_image_title(filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
+        if file.filename != '':
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                f = transform_image_title(filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
+        else:
+            f = ""
         question_id = con.find_next_index(question_file)
-        question_info = {"id": question_id, "submission_time": calendar.timegm(time.gmtime()), "view_number": "0", "vote_number": "0", 
+        submission_time = int(calendar.timegm(time.gmtime())) + 7200
+        question_info = {"id": question_id, "submission_time": submission_time, "view_number": "0", "vote_number": "0", 
                         "title": request.form["title"], "message": request.form["message"], "image": f}
         dmg.add(question_info, question_file, questions_fieldnames)
         return redirect("/question/{0}".format(question_id))
@@ -130,16 +134,16 @@ def new_answer(question_id):
             print("Error")
             return redirect(request.url)
         file = request.files['image']
-        if file.filename == '':
-            print("ERROR")
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            os.rename("static/{0}".format(file.filename), "static/{0}".format(transform_image_title(file.filename)))
+        if file.filename != '':
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                f = transform_image_title(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
+        else: f = ""
         answer_id = con.find_next_index(answer_file)
-        answer_info = {"id": answer_id, "submission_time": calendar.timegm(time.gmtime()), 
-                        "vote_number": "0", "question_id": question_id, "message": request.form['answer'], "image": transform_image_title(file.filename)}
+        submission_time = int(calendar.timegm(time.gmtime())) + 7200
+        answer_info = {"id": answer_id, "submission_time": str(submission_time), 
+                        "vote_number": "0", "question_id": question_id, "message": request.form['answer'], "image": f}
         dmg.add(answer_info, answer_file, answer_fieldnames)
         return redirect("/question/{0}".format(question_id))
     question = dmg.get_question_by_id(question_id)

@@ -126,15 +126,25 @@ def vote_question(question_id, vote):
     updated_questions = []
     for question in original_questions:
         if int(question['id']) == int(question_id):
+            votes = question['vote_number'].split('-')
             if vote == "vote-up":
-                question['vote_number'] = int(question['vote_number']) + 1
-                updated_questions.append(question)
+                votes[0] = str(int(votes[0]) + 1)
             elif vote == "vote-down":
-                question['vote_number'] = int(question['vote_number']) - 1
-                updated_questions.append(question)
+                votes[1] = str(int(votes[1]) + 1)
+            vote_number = "-".join(votes)
+            question['vote_number'] = vote_number
+            updated_questions.append(question)
         else:
             updated_questions.append(question)
     con.write_data_to_file(updated_questions, question_file, questions_fieldnames)
+    
+
+def vote_percentage(question_id):
+    question = get_question_by_id(question_id)
+    votes = question['vote_number'].split('-')
+    total_votes = int(votes[0]) + int(votes[1])
+    up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+    return int(up_votes_percentage)
 
 
 # ANSWERS FUNCTIONS: 
@@ -152,6 +162,21 @@ def find_answers_by_question_id(question_id):
     else: return answers_for_question
 
 
+def get_answer_by_id(answer_id, question_id):
+    answers = find_answers_by_question_id(question_id)
+    for answer in answers:
+        if int(answer['id']) == int(answer_id):
+            return answer
+
+def vote_percentage_answer(answer_id, question_id):
+    answer = get_answer_by_id(answer_id, question_id)
+    votes = answer['vote_number'].split('-')
+    total_votes = int(votes[0]) + int(votes[1])
+    up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+    return int(up_votes_percentage)
+
+
+
 def vote_answer(question_id, answer_id, vote):
     '''
     Adds 1 or substratcs 1 (depending on the request) from the vote_number key of an answer.
@@ -160,10 +185,13 @@ def vote_answer(question_id, answer_id, vote):
     updated_answers = []
     for answer in original_answers:
         if int(answer["id"]) == int(answer_id) and int(answer['question_id']) == int(question_id):
+            votes = answer['vote_number'].split('-')
             if vote == "vote-up":
-                answer['vote_number'] = int(answer['vote_number']) + 1
+                votes[0] = str(int(votes[0]) + 1)
             elif vote == "vote-down":
-                answer['vote_number'] = int(answer['vote_number']) - 1
+                votes[1] = str(int(votes[1]) + 1)
+            vote_number = "-".join(votes)
+            answer['vote_number'] = vote_number
             updated_answers.append(answer)
         else:
             updated_answers.append(answer)

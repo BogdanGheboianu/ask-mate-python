@@ -1,8 +1,8 @@
 id,submission_time,vote_number,question_id,message,image
-0,1493398154,4,0,You need to use brackets: my_list = [],
-1,1493088154,35,0,Look it up in the Python docs,
-2,1581342257,0,0,asdjkasnbfkjasfkjas,
-3,1581342269,0,0,/klnLKncaksdmkc mYEEEEEEEEEEEEE,
-5,1581344581,0,0,lasmclasmvlas,
-6,1581521533,0,4,my answer is askfasofas,performance-hero2.jpg
-7,1581521997,2,4,kadnfanuivbqerivbqeruvqer,huawei_matebook_droidviews_01.jpg
+0,1493398154,4-3,0,You need to use brackets: my_list = [],
+1,1493088154,35-2,0,Look it up in the Python docs,
+2,1581342257,0-1,0,asdjkasnbfkjasfkjas,
+3,1581342269,0-3,0,/klnLKncaksdmkc mYEEEEEEEEEEEEE,
+5,1581344581,0-0,0,lasmclasmvlas,
+6,1581521533,14-77,4,my answer is askfasofas,performance-hero2.jpg
+7,1581521997,5-2,4,kadnfanuivbqerivbqeruvqer,huawei_matebook_droidviews_01.jpg
