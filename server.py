@@ -57,6 +57,7 @@ def question(question_id):
     question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
     question['image'] = url_for('static', filename=question['image'])
     question['vote_number'] = "{0}%".format(dmg.vote_percentage(question_id))
+    question = utl.check_specific_question_for_edit(question)
     answers_for_question = utl.convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None: empty = True
     if empty == False: 
@@ -121,9 +122,9 @@ def edit_question(question_id):
     '''
     if request.method == "POST":
         edited_question_info = dict(request.form)
-        edited_question_info['title'] = edited_question_info['title'] + " (Edited)"
-        edited_question_info['submission_time'] = int(calendar.timegm(time.gmtime())) + 7200 # GMT+2
-        dmg.edit_question(question_id, edited_question_info)
+        edited_question_info['title'] = edited_question_info['title'] + "(Edited)"
+        new_submission_time = int(calendar.timegm(time.gmtime())) + 7200 # GMT+2
+        dmg.edit_question(question_id, edited_question_info, new_submission_time)
         return redirect("/question/{0}".format(question_id))
     question_info = dmg.get_question_by_id(question_id)
     return render_template("edit_question.html", question_info=question_info)
@@ -155,6 +156,8 @@ def show_image_for_question(question_id, image_path):
     question = dmg.get_question_by_id(question_id)
     image = url_for('static', filename=image_path)
     question['vote_number'] = dmg.vote_percentage(question_id)
+    question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
+    question = utl.check_specific_question_for_edit(question)
     return render_template(WEB_PAGES['show_image_page'], question=question, image=image, question_id=question_id)
 
 

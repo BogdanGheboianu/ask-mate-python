@@ -44,6 +44,21 @@ def prepare_answers_for_hmtl(answers, question_id):
 
 def prepare_questions_for_html(sort_info):
     all_questions = convert_unix_time_to_readable_format(dmg.sort_questions(sort_info["sort_by"], sort_info["order"]))
-    for question in all_questions:
-        question['vote_number'] = "{0}%".format(dmg.vote_percentage(question['id']))
+    for question in all_questions: question['vote_number'] = "{0}%".format(dmg.vote_percentage(question['id']))
+    all_questions = check_questions_for_edit(all_questions)
     return all_questions
+
+
+def check_questions_for_edit(questions):
+    for question in questions:
+        if "(Edited)" in question['title']:
+            question['submission_time'] = str(question['submission_time']) + " (edited)"
+            question['title'] = question['title'].replace("(Edited)", "")
+    return questions
+
+
+def check_specific_question_for_edit(question):
+    if "(Edited)" in question['title']:
+        question['submission_time'] = question['submission_time'] + " (edited)"
+        question['title'] = question['title'].replace("(Edited)", "")
+    return question

@@ -49,36 +49,6 @@ def add_view(question_id):
     con.write_data_to_file(updated_questions_data, question_file, questions_fieldnames)
 
 
-
-# def sort_questions(sort_factor, order):
-#     ''' 
-#     Returns a list of dicts with the questions sorted by a requested factor and by order.
-#     '''
-#     sort_factor_occurences = []
-#     all_questions = con.get_all(question_file)
-#     for question in all_questions:
-#         if sort_factor == "view_number" or sort_factor == "vote_number":
-#             sort_factor_occurences.append(int(question[sort_factor]))
-#         else:
-#             sort_factor_occurences.append(question[sort_factor])
-#     if order == "descending":
-#         sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=True)
-#     else:
-#         sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=False)
-#     sorted_questions = []
-#     for factor_occurrence in sorted_factor_occurrences:
-#         for question in all_questions:
-#             if sort_factor == "view_number" or sort_factor == "vote_number":
-#                 if int(question[sort_factor]) == int(factor_occurrence):
-#                     if question not in sorted_questions:
-#                         sorted_questions.append(question)
-#             else:
-#                 if question[sort_factor] == factor_occurrence:
-#                     if question not in sorted_questions:
-#                         sorted_questions.append(question)
-#     return sorted_questions
-
-
 def sort_questions(sort_factor, order):
     all_questions = con.get_all(question_file)
     int_types = ["id", "view_number", "vote_number", "submission_time"]
@@ -91,7 +61,7 @@ def sort_questions(sort_factor, order):
         else: return sorted(all_questions, key=lambda i: i[sort_factor], reverse=True)
 
 
-def edit_question(question_id, edited_question_info):
+def edit_question(question_id, edited_question_info, new_submission_time):
     '''
     Edits the title and the message of the requested question.
     '''
@@ -101,6 +71,7 @@ def edit_question(question_id, edited_question_info):
         if int(question['id']) == int(question_id):
             question["title"] = edited_question_info['title']
             question['message'] = edited_question_info['message']
+            question['submission_time'] = str(new_submission_time)
             updated_questions_data.append(question)
         else:
             updated_questions_data.append(question)
