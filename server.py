@@ -58,6 +58,7 @@ def question(question_id):
     empty = False
     question = dmg.get_question_by_id(question_id)
     question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
+    question['image'] = url_for('static', filename=question['image'])
     answers_for_question = convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None:
         empty = True
@@ -74,7 +75,6 @@ def question(question_id):
 def show_image_for_question(question_id, image_path):
     question = dmg.get_question_by_id(question_id)
     image = url_for('static', filename=image_path)
-    print(image)
     return render_template(web_pages['show_image_page'], question=question, image=image, question_id=question_id)
 
 

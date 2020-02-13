@@ -8,6 +8,7 @@
         <hr>
         <h2>{{ question['title'] }}</h2>
         <h3>Q: {{ question['message'] }}</h3>
+        <img src="{{ question['image'] }}" height="280" width="480"><br>
         <strong>Question ID:</strong> <em>{{ question["id"] }}</em> | 
         <strong>Posted:</strong> <em>{{ question["submission_time"] }}</em> | 
         <strong>Views:</strong> <em>{{ question["view_number"] }}</em> | 
@@ -32,7 +33,7 @@
                         <a href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
                     </p>
                     <p>{{answer['message']}}</p>
-                    <p><img src="{{ answer['image'] }}" height="240" width="480"></p>
+                    <p><img src="{{ answer['image'] }}" height="280" width="480"></p>
                     <hr>
                 {% endfor %}
             {% endif %}

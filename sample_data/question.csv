@@ -12,9 +12,4 @@ app.js (bundled file with webpack, including jquery)",
 2,1493015432,1369,57,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
 
 This is the code I'm using to draw the image (that works on web/desktop but not cordova built ios app)",
-3,1581512978,8,0,awejkfnqwjkef,qwefiqnweofinqwef,1039991.jpg
-4,1581513013,12,32,awdklnqweonfqw,qweqweoirnqweori,abstract-2560x1440-huawei-matebook-e-2019-hd-21830.jpg
-5,1581521626,4,0,asfklnasdklfnasd,awefklnqweiognqigqierubgier,crop.jpg
-6,1581522919,0,0,akwncerier viwer,wervjkneajfkvnadfjvnksdjv,2e009b42-90ee-41d1-a96c-2f58aaa0db10.png
-7,1581523023,1,0,cwejknvweibvweibviwuev,vd vasdfjkvnasdknvklsdanva,2022-Tesla-Cybertruck-2.jpg
-8,1581523102,1,0,jSdbvhasddbvhasdbvhasd,asdvjansdjkvbasdjkvbasdjk,67b5fca2-326c-473d-83de-8f4173c39b39.png
+4,1581513013,14,32,awdklnqweonfqw,qweqweoirnqweori,abstract-2560x1440-huawei-matebook-e-2019-hd-21830.jpg
