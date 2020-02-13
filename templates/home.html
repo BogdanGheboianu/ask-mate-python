@@ -37,10 +37,18 @@ Home
     {% for question in questions: %}
     <tr>
         {% for key, value in question.items(): %}
-        {% if key != "title": %}
+        {% if key != "title" and key != 'image': %}
         <td>{{ value }}</td>
         {% else: %}
-        <td class="question-column"><a class="question-links" href="/question/{{ question['id'] }}">{{ value }}</a></td>
+            {% if key == 'title' %}
+                <td class="question-column"><a class="question-links" href="/question/{{ question['id'] }}">{{ value }}</a></td>
+            {% else: %}
+                {% if value != "" %}
+                    <td><a href="question/{{ question['id'] }}/show/{{ value }}">See Image</a></td>
+                {% else: %}
+                <td></td>
+                {% endif %}
+            {% endif %}
         {% endif %}
         {% endfor %}
     </tr>

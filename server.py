@@ -36,7 +36,7 @@ def home():
     if request.method == "POST":
         sort_info = dict(request.form)
         all_questions = dmg.sort_questions(sort_info["sort_by"], sort_info["order"])
-        table_heading = ["ID", "SUBMISSION TIME", "VIEWS", "VOTES", "TITLE", "QUESTION", "IMAGE"]
+        table_heading = ["id", "submission time", "views", "votes", "title", "question", "image"]
         return render_template(web_pages["home_page"], questions=all_questions, table_heading=table_heading, 
                                 empty=False, default_sort_by=sort_info["sort_by"], default_order=sort_info["order"])
     if con.get_all(question_file) is False: return render_template(web_pages["home_page"], questions="", table_heading="", empty=True)

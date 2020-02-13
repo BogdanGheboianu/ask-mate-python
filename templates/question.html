@@ -15,6 +15,9 @@ Question
             href="/question/{{ question_id }}/vote-down"><img src="../static/downvote.png" width="20" height="20"></a>
     </div>
 </div>
+{% if question['image'] != "/static/" %}
+    <img src="{{ question['image'] }}" width="480" height="280">
+{% endif %}
 <div class="question-info-area">
     <strong>Question ID:</strong> <em class="question-info">{{ question["id"] }}</em>
     <strong>Posted:</strong> <em class="question-info">{{ question["submission_time"] }}</em>
@@ -34,7 +37,7 @@ Question
 
 <div class="answer-area">
     {% if empty == True: %}
-    <p><strong>There are no answers for this questions yet.</strong></p>
+        <p><strong>There are no answers for this questions yet.</strong></p>
     {% else: %}
     {% for answer in answers: %}
     <div class="answer-title-area">
@@ -53,9 +56,11 @@ Question
     </div>
     <div class="answer-info-area">
         <strong>Answered:</strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
-        <strong>Votes:</strong> <em class="answer-info">{{ answer["vote_number"] }}</em>
+        <strong>Votes:</strong> <em class="answer-info">{{ answer["vote_number"] }}%</em>
     </div>
-    <p>{{answer['image']}}</p>
+    {% if answer['image'] != '': %}
+        <p><img src="{{answer['image']}}" width="480" height="280"></p>
+    {% endif %}
     <hr>
     {% endfor %}
     {% endif %}
