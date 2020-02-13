@@ -31,10 +31,8 @@ def get_question_by_id(question_id):
     Searches in all questions and returns the questions whose id matches the requested id.
     Returns None if no matching id was found.
     '''
-    all_questions = con.get_all(question_file)
-    for question in all_questions:
-        if int(question['id']) == int(question_id):
-            return question
+    for question in con.get_all(question_file):
+        if int(question['id']) == int(question_id): return question
     return None
 
 
@@ -42,45 +40,55 @@ def add_view(question_id):
     '''
     Adds +1 to the view_number key of the requested question whenever the question is accessed.
     '''
-    original_questions_data = con.get_all(question_file)
     updated_questions_data = []
-    for question in original_questions_data:
+    for question in con.get_all(question_file):
         if int(question['id']) == int(question_id):
             question["view_number"] = str(int(question['view_number']) + 1)
             updated_questions_data.append(question)
-        else:
-            updated_questions_data.append(question)
+        else: updated_questions_data.append(question)
     con.write_data_to_file(updated_questions_data, question_file, questions_fieldnames)
 
 
 
+# def sort_questions(sort_factor, order):
+#     ''' 
+#     Returns a list of dicts with the questions sorted by a requested factor and by order.
+#     '''
+#     sort_factor_occurences = []
+#     all_questions = con.get_all(question_file)
+#     for question in all_questions:
+#         if sort_factor == "view_number" or sort_factor == "vote_number":
+#             sort_factor_occurences.append(int(question[sort_factor]))
+#         else:
+#             sort_factor_occurences.append(question[sort_factor])
+#     if order == "descending":
+#         sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=True)
+#     else:
+#         sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=False)
+#     sorted_questions = []
+#     for factor_occurrence in sorted_factor_occurrences:
+#         for question in all_questions:
+#             if sort_factor == "view_number" or sort_factor == "vote_number":
+#                 if int(question[sort_factor]) == int(factor_occurrence):
+#                     if question not in sorted_questions:
+#                         sorted_questions.append(question)
+#             else:
+#                 if question[sort_factor] == factor_occurrence:
+#                     if question not in sorted_questions:
+#                         sorted_questions.append(question)
+#     return sorted_questions
+
+
 def sort_questions(sort_factor, order):
-    ''' 
-    Returns a list of dicts with the questions sorted by a requested factor and by order.
-    '''
-    sort_factor_occurences = []
     all_questions = con.get_all(question_file)
-    for question in all_questions:
-        if sort_factor == "view_number" or sort_factor == "vote_number":
-            sort_factor_occurences.append(int(question[sort_factor]))
-        else:
-            sort_factor_occurences.append(question[sort_factor])
-    if order == "descending":
-        sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=True)
+    int_types = ["id", "view_number", "vote_number", "submission_time"]
+    if sort_factor in int_types:
+        for question in all_questions: question['vote_number'] = vote_percentage(question['id'])
+        if order == "ascending": return sorted(all_questions, key=lambda i: int(i[sort_factor]))
+        else: return sorted(all_questions, key=lambda i: int(i[sort_factor]), reverse=True)
     else:
-        sorted_factor_occurrences = sorted(sort_factor_occurences, reverse=False)
-    sorted_questions = []
-    for factor_occurrence in sorted_factor_occurrences:
-        for question in all_questions:
-            if sort_factor == "view_number" or sort_factor == "vote_number":
-                if int(question[sort_factor]) == int(factor_occurrence):
-                    if question not in sorted_questions:
-                        sorted_questions.append(question)
-            else:
-                if question[sort_factor] == factor_occurrence:
-                    if question not in sorted_questions:
-                        sorted_questions.append(question)
-    return sorted_questions
+        if order == "ascending": return sorted(all_questions, key=lambda i: i[sort_factor])
+        else: return sorted(all_questions, key=lambda i: i[sort_factor], reverse=True)
 
 
 def edit_question(question_id, edited_question_info):
@@ -116,7 +124,8 @@ def delete_question(question_id):
             updated_answers.append(answer)
     con.write_data_to_file(updated_answers, answer_file, answer_fieldnames)
 
-
+UPVOTES = 0
+DOWNVOTES = 1
 
 def vote_question(question_id, vote):
     '''
@@ -128,9 +137,9 @@ def vote_question(question_id, vote):
         if int(question['id']) == int(question_id):
             votes = question['vote_number'].split('-')
             if vote == "vote-up":
-                votes[0] = str(int(votes[0]) + 1)
+                votes[0] = str(int(votes[UPVOTES]) + 1)
             elif vote == "vote-down":
-                votes[1] = str(int(votes[1]) + 1)
+                votes[1] = str(int(votes[DOWNVOTES]) + 1)
             vote_number = "-".join(votes)
             question['vote_number'] = vote_number
             updated_questions.append(question)
@@ -145,9 +154,9 @@ def vote_percentage(question_id):
     '''
     question = get_question_by_id(question_id)
     votes = question['vote_number'].split('-')
-    total_votes = int(votes[0]) + int(votes[1])
+    total_votes = int(votes[UPVOTES]) + int(votes[DOWNVOTES])
     try:
-        up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+        up_votes_percentage = float(int(votes[UPVOTES]) / int(total_votes)) * 100
     except ZeroDivisionError:
         return "0"
     return int(up_votes_percentage)
@@ -183,9 +192,9 @@ def vote_percentage_answer(answer_id, question_id):
     '''
     answer = get_answer_by_id(answer_id, question_id)
     votes = answer['vote_number'].split('-')
-    total_votes = int(votes[0]) + int(votes[1])
+    total_votes = int(votes[UPVOTES]) + int(votes[DOWNVOTES])
     try:
-        up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+        up_votes_percentage = float(int(votes[UPVOTES]) / int(total_votes)) * 100
     except ZeroDivisionError:
         return "0"
     return int(up_votes_percentage)
@@ -202,9 +211,9 @@ def vote_answer(question_id, answer_id, vote):
         if int(answer["id"]) == int(answer_id) and int(answer['question_id']) == int(question_id):
             votes = answer['vote_number'].split('-')
             if vote == "vote-up":
-                votes[0] = str(int(votes[0]) + 1)
+                votes[0] = str(int(votes[UPVOTES]) + 1)
             elif vote == "vote-down":
-                votes[1] = str(int(votes[1]) + 1)
+                votes[1] = str(int(votes[DOWNVOTES]) + 1)
             vote_number = "-".join(votes)
             answer['vote_number'] = vote_number
             updated_answers.append(answer)
