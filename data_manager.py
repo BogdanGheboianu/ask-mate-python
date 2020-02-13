@@ -120,7 +120,7 @@ def delete_question(question_id):
 
 def vote_question(question_id, vote):
     '''
-    Adds 1 or substratcs 1 (depending on the request) from the vote_number key of a question.
+    Adds 1 to the vote_number (x-y) key of a question (depending on the request).
     '''
     original_questions = con.get_all(question_file)
     updated_questions = []
@@ -140,6 +140,9 @@ def vote_question(question_id, vote):
     
 
 def vote_percentage(question_id):
+    '''
+    Calculates and returns the percantage voting for the requested question.
+    '''
     question = get_question_by_id(question_id)
     votes = question['vote_number'].split('-')
     total_votes = int(votes[0]) + int(votes[1])
@@ -166,12 +169,18 @@ def find_answers_by_question_id(question_id):
 
 
 def get_answer_by_id(answer_id, question_id):
+    '''
+    Returns the answer that has the exact id as the requested one.
+    '''
     answers = find_answers_by_question_id(question_id)
     for answer in answers:
         if int(answer['id']) == int(answer_id):
             return answer
 
 def vote_percentage_answer(answer_id, question_id):
+    '''
+    Calculates and returns the percentage of a specific answer voting.
+    '''
     answer = get_answer_by_id(answer_id, question_id)
     votes = answer['vote_number'].split('-')
     total_votes = int(votes[0]) + int(votes[1])
@@ -185,7 +194,7 @@ def vote_percentage_answer(answer_id, question_id):
 
 def vote_answer(question_id, answer_id, vote):
     '''
-    Adds 1 or substratcs 1 (depending on the request) from the vote_number key of an answer.
+    Adds 1 to the vote_number (x-y) key of a question (depending on the request).
     '''
     original_answers = con.get_all(answer_file)
     updated_answers = []

@@ -76,6 +76,9 @@ def question(question_id):
 
 @app.route("/question/<question_id>/show/<image_path>")
 def show_image_for_question(question_id, image_path):
+    '''
+    Special route for focusing on the image of the question. Similar with the question page, but with no answers and bigger image.
+    '''
     question = dmg.get_question_by_id(question_id)
     image = url_for('static', filename=image_path)
     return render_template(web_pages['show_image_page'], question=question, image=image, question_id=question_id)
@@ -91,6 +94,9 @@ def add_view_for_question(question_id):
 
 
 def allowed_file(filename):
+    '''
+    Verifies if the uploaded file has a valid file extension.
+    '''
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -102,9 +108,6 @@ def add_question():
     "POST": Gets the new question's info, sends it to data_manager and redirects to the home page.
     '''
     if request.method == "POST":
-        if 'image' not in request.files:
-            print("Error")
-            return redirect(request.url)
         file = request.files['image']
         if file.filename != '':
             if file and allowed_file(file.filename):
@@ -130,9 +133,6 @@ def new_answer(question_id):
     '''
     if request.method == "POST":
         question = dmg.get_question_by_id(question_id)
-        if 'image' not in request.files:
-            print("Error")
-            return redirect(request.url)
         file = request.files['image']
         if file.filename != '':
             if file and allowed_file(file.filename):
