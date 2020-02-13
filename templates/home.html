@@ -45,7 +45,11 @@ Home
                 href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
         {% else: %}
         {% if value != "" %}
-        <td><a href="question/{{ question['id'] }}/show/{{ value }}">See Image</a></td>
+        <td class="image-column"><a class="see-image-link" href="question/{{ question['id'] }}/show/{{ value }}">
+            <div id="show-image">See
+                Image
+            </div>
+        </a></td>
         {% else: %}
         <td></td>
         {% endif %}
