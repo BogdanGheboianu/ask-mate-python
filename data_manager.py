@@ -143,7 +143,10 @@ def vote_percentage(question_id):
     question = get_question_by_id(question_id)
     votes = question['vote_number'].split('-')
     total_votes = int(votes[0]) + int(votes[1])
-    up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+    try:
+        up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+    except ZeroDivisionError:
+        return "0"
     return int(up_votes_percentage)
 
 
@@ -172,7 +175,10 @@ def vote_percentage_answer(answer_id, question_id):
     answer = get_answer_by_id(answer_id, question_id)
     votes = answer['vote_number'].split('-')
     total_votes = int(votes[0]) + int(votes[1])
-    up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+    try:
+        up_votes_percentage = float(int(votes[0]) / int(total_votes)) * 100
+    except ZeroDivisionError:
+        return "0"
     return int(up_votes_percentage)
 
 

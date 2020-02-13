@@ -115,7 +115,7 @@ def add_question():
             f = ""
         question_id = con.find_next_index(question_file)
         submission_time = int(calendar.timegm(time.gmtime())) + 7200
-        question_info = {"id": question_id, "submission_time": submission_time, "view_number": "0", "vote_number": "0", 
+        question_info = {"id": question_id, "submission_time": submission_time, "view_number": "0", "vote_number": "0-0", 
                         "title": request.form["title"], "message": request.form["message"], "image": f}
         dmg.add(question_info, question_file, questions_fieldnames)
         return redirect("/question/{0}".format(question_id))
@@ -143,7 +143,7 @@ def new_answer(question_id):
         answer_id = con.find_next_index(answer_file)
         submission_time = int(calendar.timegm(time.gmtime())) + 7200
         answer_info = {"id": answer_id, "submission_time": str(submission_time), 
-                        "vote_number": "0", "question_id": question_id, "message": request.form['answer'], "image": f}
+                        "vote_number": "0-0", "question_id": question_id, "message": request.form['answer'], "image": f}
         dmg.add(answer_info, answer_file, answer_fieldnames)
         return redirect("/question/{0}".format(question_id))
     question = dmg.get_question_by_id(question_id)
