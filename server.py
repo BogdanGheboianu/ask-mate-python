@@ -5,6 +5,7 @@ import connection as con
 import time, calendar, os
 from datetime import datetime
 import uuid
+import util as utl
 
 web_pages = {"home_page": "home.html", "question_page": "question.html", "add_question_page": "add_question.html", 
             "new_answer_page": "new_answer.html", "show_image_page": "show_image.html"
@@ -19,8 +20,7 @@ answer_fieldnames = ["id", "submission_time",
 questions_fieldnames = ["id", "submission_time", "view_number",
                       "vote_number", "title", "message", "image"]
 
-UPLOAD_FOLDER = "static"
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}   
+UPLOAD_FOLDER = "static" 
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -42,7 +42,7 @@ def home():
                                 empty=False, default_sort_by=sort_info["sort_by"], default_order=sort_info["order"])
     if con.get_all(question_file) is False: return render_template(web_pages["home_page"], questions="", table_heading="", empty=True)
     else:
-        all_questions = convert_unix_time_to_readable_format(dmg.sort_questions("submission_time", "descending"))
+        all_questions = utl.convert_unix_time_to_readable_format(dmg.sort_questions("submission_time", "descending"))
         for question in all_questions:
             question['vote_number'] = "{0}%".format(dmg.vote_percentage(question['id']))
         table_heading = ["ID", "SUBMISSION TIME", "VIEWS", "VOTES", "TITLE", "QUESTION", "IMAGE"]
@@ -62,7 +62,7 @@ def question(question_id):
     question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
     question['image'] = url_for('static', filename=question['image'])
     question['vote_number'] = "{0}%".format(dmg.vote_percentage(question_id))
-    answers_for_question = convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
+    answers_for_question = utl.convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
     if answers_for_question == None:
         empty = True
     if empty == False:
@@ -74,33 +74,6 @@ def question(question_id):
                             empty=empty, question_id=question_id)
 
 
-@app.route("/question/<question_id>/show/<image_path>")
-def show_image_for_question(question_id, image_path):
-    '''
-    Special route for focusing on the image of the question. Similar with the question page, but with no answers and bigger image.
-    '''
-    question = dmg.get_question_by_id(question_id)
-    image = url_for('static', filename=image_path)
-    return render_template(web_pages['show_image_page'], question=question, image=image, question_id=question_id)
-
-
-@app.route("/question/<question_id>/view/add")
-def add_view_for_question(question_id):
-    '''
-    Adds a view to the respective question ONLY when clicked from home page.
-    '''
-    dmg.add_view(question_id)
-    return redirect("/question/{0}".format(question_id))
-
-
-def allowed_file(filename):
-    '''
-    Verifies if the uploaded file has a valid file extension.
-    '''
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @app.route("/list/add-question", methods=["GET", "POST"])
 def add_question():
     '''
@@ -110,9 +83,9 @@ def add_question():
     if request.method == "POST":
         file = request.files['image']
         if file.filename != '':
-            if file and allowed_file(file.filename):
+            if file and utl.allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                f = transform_image_title(filename)
+                f = utl.transform_image_title(filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
         else:
             f = ""
@@ -135,9 +108,9 @@ def new_answer(question_id):
         question = dmg.get_question_by_id(question_id)
         file = request.files['image']
         if file.filename != '':
-            if file and allowed_file(file.filename):
+            if file and utl.allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                f = transform_image_title(file.filename)
+                f = utl.transform_image_title(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
         else: f = ""
         answer_id = con.find_next_index(answer_file)
@@ -150,7 +123,7 @@ def new_answer(question_id):
     return render_template(web_pages["new_answer_page"], question=question)
 
 
-# ROUTES FOR QUESTIONS: edit, delete, vote    
+# ROUTES FOR QUESTIONS: edit, delete, vote, show image, add view
 
 @app.route("/question/<question_id>/edit", methods=["GET", "POST"])
 def edit_question(question_id):
@@ -186,6 +159,25 @@ def vote_question(question_id, vote):
     return redirect("/question/{0}".format(question_id))
 
 
+@app.route("/question/<question_id>/show/<image_path>")
+def show_image_for_question(question_id, image_path):
+    '''
+    Special route for focusing on the image of the question. Similar with the question page, but with no answers and bigger image.
+    '''
+    question = dmg.get_question_by_id(question_id)
+    image = url_for('static', filename=image_path)
+    return render_template(web_pages['show_image_page'], question=question, image=image, question_id=question_id)
+
+
+@app.route("/question/<question_id>/view/add")
+def add_view_for_question(question_id):
+    '''
+    Adds a view to the respective question ONLY when clicked from home page.
+    '''
+    dmg.add_view(question_id)
+    return redirect("/question/{0}".format(question_id))
+
+
 # ROUTES FOR ANSWERS: delete, vote
 
 @app.route("/answer/<question_id>/<answer_id>/<vote>")
@@ -204,25 +196,6 @@ def delete_answer(question_id, answer_id):
     '''
     dmg.delete_answer(answer_id)
     return redirect("/question/{0}".format(question_id))
-
-
-def convert_unix_time_to_readable_format(list_of_dicts):
-    try:
-        for _dict in list_of_dicts:
-            _dict['submission_time'] = datetime.utcfromtimestamp(int(_dict['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
-        return list_of_dicts
-    except TypeError:
-        return None
-
-
-def transform_image_title(filename):
-    filename_splited = filename.split(".")
-    filename_splited[0] = str(uuid.uuid4())
-    print(filename_splited)
-    unique_filename = ".".join(filename_splited)
-    return unique_filename
-
-
 
 
 # MAIN

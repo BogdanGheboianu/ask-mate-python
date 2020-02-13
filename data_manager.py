@@ -24,7 +24,7 @@ def add(info, data_file, fieldnames):
         file.close()
 
 
-# QUESTIONS FUNCTIONS: get_question_by_id
+# QUESTIONS FUNCTIONS: get_question_by_id, add_view, sort_questions, edit_question, delete_question, vote_question
 
 def get_question_by_id(question_id):
     '''
@@ -153,7 +153,7 @@ def vote_percentage(question_id):
     return int(up_votes_percentage)
 
 
-# ANSWERS FUNCTIONS: 
+# ANSWERS FUNCTIONS: find_answers_by_question_id, get_answer_by_id, vote_answer, delete_answer
 
 def find_answers_by_question_id(question_id):
     '''
