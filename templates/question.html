@@ -10,14 +10,14 @@ Question
 <div class="question-title-area">
     <h2 class="question-title">{{ question['title'] }}</h2>
     <div class="voting-area">
-        <div class="voting-link-up"><a class="voting-link" href="/question/{{ question_id }}/vote-up"><img
-                    src="../static/upvote.png" width="20" height="20"></a></div> <a class="voting-link"
-            href="/question/{{ question_id }}/vote-down"><img src="../static/downvote.png" width="20" height="20"></a>
+        <a class="voting-link" href="/question/{{ question_id }}/vote-up"><img src="../static/upvote.png" width="20"
+                height="20"></a> <a class="voting-link" href="/question/{{ question_id }}/vote-down"><img
+                src="../static/downvote.png" width="20" height="20"></a>
     </div>
 </div>
-{% if question['image'] != "/static/" %}
-    <img src="{{ question['image'] }}" width="480" height="280">
-{% endif %}
+
+
+
 <div class="question-info-area">
     <strong>Question ID:</strong> <em class="question-info">{{ question["id"] }}</em>
     <strong>Posted:</strong> <em class="question-info">{{ question["submission_time"] }}</em>
@@ -28,42 +28,47 @@ Question
 </div>
 
 
+
 <hr>
 <h4 class="question-details">{{ question['message'] }}</h4>
-<hr>
-<p>
-    <h3>Answers</h3><br>
-</p>
+{% if question['image'] != "/static/" %}
+<img class="title-image" src="{{ question['image'] }}" width="480" height="280">
+{% endif %}
+<div class="answers-section">
+    <h2>Answers</h2><br>
+</div>
 
 <div class="answer-area">
     {% if empty == True: %}
-        <p><strong>There are no answers for this questions yet.</strong></p>
+    <p><strong>There are no answers for this questions yet.</strong></p>
     {% else: %}
     {% for answer in answers: %}
-    <div class="answer-title-area">
-        <div class="answer-details">
-            <p>{{answer['message']}}</p>
-        </div>
-        <div class="voting-area">
-            <div class="voting-link-up"><a class="voting-link"
-                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img src="../static/upvote.png"
-                        width="16" height="16"></a></div> <a class="voting-link"
-                href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
-                    width="16" height="16"></a>
-        </div>
-        <a id="delete-answer" href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
+    <div class="each-answer">
+        <div class="answer-title-area">
+            <div class="answer-details">
+                <p>{{answer['message']}}</p>
+            </div>
+            <div class="voting-area">
+                <a class="voting-link" href="/question/{{ question_id }}/vote-up"><img src="../static/upvote.png"
+                        width="16" height="16"></a> <a class="voting-link"
+                    href="/question/{{ question_id }}/vote-down"><img src="../static/downvote.png" width="16"
+                        height="16"></a>
+            </div>
+            <a id="delete-answer" href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
 
-    </div>
-    <div class="answer-info-area">
-        <strong>Answered:</strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
-        <strong>Votes:</strong> <em class="answer-info">{{ answer["vote_number"] }}%</em>
-    </div>
-    {% if answer['image'] != '': %}
+        </div>
+        <div class="answer-info-area">
+            <strong>Answered:</strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
+            <strong>Votes:</strong> <em class="answer-info">{{ answer["vote_number"] }}%</em>
+        </div>
+        {% if answer['image'] != '': %}
         <p><img src="{{answer['image']}}" width="480" height="280"></p>
-    {% endif %}
-    <hr>
+        {% endif %}
+        <hr>
+    </div>
     {% endfor %}
     {% endif %}
+
 </div>
 <p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/new-answer'">post
         answer</button>

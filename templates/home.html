@@ -40,15 +40,21 @@ Home
         {% if key != "title" and key != 'image': %}
         <td>{{ value }}</td>
         {% else: %}
-            {% if key == 'title' %}
-                <td class="question-column"><a class="question-links" href="/question/{{ question['id'] }}">{{ value }}</a></td>
-            {% else: %}
-                {% if value != "" %}
-                    <td><a href="question/{{ question['id'] }}/show/{{ value }}">See Image</a></td>
-                {% else: %}
-                <td></td>
-                {% endif %}
-            {% endif %}
+        {% if key == 'title' %}
+        <td class="question-column"><a class="question-links" href="/question/{{ question['id'] }}">{{ value }}</a></td>
+        {% else: %}
+        {% if value != "" %}
+        <td class="image-column">
+            <a class="see-image-link" href="question/{{ question['id'] }}/show/{{ value }}">
+                <div id="show-image">See
+                    Image
+                </div>
+            </a>
+        </td>
+        {% else: %}
+        <td></td>
+        {% endif %}
+        {% endif %}
         {% endif %}
         {% endfor %}
     </tr>
