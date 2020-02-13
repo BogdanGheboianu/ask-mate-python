@@ -211,9 +211,9 @@ def vote_answer(question_id, answer_id, vote):
         if int(answer["id"]) == int(answer_id) and int(answer['question_id']) == int(question_id):
             votes = answer['vote_number'].split('-')
             if vote == "vote-up":
-                votes[0] = str(int(votes[UPVOTES]) + 1)
+                votes[UPVOTES] = str(int(votes[UPVOTES]) + 1)
             elif vote == "vote-down":
-                votes[1] = str(int(votes[DOWNVOTES]) + 1)
+                votes[DOWNVOTES] = str(int(votes[DOWNVOTES]) + 1)
             vote_number = "-".join(votes)
             answer['vote_number'] = vote_number
             updated_answers.append(answer)

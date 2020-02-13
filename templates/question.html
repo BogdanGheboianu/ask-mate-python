@@ -49,9 +49,9 @@ Question
                 <p>{{answer['message']}}</p>
             </div>
             <div class="voting-area">
-                <a class="voting-link" href="/question/{{ question_id }}/vote-up"><img src="../static/upvote.png"
+                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img src="../static/upvote.png"
                         width="16" height="16"></a> <a class="voting-link"
-                    href="/question/{{ question_id }}/vote-down"><img src="../static/downvote.png" width="16"
+                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png" width="16"
                         height="16"></a>
             </div>
             <a id="delete-answer" href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>

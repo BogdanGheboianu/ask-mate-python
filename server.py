@@ -153,6 +153,7 @@ def show_image_for_question(question_id, image_path):
     '''
     question = dmg.get_question_by_id(question_id)
     image = url_for('static', filename=image_path)
+    question['vote_number'] = dmg.vote_percentage(question_id)
     return render_template(WEB_PAGES['show_image_page'], question=question, image=image, question_id=question_id)
 
 
