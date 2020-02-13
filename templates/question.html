@@ -1,45 +1,68 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        
-        <title>{{ question['title'] }} | AskMate</title></head>
-    <body>
-        <h1><a href="/">AskMate</a></h1>
-        <hr>
-        <h2>{{ question['title'] }}</h2>
-        <h3>Q: {{ question['message'] }}</h3>
-        <strong>Question ID:</strong> <em>{{ question["id"] }}</em> | 
-        <strong>Posted:</strong> <em>{{ question["submission_time"] }}</em> | 
-        <strong>Views:</strong> <em>{{ question["view_number"] }}</em> | 
-        <strong>Votes:</strong> <em>{{ question["vote_number"] }}</em> | 
-        <a href="/question/{{ question_id }}/vote-up">UP VOTE</a> ~ 
-        <a href="/question/{{ question_id }}/vote-down">DOWN VOTE</a> |
-        <button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
-        <button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
-        <hr><hr>
-        <p><h3>ANSWERS</h3><br></p>
-    
-        <p>
-            {% if empty == True: %}
-                <p><strong>There are no answers for this questions yet.</strong></p>
-            {% else: %}
-                {% for answer in answers: %}
-                    <p><strong>Answer ID:</strong> <em>{{ answer["id"] }}</em> | 
-                        <strong>Posted:</strong> <em>{{ answer["submission_time"] }}</em> | 
-                        <strong>Votes:</strong> <em>{{ answer["vote_number"] }}</em> | 
-                        <a href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up">UP VOTE</a> ~ 
-                        <a href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down">DOWN VOTE</a> |
-                        <a href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
-                    </p>
-                    <p>{{answer['message']}}</p>
-                    <p>{{answer['image']}}</p>
-                    <hr>
-                {% endfor %}
-            {% endif %}
-        </p>
-        <p><button onclick="location.href='/question/{{ question_id }}/new-answer'">POST ANSWER</button>
-        </p>
-    </body>
+{% extends 'framework.html'%}
 
-        
-</html>
+{% block title %}
+Question
+{% endblock %}
+
+{% block content%}
+
+<hr />
+<div class="question-title-area">
+    <h2 class="question-title">{{ question['title'] }}</h2>
+    <div class="voting-area">
+        <div class="voting-link-up"><a class="voting-link" href="/question/{{ question_id }}/vote-up"><img
+                    src="../static/upvote.png" width="20" height="20"></a></div> <a class="voting-link"
+            href="/question/{{ question_id }}/vote-down"><img src="../static/downvote.png" width="20" height="20"></a>
+    </div>
+</div>
+<div class="question-info-area">
+    <strong>Question ID:</strong> <em class="question-info">{{ question["id"] }}</em>
+    <strong>Posted:</strong> <em class="question-info">{{ question["submission_time"] }}</em>
+    <strong>Views:</strong> <em class="question-info">{{ question["view_number"] }}</em>
+    <strong>Votes:</strong> <em class="question-info">{{ question["vote_number"] }}</em>
+    <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
+    <button id="submit" onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
+</div>
+
+
+<hr>
+<h4 class="question-details">{{ question['message'] }}</h4>
+<hr>
+<p>
+    <h3>Answers</h3><br>
+</p>
+
+<div class="answer-area">
+    {% if empty == True: %}
+    <p><strong>There are no answers for this questions yet.</strong></p>
+    {% else: %}
+    {% for answer in answers: %}
+    <div class="answer-title-area">
+        <div class="answer-details">
+            <p>{{answer['message']}}</p>
+        </div>
+        <div class="voting-area">
+            <div class="voting-link-up"><a class="voting-link"
+                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img src="../static/upvote.png"
+                        width="16" height="16"></a></div> <a class="voting-link"
+                href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
+                    width="16" height="16"></a>
+        </div>
+        <a id="delete-answer" href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
+
+    </div>
+    <div class="answer-info-area">
+        <strong>Answered:</strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
+        <strong>Votes:</strong> <em class="answer-info">{{ answer["vote_number"] }}</em>
+    </div>
+    <p>{{answer['image']}}</p>
+    <hr>
+    {% endfor %}
+    {% endif %}
+</div>
+<p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/new-answer'">post
+        answer</button>
+</p>
+
+
+{% endblock %}

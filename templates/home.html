@@ -1,73 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'framework.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | AskMate</title>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <div class="all-content">
-        <div class="header-container">
-            <a class="site-title-link" href="/">
-                <h1 class="site-title">ask.Mate</h1>
-            </a>
-        </div>
+{% block title %}
+Home
+{% endblock %}
 
 
-        <div class="main-content">
+{% block content %}
+{% if empty == True: %}
+<p><strong>There are no questions to show for the moment</strong></p>
+{% else: %}
+<div class="sort-area">
+    <form method="POST">
+        <strong class="sort-info">Sort by:</strong>
+        <select name="sort_by" value="{{ default_sort_by }}" aria-selected="true">
+            <option value="title">title</option>
+            <option value="submission_time">submission time</option>
+            <option value="message">message</option>
+            <option value="vote_number">number of views</option>
+            <option value="view_number">number of votes</option>
+        </select>
+        <select name="order" aria-placeholder="{{ defaul_order }}">
+            <option value="ascending">ascending</option>
+            <option value="descending">descending</option>
+        </select>
+        <button id="submit" type="submit">sort</button>
+    </form>
+</div>
+<div class="ask-question-area"><button class="ask-question-button" onclick="location.href='/list/add-question'">ask
+        question</button></div>
+<hr />
+<table class="table-style">
+    {% for heading in table_heading: %}
+    <th class="headers">{{ heading }}</th>
+    {% endfor %}
 
-            {% if empty == True: %}
-            <p><strong>There are no questions to show for the moment</strong></p>
-            {% else: %}
-            <div class="sort-area">
-                <form method="POST">
-                    <strong class="sort-info">Sort by:</strong>
-                    <select name="sort_by" value="{{ default_sort_by }}" aria-selected="true">
-                        <option value="title">title</option>
-                        <option value="submission_time">submission time</option>
-                        <option value="message">message</option>
-                        <option value="vote_number">number of views</option>
-                        <option value="view_number">number of votes</option>
-                    </select>
-                    <select name="order" aria-placeholder="{{ defaul_order }}">
-                        <option value="ascending">ascending</option>
-                        <option value="descending">descending</option>
-                    </select>
-                    <button id="submit" type="submit">sort</button>
-                </form>
-            </div>
-            <div class="ask-question-area"><button class="ask-question-button"
-                    onclick="location.href='/list/add-question'">ASK A QUESTION</button></div>
-            <hr />
-            <table class="table-style">
-                {% for heading in table_heading: %}
-                <th class="headers">{{ heading }}</th>
-                {% endfor %}
+    {% for question in questions: %}
+    <tr>
+        {% for key, value in question.items(): %}
+        {% if key != "title": %}
+        <td>{{ value }}</td>
+        {% else: %}
+        <td class="question-column"><a class="question-links" href="/question/{{ question['id'] }}">{{ value }}</a></td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
 
-                {% for question in questions: %}
-                <tr>
-                    {% for key, value in question.items(): %}
-                    {% if key != "title": %}
-                    <td>{{ value }}</td>
-                    {% else: %}
-                    <td class="question-column"><a class="question-links"
-                            href="/question/{{ question['id'] }}">{{ value }}</a></td>
-                    {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </table>
+{% endif %}
 
-            {% endif %}
-
-
-
-        </div>
-        <p><img src="download.jpg" alt="imagine" width="100" height="100"></p>
-</body>
-
-</html>
+{%endblock%}
