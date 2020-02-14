@@ -4,8 +4,8 @@ from datetime import datetime
 import time, calendar
 
 QA_FILE = 'sample_data/sample_q_and_a.txt'
-QUESTIONS_FILE = 'question.csv'
-ANSWER_FILE = 'answer.csv'
+QUESTIONS_FILE = 'sample_data/question.csv'
+ANSWER_FILE = 'sample_data/answer.csv'
 
 def extract_data():
     '''
