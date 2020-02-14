@@ -1,0 +1,116 @@
+The term ‘Computer’ is derived from……….? Latin
+Who is the inventor of “Difference Engine”? Charles Babbage
+Who is the father of Computer? Charles Babbage
+Who is the father of Computer science? Allen Turing
+Who is the father of personal computer? Edward Robert
+A CPU contains? a control unit and an arithmetic logic unit
+Which of the following controls the process of interaction between the user and the operating system? User interface
+The first computers were programmed using? machine language
+……….is a combination of hardware and software that facilitates the sharing of information between computing devices? network
+Coded entries which are used to gain access to a computer system are called? Passwords
+You organize files by storing them in? folders
+What type of resource is most likely to be a shared common resource in a computer network?                 Printers
+Which device is required for the Internet connection? Modem
+What is a light pen? Optical input device
+UNIVAC is? Universal Automatic Computer
+CD-ROM stands for? Compactable Read Only Memory
+ALU is? Arithmetic Logic Unit
+VGA is? Video Graphics Array
+IBM 1401 is Second Generation Computer
+MSI stands for? Medium Scale Integrated Circuits
+The capacity of 3.5 inch floppy disk is? 1.44 MB ( Computer Science Quiz )
+WAN stands for? Wide Area Network
+MICR stands for Magnetic Ink Character Reader
+EBCDIC stands for? Extended Binary Coded Decimal Interchange Code
+CAD stands for ?Computer aided design
+Junk e-mail is also called? spam
+Hackers does? break into other people’s computers
+What type of computers are client computers (most of the time) in a client-server system? Microcomputer
+A computer cannot ‘boot’ if it does not have the? Operating System
+The amount of vertical space between lines of text in a document is called line spacing
+Example of non-numeric data is Employee address
+What is embedded system? The computer and software system that control the machine 
+First page of Website is termed as? Homepage
+………………… Is the appearance of typed characters? Format
+When a file is saved for the first time it must be given a name to identify it
+Office LANS, which are scattered geographically on large scale, can be connected by the use of corporate WAN
+Where are data and programme stored when the processor uses them? Main memory
+…………… represents raw facts, where-as…………….. is data made meaningful. Data, information
+What characteristic of read-only memory (ROM) makes it useful? Data in ROM is non-volatile, that is, it remains there even without electrical power.
+What do you call the programs that are used to find out possible faults and their causes? diagnostic software
+Which programming languages are classified as low level languages? Assembly languages
+Which of the following is not anti- viruses’ software? Oracle
+Which device is required for the Internet connection? Modem
+What does DMA stand for? Direct Memory Access
+Which of the following is a storage device? All of the above
+When did John Napier develop logarithm? 1614
+A normal CD- ROM usually can store up to _________ _data? 680 MB
+MIS is designed to provide information needed for effective decision making by? Managers
+What is a light pen? Optical input device
+BCD is? Binary Coded Decimal
+ASCII stands for? American Standard Code for Information Interchange
+Which of the following is first generation of computer? EDSAC
+Chief component of first generation computer was Vacuum Tubes and Valves
+FORTRAN is? Formula Translation 
+EEPROM stands for? Electronic Erasable Programmable? Read Only Memory
+Second Generation computers were developed during ?1956 to 1965
+The computer size was very large in ?First Generation
+Microprocessors as switching devices are for which generation computers Fourth Generation
+Which of the following devices can be sued to directly image printed text? OCR
+The output quality of a printer is measured by? Dot per sq. inch
+Who designed the first electronics computer – ENIAC? J. Presper Eckert and John W Mauchly
+Who invented the high level language “C”? Dennis M. Ritchie
+Personnel who design, program, operate and maintain computer equipment refers to ? Peopleware
+When did arch rivals IBM and Apple Computers Indecide to join hands? 1991  ( Computer Science Quiz )
+Human beings are referred to as Homosapinens, which device is called Sillico Sapiens? Computer
+An error in software or hardware is called a bug. What is the alternative computer jargon for it?                 Glitch
+What is the name of the display feature that highlights are of the screen which requires operator attention? Reverse video
+Personal computers use a number of chips mounted on a main circuit board.What is the common name for such boards? Motherboard
+In most IBM PCs, the CPU, the device drives, memory expansion slots and active components are mounted on a single board.What is the name of this board? Motherboard
+What is meant by a dedicated computer? Which is assigned one and only one task
+A computer program that converts an entire program into machine language is called a/an ? Compiler
+A computer program that translates one program instructions at a time into machine language is called a/an? Interpreter
+A small or intelligent device is so called because ? it contains within it a ? Sensor 
+A fault in a computer program which prevents it from working correctly is known as ?Bug
+A self replicating program, similar to a virus which was taken from a 1970s science fiction novel by John Bruner entitled the Shockwave Rider is Worm
+A state. is a bi-stable electronic circuit that has? Flip-flop
+Unwanted repetitious messages, such as unsolicited bulk e-mail is known as ? Spam
+DOS stands for? Disk Operating System
+  Computer Science Quiz
+Which of the following is also known as brain of computer? Central Processing unit
+IBM stands for? International Business Machines
+translates and executes program at run time line by line Interpreter
+……………… is an OOP principle? Inheritance
+COBOL is widely used in applications involving? Commercial
+RAM stands for? Random access memory
+1 Byte =? 8 bits
+SMPS stands for? Switched mode Power Supply
+The device used to carry digital data on analogue lines is called as Modem
+VDU is also called? Both 1 & 2
+BIOS stands for?                 Basic Input Output system
+Father of C programming language? Dennis Ritchie
+The instructions that tell a computer how to carry out the processing tasks are referred to as computer? programs
+An area of a computer that temporarily holds data waiting to be processed is? Memory
+_________ is the key to close a selected drop -down list and cancel a command and close a dialog box.? ESC
+Data becomes ……………. when it is presented in a format that people can understand and use? information
+…………. Is the functional key to display save-as box? F12
+The term …………. designates equipment that might be added to a computer system to enhance its functionality? peripheral device
+A ………… is a microprocessor -based computing device ?personal computer
+RAM can be treated as the ……… for the computer’s processor? waiting room
+To move a copy of file from one computer to another over a communication channel is? File transfer
+The primary function of the ………… is to set up the hardware and load and start an operating system?                 BIOS
+What kind of memory is both static and non -volatile? ROM
+___________is computer software designed to operate the computer hardware and to provide platform for running application software? System software
+The ……… is the amount of data that a storage device can move from the storage medium to the Computer per second data? transfer rate 
+A device, which is not connected to CPU, is called as ……. ?Off-line device
+What is the other name for programmed chip? LSIC
+On-line real time systems become popular in ……….. generation? Third Generation
+You use a(n) ….., such as a keyboard or mouse, to input information? input device
+…………. is the ability of a device to “jump” directly to the requested data? Random access
+…………. provides process and memory management services that allow two or more tasks, jobs, or programs to run simultaneously? Multitasking
+The task of performing operations like arithmetic and logical operations is called ?Processing
+ALU and Control Unit jointly known as ?CPU
+RAM is an example of? Primary memory
+Magnetic disk is an example of? Secondary memory
+Which one of the following is NOT a computer language? MS-Excel
+RAM is also called as Read / Write? Memory
