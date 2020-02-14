@@ -1,24 +1,14 @@
-id,submission_time,vote_number,question_id,message,image
-
-0,1493398154,4-3,0,You need to use brackets: my_list = [],
-
-1,1493088154,35-2,0,Look it up in the Python docs,
-
-2,1581342257,0-1,0,asdjkasnbfkjasfkjas,
-
-5,1581344581,0-0,0,lasmclasmvlas,
-
-6,1581521533,55-95,4,my answer is askfasofas,performance-hero2.jpg
-
-7,1581521997,12-2,4,kadnfanuivbqerivbqeruvqer,huawei_matebook_droidviews_01.jpg
-
-8,1581588464,13-1,1,axcnsldcnksdlanvlsdnv,85d8a587-7123-46ee-ad98-a0c9a0ef7a9b.jpg
-
-9,1581589001,0-0,4,asdknaskfcbsdjkavbhsdabv,
-
-10,1581597365,0-0,4,"sdv,nsdvnasdjkvnasjkvasddnva",8f1b5b4a-0380-451e-9dc2-8a6e4d91bfc9.png
-
-12,1588871683,0-0,5, Latin,
+id,submission_time,vote_number,question_id,message,image
+0,1493398154,4-3,0,You need to use brackets: my_list = [],
+1,1493088154,35-2,0,Look it up in the Python docs,
+2,1581342257,0-1,0,asdjkasnbfkjasfkjas,
+5,1581344581,0-0,0,lasmclasmvlas,
+6,1581521533,55-95,4,my answer is askfasofas,performance-hero2.jpg
+7,1581521997,12-2,4,kadnfanuivbqerivbqeruvqer,huawei_matebook_droidviews_01.jpg
+8,1581588464,13-1,1,axcnsldcnksdlanvlsdnv,85d8a587-7123-46ee-ad98-a0c9a0ef7a9b.jpg
+9,1581589001,0-0,4,asdknaskfcbsdjkavbhsdabv,
+10,1581597365,0-0,4,"sdv,nsdvnasdjkvnasjkvasddnva",8f1b5b4a-0380-451e-9dc2-8a6e4d91bfc9.png
+12,1588871683,41-1,5, Latin,
 13,1588871683,0-0,6, Charles Babbage,
 14,1588871683,0-0,7, Charles Babbage,
 15,1588871683,0-0,8, Allen Turing,
