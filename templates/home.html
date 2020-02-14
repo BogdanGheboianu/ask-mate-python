@@ -13,17 +13,22 @@ Home
     <form method="POST">
         <strong class="sort-info">Sort by:</strong>
         <select name="sort_by">
-            <option value="none">--Choose option--</option>
-            <option value="title">title</option>
-            <option value="submission_time">submission time</option>
-            <option value="message">message</option>
-            <option value="view_number">number of views</option>
-            <option value="vote_number">number of votes</option>
+            {% for value, option in sort_options.items(): %}
+                {% if value == default_sort: %}
+                    <option value="{{ value }}" selected>{{ option }}</option>
+                {% else: %}
+                    <option value="{{ value }}">{{ option }}</option>
+                {% endif %}
+            {% endfor %}
         </select>
         <select name="order">
-            <option value="none">--Choose order--</option>
-            <option value="ascending">ascending</option>
-            <option value="descending">descending</option>
+            {% for value, order in order_options.items(): %}
+                {% if value == default_order: %}
+                    <option value="{{ value }}" selected>{{ order }}</option>
+                {% else: %}
+                    <option value="{{ value }}">{{ order }}</option>
+                {% endif %}
+            {% endfor %}
         </select>
         <button id="submit" type="submit">sort</button>
     </form>
