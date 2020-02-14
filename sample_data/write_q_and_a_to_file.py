@@ -44,7 +44,7 @@ def create_list_of_dicts_info(qas_dict):
         question_dict = {}
         question_id = question_count
         question_splitted = question.split()
-        question_title = question_splitted[0] + question_splitted[1] + "..."
+        question_title = question_splitted[0] + " " + question_splitted[1] + "..."
         question_message = question
         question_submission_time = int(calendar.timegm(time.gmtime())) + 7200
         question_vote_number = "0-0"
