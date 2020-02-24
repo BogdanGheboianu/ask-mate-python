@@ -3,7 +3,6 @@ id,submission_time,vote_number,question_id,message,image
 1,1493088154,35-2,0,Look it up in the Python docs,
 2,1581342257,0-1,0,asdjkasnbfkjasfkjas,
 5,1581344581,0-0,0,lasmclasmvlas,
-6,1581521533,55-95,4,my answer is askfasofas,performance-hero2.jpg
 7,1581521997,12-2,4,kadnfanuivbqerivbqeruvqer,huawei_matebook_droidviews_01.jpg
 8,1581588464,13-1,1,axcnsldcnksdlanvlsdnv,85d8a587-7123-46ee-ad98-a0c9a0ef7a9b.jpg
 9,1581589001,0-0,4,asdknaskfcbsdjkavbhsdabv,
@@ -109,3 +108,7 @@ id,submission_time,vote_number,question_id,message,image
 110,1588871683,0-0,103, Secondary memory,
 111,1588871683,0-0,104, MS-Excel,
 112,1588871683,0-0,105, Memory,
+113,1581683985,21-1,106,dict = {},962f08a3-695c-446d-907c-bc8201bd67d8.pod_.1.png
+114,1581684074,1-0,106,Use '{}' like this: dictionary = {},
+115,1581687811,0-0,4,lut7tiuguhi,e8ab5fda-31dd-44d6-a1a4-4299be5b466a.png
+116,1581796943,0-0,4,><snvlkasdnvlksdna,

@@ -9,16 +9,16 @@ BUT in my theme i also using jquery via webpack so the loading order is now foll
 jquery
 booklet
 app.js (bundled file with webpack, including jquery)",
-2,1493015432,1375,65-30,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
+2,1493015432,1377,65-30,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
 
 This is the code I'm using to draw the image (that works on web/desktop but not cordova built ios app)",
-4,1581513013,42,215-135,random question (Edited),random message,abstract-2560x1440-huawei-matebook-e-2019-hd-21830.jpg
+4,1581680752,48,215-135,Images in HTML(Edited),"How to add images with HTML, Python and Flask?",abstract-2560x1440-huawei-matebook-e-2019-hd-21830.jpg
 5,1581679230,2,9-1,The term...(Edited),The term 'Computer' is derived from......,
-6,1581678883,0,0-0,Who is...,Who is the inventor of “Difference Engine”,
+6,1581678883,1,0-0,Who is...,Who is the inventor of “Difference Engine”,
 7,1581678883,0,0-0,Who is...,Who is the father of Computer,
 8,1581678883,0,0-0,Who is...,Who is the father of Computer science,
 9,1581678883,0,0-0,Who is...,Who is the father of personal computer,
-10,1581678883,0,0-0,A CPU...,A CPU contains,
+10,1581678883,1,0-0,A CPU...,A CPU contains,
 11,1581678883,0,0-0,Which of...,Which of the following controls the process of interaction between the user and the operating system,
 12,1581678883,0,0-0,The first...,The first computers were programmed using,
 13,1581678883,0,0-0,……….is a...,……….is a combination of hardware and software that facilitates the sharing of information between computing devices,
@@ -32,7 +32,7 @@ This is the code I'm using to draw the image (that works on web/desktop but not 
 21,1581678883,0,0-0,ALU is...,ALU is,
 22,1581678883,0,0-0,VGA is...,VGA is,
 23,1581678883,0,0-0,MSI stands...,MSI stands for,
-24,1581678883,0,0-0,The capacity...,The capacity of 3.5 inch floppy disk is,
+24,1581678883,1,0-0,The capacity...,The capacity of 3.5 inch floppy disk is,
 25,1581678883,0,0-0,WAN stands...,WAN stands for,
 26,1581678883,0,0-0,EBCDIC stands...,EBCDIC stands for,
 27,1581678883,0,0-0,CAD stands...,CAD stands for ,
@@ -114,3 +114,5 @@ This is the code I'm using to draw the image (that works on web/desktop but not 
 103,1581678883,0,0-0,Magnetic disk...,Magnetic disk is an example of,
 104,1581678883,0,0-0,Which one...,Which one of the following is NOT a computer language,
 105,1581678883,0,0-0,RAM is...,RAM is also called as Read / Write,
+106,1581683945,2,4-5,Dictionary in Python(Edited),How to create an empty dictionary in Python?,bf3e27da-461c-457a-b282-ab9e0936e405.png
+107,1581796890,0,11-7,sbbn,bnnbgfyfjyfytjfgyfg,1a2c512c-573e-43e5-9eb7-41246f011df6.png
