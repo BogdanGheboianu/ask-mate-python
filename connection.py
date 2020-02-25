@@ -43,6 +43,17 @@ def get_question_tags(cursor):
     return question_tags
 
 
+@database_common.connection_handler
+def add_view(cursor, question_id):
+    '''
+    Adds +1 to the view_number key of the requested question whenever the question is accessed.
+    '''
+    questions = get_questions('id', 'ascending')
+    for question in questions:
+        if question['id'] == int(question_id):
+            view_number = question['view_number']
+    cursor.execute(""" UPDATE question set view_number={0} where id={1} """.format(view_number+1, question_id))
+
 
 
 

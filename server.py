@@ -39,11 +39,13 @@ def home():
     if request.method == "POST" and dict(request.form)['sort_by'] != 'none' and dict(request.form)['order'] != 'none':
         sort_info = dict(request.form)
         all_questions = con.get_questions(sort_info['sort_by'], sort_info['order'])
+        all_questions = utl.check_questions_for_edit(all_questions)
         return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False,
                                 sort_options=sort_options, order_options=order_options, default_sort=sort_info['sort_by'], default_order=sort_info['order'])
     if con.get_questions('title', 'ascending') is False: return render_template(WEB_PAGES["home_page"], questions="", table_heading="", empty=True)
     else:
         all_questions = con.get_questions('submission_time', 'descending')
+        all_questions = utl.check_questions_for_edit(all_questions)
         return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options, 
                                 order_options=order_options, default_sort="none", default_order="none")
 
@@ -57,18 +59,27 @@ def question(question_id):
     '''
     empty = False
     num_answers = 0
-    question = dmg.get_question_by_id(question_id)
-    question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
+
+    question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     question['image'] = url_for('static', filename=question['image'])
-    question['vote_number'] = "{0}%".format(dmg.vote_percentage(question_id))
-    question = utl.check_specific_question_for_edit(question)
-    answers_for_question = utl.convert_unix_time_to_readable_format(dmg.find_answers_by_question_id(question_id))
+    answers_for_question = dmg.get_answers_for_question(question_id)
+    comments_for_question = dmg.get_comments_for_question(question_id)
+    tags_for_question = dmg.get_tags_for_question(question_id)
+    comments_for_answers = dmg.get_answers_for_question_comments(question_id)
+
     if answers_for_question == None: empty = True
     if empty == False: 
         answers_for_question = utl.prepare_answers_for_hmtl(answers_for_question, question_id)
         num_answers = len(answers_for_question)
-    return render_template(WEB_PAGES["question_page"], question=question, answers=answers_for_question, 
-                            empty=empty, question_id=question_id, num_answers=num_answers)
+    return render_template(WEB_PAGES["question_page"], 
+                            question=question, 
+                            answers=answers_for_question, 
+                            empty=empty, 
+                            question_id=question_id, 
+                            num_answers=num_answers,
+                            comments_for_question=comments_for_question,
+                            comments_for_answers=comments_for_answers,
+                            tags_for_question=tags_for_question)
 
 
 @app.route("/list/add-question", methods=["GET", "POST"])
@@ -170,7 +181,7 @@ def add_view_for_question(question_id):
     '''
     Adds a view to the respective question ONLY when clicked from home page.
     '''
-    dmg.add_view(question_id)
+    con.add_view(question_id)
     return redirect("/question/{0}".format(question_id))
 
 

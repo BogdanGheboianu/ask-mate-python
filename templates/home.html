@@ -44,24 +44,32 @@ Home
     {% for question in questions: %}
     <tr>
         {% for key, value in question.items(): %}
-        {% if key != "title" and key != 'image': %}
-        <td>{{ value }}</td>
-        {% else: %}
-        {% if key == 'title' %}
-        <td class="question-column"><a class="question-links"
-                href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
-        {% else: %}
-        {% if value != "" %}
-        <td class="image-column"><a class="see-image-link" href="question/{{ question['id'] }}/show/{{ value }}">
-            <div id="show-image">See
-                Image
-            </div>
-        </a></td>
-        {% else: %}
-        <td></td>
-        {% endif %}
-        {% endif %}
-        {% endif %}
+            {% if key != "title" and key != 'image' and key!= 'vote_number': %}
+                <td>{{ value }}</td>
+            {% else: %}
+                {% if key == 'title' %}
+                    <td class="question-column"><a class="question-links"
+                            href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
+                {% else: %}
+                    {% if key == 'vote_number' %}
+                        <td>{{ value }}%</td>
+                    {% else %}
+                
+                        {% if value != "" %}
+                            <td class="image-column"><a class="see-image-link" href="question/{{ question['id'] }}/show/{{ value }}">
+                                <div id="show-image">See
+                                    Image
+                                </div>
+                            </a></td>
+                        {% else: %}
+                            <td></td>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                
+                
+                
+            {% endif %}
         {% endfor %}
     </tr>
     {% endfor %}
