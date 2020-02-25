@@ -62,11 +62,57 @@ def get_next_id(cursor, table):
     next_id = next_id_tuple[0]['id'] + 1
     return next_id
 
+
 @database_common.connection_handler
 def add_answer(cursor, answer_info):
     cursor.execute(""" INSERT INTO answer VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}');
                     """.format(answer_info['id'], answer_info['submission_time'], answer_info['vote_number'], answer_info['question_id'],
                                 answer_info['message'], answer_info['image']))
+
+
+@database_common.connection_handler
+def vote_answer(cursor, answer_id, vote):
+    with open('sample_data/answer_votes.csv', "r") as file:
+        content = file.readlines()
+        file.close()
+    votes = [vote.replace("\n", '') for vote in content]
+    updated_content = []
+    for vote in votes:
+        vote_updated = ''
+        vote_list = vote.split('??')
+        if int(vote_list[0]) == int(answer_id):
+            print("HERE")
+            up_down_votes = vote_list[1].split('-')
+            if vote == 'vote-up':
+                up_down_votes[0] = str(int(up_down_votes[0]) + 1)
+                
+            elif vote == 'vote-down':
+                up_down_votes[1] = str(int(up_down_votes[1]) + 1)
+            up_down_votes = '-'.join(up_down_votes)
+            transform_vote_to_percentage_and_update(answer_id, up_down_votes)
+            vote_list[1] = up_down_votes
+            vote_updated = '??'.join(vote_list)
+            updated_content.append(vote_updated)
+        else:
+            updated_content.append(vote)
+    with open('sample_data/answer_votes.csv', 'w') as file:
+        for vote in updated_content:
+            file.write('{0}\n'.format(vote))
+        file.close()
+
+UPVOTES = 0
+DOWNVOTES = 1
+@database_common.connection_handler
+def transform_vote_to_percentage_and_update(cursor, answer_id, up_down_votes):
+    votes = up_down_votes.split('-')
+    total_votes = int(votes[UPVOTES]) + int(votes[DOWNVOTES])
+    try:
+        up_votes_percentage = float(int(votes[UPVOTES]) / int(total_votes)) * 100
+    except ZeroDivisionError:
+        up_votes_percentage = 0
+    cursor.execute(""" UPDATE answer SET vote_number={0} where id={1}; """.format(int(up_votes_percentage), answer_id))
+
+    
 
 
 

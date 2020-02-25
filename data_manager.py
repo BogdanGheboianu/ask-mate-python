@@ -210,25 +210,7 @@ def get_tags_for_question(question_id):
 
 
 
-# def vote_answer(question_id, answer_id, vote):
-#     '''
-#     Adds 1 to the vote_number (x-y) key of a question (depending on the request).
-#     '''
-#     original_answers = con.get_all(answer_file)
-#     updated_answers = []
-#     for answer in original_answers:
-#         if int(answer["id"]) == int(answer_id) and int(answer['question_id']) == int(question_id):
-#             votes = answer['vote_number'].split('-')
-#             if vote == "vote-up":
-#                 votes[UPVOTES] = str(int(votes[UPVOTES]) + 1)
-#             elif vote == "vote-down":
-#                 votes[DOWNVOTES] = str(int(votes[DOWNVOTES]) + 1)
-#             vote_number = "-".join(votes)
-#             answer['vote_number'] = vote_number
-#             updated_answers.append(answer)
-#         else:
-#             updated_answers.append(answer)
-#     con.write_data_to_file(updated_answers, answer_file, answer_fieldnames)
+
 
 
 # def delete_answer(answer_id):

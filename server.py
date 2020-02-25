@@ -191,7 +191,7 @@ def vote_answer(question_id, answer_id, vote):
     '''
     Sends the respective answer's id and the voting type to data_manager and redirects back to the question page
     '''
-    dmg.vote_answer(question_id, answer_id, vote)
+    con.vote_answer(answer_id, vote)
     return redirect("/question/{0}".format(question_id))
 
 
