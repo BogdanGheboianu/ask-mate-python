@@ -69,7 +69,18 @@ def add_answer(cursor, answer_info):
                                 answer_info['message'], answer_info['image']))
 
 
-
+@database_common.connection_handler
+def add(cursor,info):
+    '''
+    Adds a new question
+    '''
+    next_id = get_next_id('question')
+    cursor.execute("""
+    INSERT INTO question
+    (id, submission_time, view_number, vote_number, title, message, image)
+    VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}', '{6}');
+    """.format(next_id, info['submission_time'], info['view_number'],
+               info['vote_number'], info['title'], info['message'], info['image']))
 
 
 
