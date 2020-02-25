@@ -65,7 +65,6 @@ def question(question_id):
     answers_for_question = dmg.get_answers_for_question(question_id)
     comments_for_question = dmg.get_comments_for_question(question_id)
     tags_for_question = dmg.get_tags_for_question(question_id)
-    print(tags_for_question)
     comments_for_answers = dmg.get_answers_for_question_comments(question_id)
     if answers_for_question == None: empty = True
     if empty == False: 
@@ -100,7 +99,7 @@ def add_question():
         question_info = {"submission_time": submission_time, "view_number": 0,
                          "vote_number": 87, "title": request.form["title"],
                          "message": request.form["message"], "image": f}
-        con.add(question_info)
+        con.add_question(question_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["add_question_page"])
 
@@ -160,7 +159,7 @@ def vote_question(question_id, vote):
     '''
     Sends the respective question's id and the voting type to data_manager and redirects back to the question page
     '''
-    dmg.vote_question(question_id, vote)
+    con.vote_question(question_id, vote)
     return redirect("/question/{0}".format(question_id))
 
 
