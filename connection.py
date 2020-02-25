@@ -1,7 +1,6 @@
 import database_common
-import datetime
+from datetime import datetime
 import util as utl
-f = '%Y-%m-%d %H:%M:%S'
 
 
 @database_common.connection_handler
@@ -54,6 +53,27 @@ def add_view(cursor, question_id):
             view_number = question['view_number']
     cursor.execute(""" UPDATE question set view_number={0} where id={1} """.format(view_number+1, question_id))
 
+
+@database_common.connection_handler
+def get_next_id(cursor, table):
+    cursor.execute(""" SELECT id FROM {0} ORDER BY id DESC LIMIT 1; """.format(table))
+    next_id_tuple = cursor.fetchall()
+    next_id = next_id_tuple[0]['id'] + 1
+    return next_id
+
+
+@database_common.connection_handler
+def add(cursor,info):
+    '''
+    Adds a new question
+    '''
+    next_id = get_next_id('question')
+    cursor.execute("""
+    INSERT INTO question
+    (id, submission_time, view_number, vote_number, title, message, image)
+    VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}', '{6}');
+    """.format(next_id, info['submission_time'], info['view_number'],
+               info['vote_number'], info['title'], info['message'], info['image']))
 
 
 

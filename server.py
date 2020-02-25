@@ -61,7 +61,7 @@ def question(question_id):
     num_answers = 0
 
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
-    question['image'] = url_for('static', filename=question['image'])
+    # question['image'] = url_for('static', filename=question['image'])
     answers_for_question = dmg.get_answers_for_question(question_id)
     comments_for_question = dmg.get_comments_for_question(question_id)
     tags_for_question = dmg.get_tags_for_question(question_id)
@@ -95,11 +95,12 @@ def add_question():
                 f = utl.transform_image_title(secure_filename(file.filename))
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
         else: f = ""
-        question_id = con.find_next_index(QUESTION_FILE)
-        submission_time = int(calendar.timegm(time.gmtime())) + 7200 # GMT+2
-        question_info = {"id": question_id, "submission_time": submission_time, "view_number": "0", "vote_number": "0-0", 
-                        "title": request.form["title"], "message": request.form["message"], "image": f}
-        dmg.add(question_info, QUESTION_FILE, QUESTION_FIELDNAMES)
+        submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        question_id = con.get_next_id('question')
+        question_info = {"submission_time": submission_time, "view_number": 0,
+                         "vote_number": 87, "title": request.form["title"],
+                         "message": request.form["message"], "image": f}
+        con.add(question_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["add_question_page"])
 
