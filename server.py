@@ -207,7 +207,7 @@ def delete_answer(question_id, answer_id):
     '''
     Sends the respective answer's id to data_manager to delete it and redirects to the question page
     '''
-    dmg.delete_answer(answer_id)
+    con.delete_answer(answer_id)
     return redirect("/question/{0}".format(question_id))
 
 

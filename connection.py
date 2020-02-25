@@ -152,7 +152,9 @@ def delete_question(cursor, question_id):
     cursor.execute(""" DELETE FROM question WHERE id={0}; """.format(question_id))
     
 
-
+@database_common.connection_handler
+def delete_answer(cursor, answer_id):
+    cursor.execute(""" DELETE FROM answer WHERE id={0};""".format(answer_id))
 
 
 
