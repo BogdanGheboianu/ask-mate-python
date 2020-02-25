@@ -66,7 +66,6 @@ def question(question_id):
     comments_for_question = dmg.get_comments_for_question(question_id)
     tags_for_question = dmg.get_tags_for_question(question_id)
     comments_for_answers = dmg.get_answers_for_question_comments(question_id)
-
     if answers_for_question == None: empty = True
     if empty == False: 
         answers_for_question = utl.prepare_answers_for_hmtl(answers_for_question, question_id)
@@ -119,11 +118,11 @@ def new_answer(question_id):
                 f = utl.transform_image_title(secure_filename(file.filename))
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
         else: f = ""
-        answer_id = con.find_next_index(ANSWER_FILE)
-        submission_time = int(calendar.timegm(time.gmtime())) + 7200 # GMT+2
-        answer_info = {"id": answer_id, "submission_time": str(submission_time), 
-                        "vote_number": "0-0", "question_id": question_id, "message": request.form['answer'], "image": f}
-        dmg.add(answer_info, ANSWER_FILE, ANSWER_FIELDNAMES)
+        answer_id = con.get_next_id('answer')
+        submission_time =  datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        answer_info = {"id": answer_id, "submission_time": submission_time, 
+                        "vote_number": 0, "question_id": question_id, "message": request.form['answer'], "image": f}
+        con.add_answer(answer_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["new_answer_page"], question=question)
 

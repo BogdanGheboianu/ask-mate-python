@@ -33,10 +33,28 @@ Question
 <h4 class="question-details">{{ question['message'] }}</h4>
 {% if question['image'] != "/static/" %}
 <img class="title-image" src="{{ question['image'] }}" width="480" height="280">
-{% endif %}
+{% endif %}<hr>
+<div class="question-info-area">
+    <strong><em class="question-info">Comments</em></strong>
+        {% if comments_for_question != None %}
+            {% for comment in comments_for_question %}
+            <ul>
+                <li><p>{{ comment['message'] }} | <strong>Comment ID: </strong><em class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em class="question-info">{{ comment['submission_time'] }}</em></p></li>
+            </ul>
+            {% endfor %}
+        {% else %}
+            <p><em>There are no comments for this question</em></p>
+        {% endif %}
+    <button id='submit' onclick="location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
+</div>
+
 <div class="answers-section">
     {% if num_answers != 0: %}
-    <h2>{{ num_answers }} Answers</h2><br>
+        {% if num_answers > 1 %}
+            <h2>{{ num_answers }} Answers</h2><br>
+        {% else %}
+        <h2>{{ num_answers }} Answer</h2><br>
+        {% endif %}
     {% else: %}
     <h2>Answers</h2><br>
     {% endif %}
@@ -68,6 +86,21 @@ Question
         {% if answer['image'] != '': %}
         <p><img src="{{answer['image']}}" width="480" height="280"></p>
         {% endif %}
+        <div class="question-info-area">
+            <strong><em class="question-info">Comments</em></strong>
+                {% if comments_for_answers != None %}
+                    {% for comment in comments_for_answers %}
+                    {% if comment['answer_id'] == answer['id'] %}
+                    <ul>
+                        <li><p>{{ comment['message'] }} | <strong>Comment ID: </strong><em class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em class="question-info">{{ comment['submission_time'] }}</em></p></li>
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p><em>There are no comments for this answer</em></p>
+                {% endif %}
+            <button id='submit' onclick="location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
+        </div>
         <hr>
     </div>
     {% endfor %}

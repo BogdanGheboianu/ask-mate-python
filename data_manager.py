@@ -25,7 +25,8 @@ def get_comments_for_question(question_id):
     for comment in comments:
         if comment['question_id'] != None and comment['question_id'] == int(question_id):
             comments_for_question.append(comment)
-    return comments_for_question
+    if len(comments_for_question) == 0: return None
+    else: return comments_for_question
 
 
 def get_answers_for_question_comments(question_id):
@@ -37,7 +38,8 @@ def get_answers_for_question_comments(question_id):
             for comment in comments:
                 if comment['answer_id'] != None and comment['answer_id'] == answer['id']:
                     comments_for_answers.append(comment)
-        return comments_for_answers
+    if len(comments_for_answers) == 0: return None
+    else: return comments_for_answers
 
 
 def get_tags_for_question(question_id):
@@ -52,7 +54,8 @@ def get_tags_for_question(question_id):
         for tag in tags:
             if tag['id'] == tag_id:
                 tags_for_question.append(tag['name'])
-    return tags_for_question
+    if len(tags_for_question) == 0: return None
+    else: return tags_for_question
 
 
     

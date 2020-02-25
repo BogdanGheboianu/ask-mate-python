@@ -1,6 +1,7 @@
 import database_common
-from datetime import datetime
+import datetime
 import util as utl
+f = '%Y-%m-%d %H:%M:%S'
 
 
 @database_common.connection_handler
@@ -61,19 +62,14 @@ def get_next_id(cursor, table):
     next_id = next_id_tuple[0]['id'] + 1
     return next_id
 
-
 @database_common.connection_handler
-def add(cursor,info):
-    '''
-    Adds a new question
-    '''
-    next_id = get_next_id('question')
-    cursor.execute("""
-    INSERT INTO question
-    (id, submission_time, view_number, vote_number, title, message, image)
-    VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}', '{6}');
-    """.format(next_id, info['submission_time'], info['view_number'],
-               info['vote_number'], info['title'], info['message'], info['image']))
+def add_answer(cursor, answer_info):
+    cursor.execute(""" INSERT INTO answer VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}');
+                    """.format(answer_info['id'], answer_info['submission_time'], answer_info['vote_number'], answer_info['question_id'],
+                                answer_info['message'], answer_info['image']))
+
+
+
 
 
 
