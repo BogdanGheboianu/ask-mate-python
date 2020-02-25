@@ -50,16 +50,10 @@ def add_view(question_id):
 
 
 def sort_questions(sort_factor, order):
-    all_questions = con.get_all(question_file)
-    int_types = ["id", "view_number", "vote_number", "submission_time"]
-    if sort_factor in int_types:
-        for question in all_questions: question['vote_number'] = vote_percentage(question['id'])
-        if order == "ascending": return sorted(all_questions, key=lambda i: int(i[sort_factor]))
-        else: return sorted(all_questions, key=lambda i: int(i[sort_factor]), reverse=True)
-    else:
-        if order == "ascending": return sorted(all_questions, key=lambda i: i[sort_factor])
-        else: return sorted(all_questions, key=lambda i: i[sort_factor], reverse=True)
-
+    all_questions = con.get_all()
+    if order == "ascending": return sorted(all_questions, key=lambda i: int(i[sort_factor]))
+    else: return sorted(all_questions, key=lambda i: i[sort_factor], reverse=True)
+    
 
 def edit_question(question_id, edited_question_info, new_submission_time):
     '''

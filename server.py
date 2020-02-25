@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import time, calendar, os, uuid
 from datetime import datetime
@@ -38,12 +38,12 @@ def home():
     order_options = {"none":"Choose order", "ascending":"ascending", "descending":"descending"}
     if request.method == "POST" and dict(request.form)['sort_by'] != 'none' and dict(request.form)['order'] != 'none':
         sort_info = dict(request.form)
-        all_questions = utl.prepare_questions_for_html(sort_info)
+        all_questions = con.get_questions(sort_info['sort_by'], sort_info['order'])
         return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False,
                                 sort_options=sort_options, order_options=order_options, default_sort=sort_info['sort_by'], default_order=sort_info['order'])
-    if con.get_all(QUESTION_FILE) is False: return render_template(WEB_PAGES["home_page"], questions="", table_heading="", empty=True)
+    if con.get_questions('title', 'ascending') is False: return render_template(WEB_PAGES["home_page"], questions="", table_heading="", empty=True)
     else:
-        all_questions = utl.prepare_questions_for_html({"sort_by": "submission_time", "order": "descending"})
+        all_questions = con.get_questions('submission_time', 'descending')
         return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options, 
                                 order_options=order_options, default_sort="none", default_order="none")
 

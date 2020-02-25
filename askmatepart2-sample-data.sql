@@ -22,7 +22,7 @@ CREATE TABLE question (
     id serial NOT NULL,
     submission_time timestamp without time zone,
     view_number integer,
-    vote_number integer,
+    vote_number text,
     title text,
     message text,
     image text
@@ -33,7 +33,7 @@ DROP SEQUENCE IF EXISTS public.answer_id_seq;
 CREATE TABLE answer (
     id serial NOT NULL,
     submission_time timestamp without time zone,
-    vote_number integer,
+    vote_number text,
     question_id integer,
     message text,
     image text
@@ -95,8 +95,8 @@ ALTER TABLE ONLY comment
 ALTER TABLE ONLY question_tag
     ADD CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tag(id);
 
-INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 29, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', NULL);
-INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 15, 9, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
+INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 29, '7-2', 'How to make lists in Python?', 'I am totally new to this, any hints?', '');
+INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 15, '9-1', 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
 
 I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
 
@@ -109,8 +109,8 @@ INSERT INTO question VALUES (2, '2017-05-01 10:41:00', 1364, 57, 'Drawing canvas
 ', NULL);
 SELECT pg_catalog.setval('question_id_seq', 2, true);
 
-INSERT INTO answer VALUES (1, '2017-04-28 16:49:00', 4, 1, 'You need to use brackets: my_list = []', NULL);
-INSERT INTO answer VALUES (2, '2017-04-25 14:42:00', 35, 1, 'Look it up in the Python docs', 'images/image2.jpg');
+INSERT INTO answer VALUES (1, '2017-04-28 16:49:00', '4-2', 1, 'You need to use brackets: my_list = []', '');
+INSERT INTO answer VALUES (2, '2017-04-25 14:42:00', '35-5', 1, 'Look it up in the Python docs', 'images/image2.jpg');
 SELECT pg_catalog.setval('answer_id_seq', 2, true);
 
 INSERT INTO comment VALUES (1, 0, NULL, 'Please clarify the question as it is too vague!', '2017-05-01 05:49:00');

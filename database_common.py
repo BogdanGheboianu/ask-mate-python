@@ -8,7 +8,7 @@ def get_connection_string():
     user_name = 'bogda'
     password = 'bogdan'
     host = 'localhost'
-    database_name = 'friends_management_db'
+    database_name = 'ask_mate'
 
     env_variables_defined = user_name and password and database_name and host
 
