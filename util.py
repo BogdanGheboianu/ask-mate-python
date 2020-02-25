@@ -6,7 +6,7 @@ from flask import url_for
 
 def check_specific_question_for_edit(question):
     if "(Edited)" in question['title']:
-        question['submission_time'] = question['submission_time'] + " (edited)"
+        question['submission_time'] = str(question['submission_time']) + " (edited)"
         question['title'] = question['title'].replace("(Edited)", "")
     return question
 

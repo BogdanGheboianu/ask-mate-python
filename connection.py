@@ -71,7 +71,21 @@ def add_answer(cursor, answer_info):
 
 
 @database_common.connection_handler
-def vote_answer(cursor, answer_id, vote):
+def add(cursor,info):
+    '''
+    Adds a new question
+    '''
+    next_id = get_next_id('question')
+    cursor.execute("""
+    INSERT INTO question
+    (id, submission_time, view_number, vote_number, title, message, image)
+    VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}', '{6}');
+    """.format(next_id, info['submission_time'], info['view_number'],
+               info['vote_number'], info['title'], info['message'], info['image']))
+
+
+@database_common.connection_handler
+def vote_answer(cursor, answer_id, vote_name):
     with open('sample_data/answer_votes.csv', "r") as file:
         content = file.readlines()
         file.close()
@@ -81,12 +95,10 @@ def vote_answer(cursor, answer_id, vote):
         vote_updated = ''
         vote_list = vote.split('??')
         if int(vote_list[0]) == int(answer_id):
-            print("HERE")
             up_down_votes = vote_list[1].split('-')
-            if vote == 'vote-up':
+            if vote_name == 'vote-up':
                 up_down_votes[0] = str(int(up_down_votes[0]) + 1)
-                
-            elif vote == 'vote-down':
+            elif vote_name == 'vote-down':
                 up_down_votes[1] = str(int(up_down_votes[1]) + 1)
             up_down_votes = '-'.join(up_down_votes)
             transform_vote_to_percentage_and_update(answer_id, up_down_votes)
@@ -112,21 +124,14 @@ def transform_vote_to_percentage_and_update(cursor, answer_id, up_down_votes):
         up_votes_percentage = 0
     cursor.execute(""" UPDATE answer SET vote_number={0} where id={1}; """.format(int(up_votes_percentage), answer_id))
 
+
+@database_common.connection_handler
+def edit_question(cursor, question_id, edited_question_info, new_submission_time):
+    cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}' where id={3}; 
+                    """.format(edited_question_info['title'], edited_question_info['message'],
+                                new_submission_time, question_id))
+
     
-
-
-
-def add(cursor,info):
-    '''
-    Adds a new question
-    '''
-    next_id = get_next_id('question')
-    cursor.execute("""
-    INSERT INTO question
-    (id, submission_time, view_number, vote_number, title, message, image)
-    VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}', '{6}');
-    """.format(next_id, info['submission_time'], info['view_number'],
-               info['vote_number'], info['title'], info['message'], info['image']))
 
 
 

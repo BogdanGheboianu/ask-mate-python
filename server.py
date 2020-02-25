@@ -61,7 +61,7 @@ def question(question_id):
     num_answers = 0
 
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
-    # question['image'] = url_for('static', filename=question['image'])
+    question['image'] = url_for('static', filename=question['image'])
     answers_for_question = dmg.get_answers_for_question(question_id)
     comments_for_question = dmg.get_comments_for_question(question_id)
     tags_for_question = dmg.get_tags_for_question(question_id)
@@ -138,8 +138,8 @@ def edit_question(question_id):
     if request.method == "POST":
         edited_question_info = dict(request.form)
         edited_question_info['title'] = edited_question_info['title'] + "(Edited)"
-        new_submission_time = int(calendar.timegm(time.gmtime())) + 7200 # GMT+2
-        dmg.edit_question(question_id, edited_question_info, new_submission_time)
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S') # GMT+2
+        con.edit_question(question_id, edited_question_info, new_submission_time)
         return redirect("/question/{0}".format(question_id))
     question_info = dmg.get_question_by_id(question_id)
     return render_template("edit_question.html", question_info=question_info)

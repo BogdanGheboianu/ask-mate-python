@@ -7,8 +7,8 @@ Question
 {% block content%}
 <h2>Edit this question</h2>
 <form method="POST">
-    <p><input type="text" name="title" required placeholder="{{ question_info['title'] }}" minlength="4"></p>
-    <p><textarea name="message" required placeholder="{{ question_info['message'] }}" rows="10" cols="50" minlength="10"></textarea>
+    <p><input type="text" name="title" required value="{{ question_info['title'] }}" minlength="4"></p>
+    <p><textarea name="message" required ="{{ question_info['message'] }}" rows="10" cols="50" minlength="10">{{ question_info['message'] }}</textarea>
     </p>
     <div><button class="ask-question-button" type="submit">POST</button></div>
 </form>
