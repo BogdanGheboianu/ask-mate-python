@@ -65,6 +65,7 @@ def question(question_id):
     answers_for_question = dmg.get_answers_for_question(question_id)
     comments_for_question = dmg.get_comments_for_question(question_id)
     tags_for_question = dmg.get_tags_for_question(question_id)
+    print(tags_for_question)
     comments_for_answers = dmg.get_answers_for_question_comments(question_id)
     if answers_for_question == None: empty = True
     if empty == False: 
@@ -150,7 +151,7 @@ def delete_question(question_id):
     '''
     Sends the respective's question id to data_manager to delete it and redirects to home page.
     '''
-    dmg.delete_question(question_id)
+    con.delete_question(question_id)
     return redirect("/")
 
 
@@ -168,12 +169,17 @@ def show_image_for_question(question_id, image_path):
     '''
     Special route for focusing on the image of the question. Similar with the question page, but with no answers and bigger image.
     '''
-    question = dmg.get_question_by_id(question_id)
-    image = url_for('static', filename=image_path)
-    question['vote_number'] = dmg.vote_percentage(question_id)
-    question['submission_time'] = datetime.utcfromtimestamp(int(question['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
-    question = utl.check_specific_question_for_edit(question)
-    return render_template(WEB_PAGES['show_image_page'], question=question, image=image, question_id=question_id)
+    question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
+    question['image'] = url_for('static', filename=question['image'])
+    image = question['image']
+    comments_for_question = dmg.get_comments_for_question(question_id)
+    tags_for_question = dmg.get_tags_for_question(question_id)
+    return render_template(WEB_PAGES['show_image_page'], 
+                            question=question, 
+                            image=image, 
+                            question_id=question_id,
+                            comments_for_question=comments_for_question,
+                            tags_for_question=tags_for_question)
 
 
 @app.route("/question/<question_id>/view/add")

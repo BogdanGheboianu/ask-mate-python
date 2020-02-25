@@ -68,6 +68,10 @@ def add_answer(cursor, answer_info):
     cursor.execute(""" INSERT INTO answer VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}');
                     """.format(answer_info['id'], answer_info['submission_time'], answer_info['vote_number'], answer_info['question_id'],
                                 answer_info['message'], answer_info['image']))
+    with open('sample_data/answer_votes.csv', "a") as file:
+        data = '{0}??0-0'.format(answer_info['id'])
+        file.write('{0}\n'.format(data))
+        file.close
 
 
 @database_common.connection_handler
@@ -131,6 +135,21 @@ def edit_question(cursor, question_id, edited_question_info, new_submission_time
                     """.format(edited_question_info['title'], edited_question_info['message'],
                                 new_submission_time, question_id))
 
+
+@database_common.connection_handler
+def delete_question(cursor, question_id):
+    answers = get_answers()
+    answers_for_question_ids = []
+    for answer in answers:
+        if answer['question_id'] == int(question_id):
+            answers_for_question_ids.append(answer['id'])
+    for ans_id in answers_for_question_ids:
+        cursor.execute("""  DELETE FROM comment WHERE id={0}; """.format(ans_id))
+
+    cursor.execute("""  DELETE FROM answer WHERE question_id={0}; """.format(question_id))
+    cursor.execute("""  DELETE FROM comment WHERE question_id={0}; """.format(question_id))
+    cursor.execute(""" DELETE FROM question_tag WHERE question_id={0}; """.format(question_id))
+    cursor.execute(""" DELETE FROM question WHERE id={0}; """.format(question_id))
     
 
 
