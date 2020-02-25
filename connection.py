@@ -55,6 +55,22 @@ def add_view(cursor, question_id):
     cursor.execute(""" UPDATE question set view_number={0} where id={1} """.format(view_number+1, question_id))
 
 
+@database_common.connection_handler
+def get_next_id(cursor, table):
+    cursor.execute(""" SELECT id FROM {0} ORDER BY id DESC LIMIT 1; """.format(table))
+    next_id_tuple = cursor.fetchall()
+    next_id = next_id_tuple[0]['id'] + 1
+    return next_id
+
+@database_common.connection_handler
+def add_answer(cursor, answer_info):
+    cursor.execute(""" INSERT INTO answer VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}');
+                    """.format(answer_info['id'], answer_info['submission_time'], answer_info['vote_number'], answer_info['question_id'],
+                                answer_info['message'], answer_info['image']))
+
+
+
+
 
 
 
