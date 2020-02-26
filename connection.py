@@ -17,7 +17,7 @@ def get_questions(cursor, sort_factor, sort_order):
 
 @database_common.connection_handler
 def get_answers(cursor):
-    cursor.execute(""" SELECT * FROM answer; """)
+    cursor.execute(""" SELECT * FROM answer ORDER BY submission_time DESC; """)
     answers = cursor.fetchall()
     return answers
 
@@ -31,7 +31,7 @@ def get_tags(cursor):
 
 @database_common.connection_handler
 def get_comments(cursor):
-    cursor.execute(""" SELECT * FROM comment; """)
+    cursor.execute(""" SELECT * FROM comment ORDER BY submission_time DESC; """)
     comments = cursor.fetchall()
     return comments
 
@@ -254,3 +254,21 @@ def add_comment_for_answer(cursor, comment_info):
                         comment_info['message'],
                         comment_info['submission_time']
                     ))
+
+
+@database_common.connection_handler
+def edit_answer(cursor, answer_new_info):
+    cursor.execute(""" UPDATE answer SET message='{0}', submission_time='{1}' WHERE id={2};
+                     """.format(answer_new_info['message'], answer_new_info['submission_time'], answer_new_info['id']))
+
+
+@database_common.connection_handler
+def edit_comment_for_question(cursor, new_comment_info):
+    cursor.execute(""" UPDATE comment SET message='{0}', submission_time='{1}' WHERE id={2}; 
+                    """.format(new_comment_info['message'], new_comment_info['submission_time'], new_comment_info['id']))
+
+
+@database_common.connection_handler
+def edit_comment_for_answer(cursor, new_comment_info):
+    cursor.execute(""" UPDATE comment SET message='{0}', submission_time='{1}' WHERE id={2}; 
+                    """.format(new_comment_info['message'], new_comment_info['submission_time'], new_comment_info['id']))

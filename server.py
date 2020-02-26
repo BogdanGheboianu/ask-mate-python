@@ -62,10 +62,10 @@ def question(question_id):
 
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     question['image'] = url_for('static', filename=question['image'])
-    answers_for_question = dmg.get_answers_for_question(question_id)
-    comments_for_question = dmg.get_comments_for_question(question_id)
+    answers_for_question = utl.check_answers_for_edit(dmg.get_answers_for_question(question_id))
+    comments_for_question = utl.check_comments_for_edit(dmg.get_comments_for_question(question_id))
     tags_for_question = dmg.get_tags_for_question(question_id)
-    comments_for_answers = dmg.get_answers_for_question_comments(question_id)
+    comments_for_answers = utl.check_comments_for_edit(dmg.get_answers_for_question_comments(question_id))
     if answers_for_question == None: empty = True
     if empty == False: 
         answers_for_question = utl.prepare_answers_for_hmtl(answers_for_question, question_id)
@@ -233,6 +233,52 @@ def add_comment_for_answer(question_id, answer_id):
         con.add_comment_for_answer(comment_info)
         return redirect('/question/{0}'.format(question_id))
     return render_template('add_comm.html')
+
+
+@app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(question_id, answer_id):
+    if request.method == "POST":
+        new_answer = request.form['message'] + ' (Edited)'
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        edited_answer = {'id': answer_id, 'message': new_answer, 'submission_time': new_submission_time}
+        con.edit_answer(edited_answer)
+        return redirect('/question/{0}'.format(question_id))
+    answers = con.get_answers()
+    for answer in answers:
+        if answer['id'] == int(answer_id):
+            selected_answer = answer
+    return render_template('edit_answer.html', selected_answer=selected_answer)
+
+
+@app.route('/question/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
+def edit_comment_for_question(question_id, comment_id):
+    if request.method == 'POST':
+        new_comment = request.form['message'] + ' (Edited)'
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        new_comment_info = {'id': comment_id, 'question_id': question_id, 'message': new_comment, 'submission_time': new_submission_time}
+        con.edit_comment_for_question(new_comment_info)
+        return redirect('/question/{0}'.format(question_id))
+    comments = con.get_comments()
+    for com in comments:
+        if com['id'] == int(comment_id):
+            comment = com
+    return render_template('edit_comment.html', comment=comment)
+
+
+@app.route('/answer/<answer_id>/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
+def edit_comment_for_answer(answer_id, question_id, comment_id):
+    if request.method == 'POST':
+        new_comment = request.form['message'] + ' (Edited)'
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        answer_id = answer_id
+        new_comment_info = {'id': comment_id, 'answer_id': answer_id, 'message': new_comment, 'submission_time': new_submission_time}
+        con.edit_comment_for_answer(new_comment_info)
+        return redirect('/question/{0}'.format(question_id))
+    comments = con.get_comments()
+    for com in comments:
+        if com['id'] == int(comment_id):
+            comment = com
+    return render_template('edit_comment.html', comment=comment)
 
 # MAIN
 
