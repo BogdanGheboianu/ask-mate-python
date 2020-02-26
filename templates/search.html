@@ -18,7 +18,11 @@ Search
                 <strong>Question ID:</strong> <em class="question-info">{{ result["id"] }}</em>
                 <strong>Posted:</strong> <em class="question-info">{{ result["submission_time"] }}</em>
                 <strong>Views:</strong> <em class="question-info">{{ result["view_number"] }}</em>
+                {% if result['vote_number'] != None %}
                 <strong>Votes:</strong> <em class="question-info">{{ result["vote_number"] }}%</em><br><hr>
+                {% else %}
+                <strong>Votes:</strong> <em class="question-info">N/A</em><br><hr>
+                {% endif %}
             {% endfor %}
     {% endif %}
     <br><br>

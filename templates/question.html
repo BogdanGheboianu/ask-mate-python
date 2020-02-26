@@ -22,7 +22,11 @@ Question
     <strong>Question ID:</strong> <em class="question-info">{{ question["id"] }}</em>
     <strong>Posted:</strong> <em class="question-info">{{ question["submission_time"] }}</em>
     <strong>Views:</strong> <em class="question-info">{{ question["view_number"] }}</em>
-    <strong>Votes:</strong> <em class="question-info">{{ question["vote_number"] }}%</em>
+    {% if question['vote_number'] != None %}
+        <strong>Votes:</strong> <em class="question-info">{{ question["vote_number"] }}%</em>
+    {% else %}
+        <strong>Votes:</strong> <em class="question-info">N/A</em>
+    {% endif %}
     <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
     <button id="submit" onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
     {% if tags_for_question != None %}
@@ -89,7 +93,11 @@ Question
         <div class="answer-info-area">
             <strong>Answer ID: </strong><em class="answer-info">{{ answer['id'] }}</em>
             <strong>Answered: </strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
-            <strong>Votes: </strong> <em class="answer-info">{{ answer["vote_number"] }}%</em>
+            {% if answer['vote_number'] != None %}
+                <strong>Votes: </strong> <em class="answer-info">{{ answer["vote_number"] }}%</em>
+            {% else %}
+                <strong>Votes: </strong> <em class="answer-info">N/A</em>
+            {% endif %}
         </div>
         {% if answer['image'] != '': %}
         <p><img src="{{answer['image']}}" width="480" height="280"></p>

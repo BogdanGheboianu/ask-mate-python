@@ -52,7 +52,11 @@ Home
                             href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
                 {% else: %}
                     {% if key == 'vote_number' %}
+                        {% if value != None %}
                         <td>{{ value }}%</td>
+                        {% else %}
+                        <td>N/A</td>
+                        {% endif %}
                     {% else %}
                 
                         {% if value != "" %}
@@ -74,7 +78,7 @@ Home
 </table>
 
     {% if show_all_questions %}
-       <a href="/list?sort-factor={{ default_sort }}&sort-order={{ default_order }}"><div class="show-all-questions" id="submit"><p>show all questions</p></div></a>
+       <a id="delete-answer" href="/list?sort-factor={{ default_sort }}&sort-order={{ default_order }}">Show all questions</a>
     {% endif %}
 {% endif %}
 

@@ -89,8 +89,9 @@ def get_next_id(cursor, table):
 
 @database_common.connection_handler
 def add_answer(cursor, answer_info):
-    cursor.execute(""" INSERT INTO answer VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}');
-                    """.format(answer_info['id'], answer_info['submission_time'], answer_info['vote_number'], answer_info['question_id'],
+    cursor.execute(""" INSERT INTO answer (id, submission_time, question_id, message, image)
+                    VALUES ({0}, '{1}', {2}, '{3}', '{4}');
+                    """.format(answer_info['id'], answer_info['submission_time'], answer_info['question_id'],
                                answer_info['message'], answer_info['image']))
     with open('sample_data/answer_votes.csv', "a") as file:
         data = '{0}??0-0'.format(answer_info['id'])
@@ -106,10 +107,10 @@ def add_question(cursor, info):
     next_id = get_next_id('question')
     cursor.execute("""
     INSERT INTO question
-    (id, submission_time, view_number, vote_number, title, message, image)
-    VALUES ({0}, '{1}', {2}, {3}, '{4}', '{5}', '{6}');
+    (id, submission_time, view_number, title, message, image)
+    VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}');
     """.format(next_id, info['submission_time'], info['view_number'],
-               info['vote_number'], info['title'], info['message'], info['image']))
+               info['title'], info['message'], info['image']))
     with open('sample_data/question_votes.csv', "a") as file:
         data = '{0}??0-0'.format(next_id)
         file.write('{0}\n'.format(data))
