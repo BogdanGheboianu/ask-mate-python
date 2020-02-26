@@ -235,10 +235,22 @@ def delete_answer(cursor, answer_id):
 @database_common.connection_handler
 def add_comment_for_question(cursor, comment_info):
     cursor.execute(""" INSERT INTO comment (id, question_id, message, submission_time)
-    VALUES ({0}, {1}, '{2}', '{3}'); 
+                        VALUES ({0}, {1}, '{2}', '{3}'); 
                     """.format(
                         comment_info['id'],
                         comment_info['question_id'],
+                        comment_info['message'],
+                        comment_info['submission_time']
+                    ))
+
+
+@database_common.connection_handler
+def add_comment_for_answer(cursor, comment_info):
+    cursor.execute(""" INSERT INTO comment (id, answer_id, message, submission_time)
+                        VALUES ({0}, {1}, '{2}', '{3}'); 
+                    """.format(
+                        comment_info['id'],
+                        comment_info['answer_id'],
                         comment_info['message'],
                         comment_info['submission_time']
                     ))

@@ -215,14 +215,24 @@ def add_comment_for_question(question_id):
     if request.method == 'POST':
         comment = request.form['comment']
         comment_id = con.get_next_id('comment')
-        answer_id = None
         submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
-        comment_info = {'id': comment_id, 'question_id':question_id, 'answer_id': answer_id,
-                        'message': comment, 'submission_time': submission_time, 'edited_count': None}
+        comment_info = {'id': comment_id, 'question_id':question_id,
+                        'message': comment, 'submission_time': submission_time}
         con.add_comment_for_question(comment_info)
         return redirect('/question/{0}'.format(question_id))
     return render_template('add_comm.html', question_id=question_id)
 
+
+@app.route('/<question_id>/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
+def add_comment_for_answer(question_id, answer_id):
+    if request.method == 'POST':
+        comment = request.form['comment']
+        comment_id = con.get_next_id('comment')
+        submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        comment_info = {'id': comment_id, 'answer_id': answer_id, 'submission_time': submission_time, 'message': comment}
+        con.add_comment_for_answer(comment_info)
+        return redirect('/question/{0}'.format(question_id))
+    return render_template('add_comm.html')
 
 # MAIN
 
