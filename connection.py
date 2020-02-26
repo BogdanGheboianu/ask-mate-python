@@ -223,7 +223,7 @@ def delete_question(cursor, question_id):
             answers_for_question_ids.append(answer['id'])
     for ans_id in answers_for_question_ids:
         cursor.execute(
-            """  DELETE FROM comment WHERE id={0}; """.format(ans_id))
+            """  DELETE FROM comment WHERE answer_id={0}; """.format(ans_id))
 
     cursor.execute(
         """  DELETE FROM answer WHERE question_id={0}; """.format(question_id))
