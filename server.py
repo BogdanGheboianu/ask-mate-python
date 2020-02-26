@@ -210,6 +210,20 @@ def delete_answer(question_id, answer_id):
     return redirect("/question/{0}".format(question_id))
 
 
+@app.route('/question/<question_id>/add-comment', methods=['GET', 'POST'])
+def add_comment_for_question(question_id):
+    if request.method == 'POST':
+        comment = request.form['comment']
+        comment_id = con.get_next_id('comment')
+        answer_id = None
+        submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        comment_info = {'id': comment_id, 'question_id':question_id, 'answer_id': answer_id,
+                        'message': comment, 'submission_time': submission_time, 'edited_count': None}
+        con.add_comment_for_question(comment_info)
+        return redirect('/question/{0}'.format(question_id))
+    return render_template('add_comm.html', question_id=question_id)
+
+
 # MAIN
 
 if __name__ == "__main__":
