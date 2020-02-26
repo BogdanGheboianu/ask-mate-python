@@ -66,15 +66,16 @@ Home
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                
-                
-                
+
             {% endif %}
         {% endfor %}
     </tr>
     {% endfor %}
 </table>
 
+    {% if show_all_questions %}
+       <a href="/list"><div class="show-all-questions" id="submit"><p>show all questions</p></div></a>
+    {% endif %}
 {% endif %}
 
 {%endblock%}
