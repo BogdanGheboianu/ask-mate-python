@@ -85,6 +85,7 @@ Question
 
         </div>
         <div class="answer-info-area">
+            <strong>Answer ID:</strong><em class="answer-info">{{ answer['id'] }}</em>
             <strong>Answered:</strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
             <strong>Votes:</strong> <em class="answer-info">{{ answer["vote_number"] }}%</em>
         </div>
@@ -104,7 +105,7 @@ Question
                 {% else %}
                     <p><em>There are no comments for this answer</em></p>
                 {% endif %}
-            <button id='submit' onclick="location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
+            <a class="question-links" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
         </div>
         <hr>
     </div>
