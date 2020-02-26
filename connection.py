@@ -307,3 +307,10 @@ def edit_comment_for_question(cursor, new_comment_info):
 def edit_comment_for_answer(cursor, new_comment_info):
     cursor.execute(""" UPDATE comment SET message='{0}', submission_time='{1}' WHERE id={2}; 
                     """.format(new_comment_info['message'], new_comment_info['submission_time'], new_comment_info['id']))
+
+
+@database_common.connection_handler
+def get_questions_for_search(cursor):
+    cursor.execute(""" SELECT * FROM question ORDER BY vote_number  DESC; """)
+    questions = cursor.fetchall()
+    return questions

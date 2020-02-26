@@ -26,7 +26,8 @@ Question
     <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
     <button id="submit" onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
     {% if tags_for_question != None %}
-    <p>{% for tag in tags_for_question %}
+    <p><strong>TAGS: </strong>
+    {% for tag in tags_for_question %}
         <em class="question-info">#{{ tag }} </em></p>
         {% endfor %}
     {% endif %}

@@ -32,25 +32,35 @@ def show_latest_questions():
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
     order_options = {"none": "Choose order", "ascending": "ascending", "descending": "descending"}
-    show_all_questions = True
     if request.method == "POST" and dict(request.form)['sort_by'] != 'none' and dict(request.form)['order'] != 'none':
         sort_info = dict(request.form)
-        all_questions = con.display_latest_questions(sort_info['sort_by'], sort_info['order'])
-        all_questions = utl.check_questions_for_edit(all_questions)
+        all_questions = con.get_questions(sort_info['sort_by'], sort_info['order'])
+        first_questions = con.display_latest_questions(sort_info['sort_by'], sort_info['order'])
+        first_questions = utl.check_questions_for_edit(first_questions)
+        if len(all_questions) > 5:
+            show_all_questions = True
+        else: show_all_questions == False
 
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading,
+        return render_template(WEB_PAGES["home_page"], questions=first_questions, table_heading=table_heading,
                                empty=False,
                                sort_options=sort_options, order_options=order_options,
                                default_sort=sort_info['sort_by'],
                                default_order=sort_info['order'],  show_all_questions=show_all_questions)
-    if con.display_latest_questions('title', 'ascending') is False: return render_template(WEB_PAGES["home_page"],
+    if con.display_latest_questions('title', 'ascending') is False: 
+        show_all_questions = True
+        return render_template(WEB_PAGES["home_page"],
                              questions="", table_heading="", empty=True, show_all_questions=show_all_questions)
     else:
-        all_questions = con.display_latest_questions('submission_time', 'descending')
-        all_questions = utl.check_questions_for_edit(all_questions)
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading,
+        first_questions = con.display_latest_questions('submission_time', 'descending')
+        first_questions = utl.check_questions_for_edit(first_questions)
+        all_questions = con.get_questions('id', 'ascending')
+        if len(all_questions) > 5:
+            show_all_questions = True
+        else: show_all_questions = False
+        return render_template(WEB_PAGES["home_page"], questions=first_questions, table_heading=table_heading,
         empty=False, sort_options=sort_options, order_options=order_options, default_sort="none",
                                default_order="none",  show_all_questions=show_all_questions)
+
 
 @app.route("/list", methods=["GET", "POST"])
 def home():
@@ -58,6 +68,7 @@ def home():
     "GET": displays the table with all the questions, the "ASK" button and the sorting functionality.
     "POST": gets the sorting criteria, sends it to data manager to execute the sorting and displays the home page based on the new result.
     '''
+    
     table_heading = ["ID", "Submission Time", "Views", "Votes", "Title", "Question", "Image"]
     sort_options = {"none":"Choose option", "title":"title", "message":"question", "submission_time":"submission time", "vote_number": "votes", "view_number":"views"}
     order_options = {"none":"Choose order", "ascending":"ascending", "descending":"descending"}
@@ -69,10 +80,18 @@ def home():
                                 sort_options=sort_options, order_options=order_options, default_sort=sort_info['sort_by'], default_order=sort_info['order'])
     if con.get_questions('title', 'ascending') is False: return render_template(WEB_PAGES["home_page"], questions="", table_heading="", empty=True)
     else:
-        all_questions = con.get_questions('submission_time', 'descending')
-        all_questions = utl.check_questions_for_edit(all_questions)
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options, 
-                                order_options=order_options, default_sort="none", default_order="none")
+        if request.args.get('sort-factor') == 'none':
+            all_questions = con.get_questions('submission_time', 'descending')
+            all_questions = utl.check_questions_for_edit(all_questions)
+            return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options, 
+                                    order_options=order_options, default_sort="none", default_order="none")
+        else:
+            sort_factor = request.args.get('sort-factor')
+            sort_order = request.args.get('sort-order')
+            all_questions = con.get_questions(sort_factor, sort_order)
+            all_questions = utl.check_questions_for_edit(all_questions)
+            return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options, 
+                                    order_options=order_options, default_sort=sort_factor, default_order=sort_order)
 
 
 @app.route("/question/<question_id>")
@@ -304,6 +323,20 @@ def edit_comment_for_answer(answer_id, question_id, comment_id):
         if com['id'] == int(comment_id):
             comment = com
     return render_template('edit_comment.html', comment=comment)
+
+
+@app.route('/search')
+def search():
+    search_term = request.args.get('q')
+    search_results = dmg.search(search_term)
+    if search_results != None:
+        return render_template('search.html', search_term=search_term, search_results=search_results,
+                                in_question_title=search_results['question_title'],
+                                in_question_message=search_results['question_message'],
+                                in_answers=search_results['answers'],
+                                in_tags=search_results['tags'],
+                                in_comments=search_results['comments'])
+    else: return render_template('search.html', search_results=search_results, search_term=search_term)
 
 # MAIN
 
