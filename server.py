@@ -114,8 +114,6 @@ def question(question_id):
     try:
         num_comments_for_question = len(utl.check_comments_for_edit(dmg.get_comments_for_question(question_id, 'no-limit'))) 
     except TypeError: num_comments_for_question = 0
-    print(num_comments_for_question)
-    print(request.args.get('show_more_com_for_q'))
     tags_for_question = dmg.get_tags_for_question(question_id)
     comments_for_answers = utl.check_comments_for_edit(dmg.get_answers_for_question_comments(question_id))
     if answers_for_question == None: empty = True
@@ -157,9 +155,13 @@ def add_question():
                          "vote_number": 0, "title": request.form["title"],
                          "message": request.form["message"], "image": f,
                          'votes_up': 0, 'votes_down': 0}
+        tags_for_question = {'existing_tag': request.form.get('existing_tag'),
+                                'new_tags': request.form.get('tags')}
         con.add_question(question_info)
+        con.add_tags_for_question(tags_for_question, question_id)
         return redirect("/question/{0}".format(question_id))
-    return render_template(WEB_PAGES["add_question_page"])
+    all_tags = con.get_tags()
+    return render_template(WEB_PAGES["add_question_page"], all_tags=all_tags)
 
 
 @app.route("/question/<question_id>/new-answer", methods=["GET", "POST"])

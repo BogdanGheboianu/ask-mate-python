@@ -218,3 +218,28 @@ def get_questions_for_search(cursor):
     cursor.execute(""" SELECT * FROM question ORDER BY vote_number  DESC; """)
     questions = cursor.fetchall()
     return questions
+
+
+@database_common.connection_handler
+def add_tags_for_question(cursor, tags, question_id):
+    ready_tags = []
+    all_tags = get_tags()
+    if tags['existing_tag'] != 'none': ready_tags.append(tags['existing_tag'])
+    if tags['new_tags'] != '': 
+        new_tags_list = tags['new_tags'].split(',')
+        for tag in new_tags_list:
+            clean_tag = tag.lstrip()
+            if clean_tag != tags['existing_tag'] and clean_tag not in ready_tags:
+                ready_tags.append(clean_tag)    
+    for tag in ready_tags:
+        found = False
+        for existing_tag in all_tags:
+            if tag == existing_tag['name']:
+                cursor.execute(""" INSERT INTO question_tag VALUES ({0}, {1}); """.format(question_id, existing_tag['id']))
+                found = True
+                break
+        if not found:
+            tag_id = get_next_id('tag')
+            tag_name = tag
+            cursor.execute(""" INSERT INTO tag VALUES({0}, '{1}'); """.format(tag_id, tag_name))
+            cursor.execute(""" INSERT INTO question_tag VALUES ({0}, {1}); """.format(question_id, tag_id))
