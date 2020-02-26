@@ -61,3 +61,12 @@ def check_comments_for_edit(comments):
                 com['submission_time'] = str(com['submission_time']) + " (edited)"
                 com['message'] = com['message'].replace("(Edited)", "")
         return comments
+
+
+def calculate_vote_percentage(votes_up, votes_down):
+    total_votes = votes_up + votes_down
+    try:
+        vote_percentage = float(votes_up/total_votes) * 100
+    except ZeroDivisionError:
+        vote_percentage = 0
+    return vote_percentage

@@ -8,6 +8,8 @@ Home
 {% block content %}
 {% if empty == True: %}
 <p><strong>There are no questions to show for the moment</strong></p>
+<button class="ask-question-button" onclick="location.href='/list/add-question'">ask
+    question</button>
 {% else: %}
 <div class="sort-area">
     <form method="POST">

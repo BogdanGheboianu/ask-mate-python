@@ -142,7 +142,8 @@ def add_question():
         question_id = con.get_next_id('question')
         question_info = {"submission_time": submission_time, "view_number": 0,
                          "vote_number": 0, "title": request.form["title"],
-                         "message": request.form["message"], "image": f}
+                         "message": request.form["message"], "image": f,
+                         'votes_up': 0, 'votes_down': 0}
         con.add_question(question_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["add_question_page"])
@@ -165,7 +166,8 @@ def new_answer(question_id):
         answer_id = con.get_next_id('answer')
         submission_time =  datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
         answer_info = {"id": answer_id, "submission_time": submission_time, 
-                        "vote_number": 0, "question_id": question_id, "message": request.form['answer'], "image": f}
+                        "vote_number": 0, "question_id": question_id, "message": request.form['answer'], "image": f,
+                        'votes_up': 0, 'votes_down':0}
         con.add_answer(answer_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["new_answer_page"], question=question)

@@ -89,14 +89,11 @@ def get_next_id(cursor, table):
 
 @database_common.connection_handler
 def add_answer(cursor, answer_info):
-    cursor.execute(""" INSERT INTO answer (id, submission_time, question_id, message, image)
-                    VALUES ({0}, '{1}', {2}, '{3}', '{4}');
+    cursor.execute(""" INSERT INTO answer (id, submission_time, question_id, message, image, votes_up, votes_down)
+                    VALUES ({0}, '{1}', {2}, '{3}', '{4}', {5}, {6});
                     """.format(answer_info['id'], answer_info['submission_time'], answer_info['question_id'],
-                               answer_info['message'], answer_info['image']))
-    with open('sample_data/answer_votes.csv', "a") as file:
-        data = '{0}??0-0'.format(answer_info['id'])
-        file.write('{0}\n'.format(data))
-        file.close
+                               answer_info['message'], answer_info['image'], answer_info['votes_up'], answer_info['votes_down']))
+    
 
 
 @database_common.connection_handler
@@ -107,104 +104,35 @@ def add_question(cursor, info):
     next_id = get_next_id('question')
     cursor.execute("""
     INSERT INTO question
-    (id, submission_time, view_number, title, message, image)
-    VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}');
+    (id, submission_time, view_number, title, message, image, votes_up, votes_down)
+    VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}', {6}, {7});
     """.format(next_id, info['submission_time'], info['view_number'],
-               info['title'], info['message'], info['image']))
-    with open('sample_data/question_votes.csv', "a") as file:
-        data = '{0}??0-0'.format(next_id)
-        file.write('{0}\n'.format(data))
-        file.close
+               info['title'], info['message'], info['image'], info['votes_up'], info['votes_down']))
+    
 
 
 @database_common.connection_handler
 def vote_answer(cursor, answer_id, vote_name):
-    with open('sample_data/answer_votes.csv', "r") as file:
-        content = file.readlines()
-        file.close()
-    votes = [vote.replace("\n", '') for vote in content]
-    updated_content = []
-    for vote in votes:
-        vote_updated = ''
-        vote_list = vote.split('??')
-        if int(vote_list[0]) == int(answer_id):
-            up_down_votes = vote_list[1].split('-')
-            if vote_name == 'vote-up':
-                up_down_votes[0] = str(int(up_down_votes[0]) + 1)
-            elif vote_name == 'vote-down':
-                up_down_votes[1] = str(int(up_down_votes[1]) + 1)
-            up_down_votes = '-'.join(up_down_votes)
-            transform_vote_to_percentage_and_update_answer(
-                answer_id, up_down_votes)
-            vote_list[1] = up_down_votes
-            vote_updated = '??'.join(vote_list)
-            updated_content.append(vote_updated)
-        else:
-            updated_content.append(vote)
-    with open('sample_data/answer_votes.csv', 'w') as file:
-        for vote in updated_content:
-            file.write('{0}\n'.format(vote))
-        file.close()
+    if vote_name == 'vote-up':
+        cursor.execute(""" UPDATE answer SET votes_up=votes_up + 1 WHERE id={0}; """.format(answer_id))
+    elif vote_name == 'vote-down':
+        cursor.execute(""" UPDATE answer SET votes_down=votes_down + 1 WHERE id={0}; """.format(answer_id))
+    cursor.execute(""" SELECT votes_up, votes_down FROM answer WHERE id={0}; """.format(answer_id))
+    votes = cursor.fetchall()
+    vote_percentage = utl.calculate_vote_percentage(votes[0]['votes_up'], votes[0]['votes_down'])
+    cursor.execute(""" UPDATE answer SET vote_number={0}; """.format(vote_percentage))
 
-
-UPVOTES = 0
-DOWNVOTES = 1
-@database_common.connection_handler
-def transform_vote_to_percentage_and_update_answer(cursor, answer_id, up_down_votes):
-    votes = up_down_votes.split('-')
-    total_votes = int(votes[UPVOTES]) + int(votes[DOWNVOTES])
-    try:
-        up_votes_percentage = float(
-            int(votes[UPVOTES]) / int(total_votes)) * 100
-    except ZeroDivisionError:
-        up_votes_percentage = 0
-    cursor.execute(""" UPDATE answer SET vote_number={0} where id={1}; """.format(
-        int(up_votes_percentage), answer_id))
-
-
+  
 @database_common.connection_handler
 def vote_question(cursor, question_id, vote_name):
-    with open('sample_data/question_votes.csv', "r") as file:
-        content = file.readlines()
-        file.close()
-    votes = [vote.replace("\n", '') for vote in content]
-    updated_content = []
-    for vote in votes:
-        vote_updated = ''
-        vote_list = vote.split('??')
-        if int(vote_list[0]) == int(question_id):
-            up_down_votes = vote_list[1].split('-')
-            if vote_name == 'vote-up':
-                up_down_votes[0] = str(int(up_down_votes[0]) + 1)
-            elif vote_name == 'vote-down':
-                up_down_votes[1] = str(int(up_down_votes[1]) + 1)
-            up_down_votes = '-'.join(up_down_votes)
-            transform_vote_to_percentage_and_update_question(
-                question_id, up_down_votes)
-            vote_list[1] = up_down_votes
-            vote_updated = '??'.join(vote_list)
-            updated_content.append(vote_updated)
-        else:
-            updated_content.append(vote)
-    with open('sample_data/question_votes.csv', 'w') as file:
-        for vote in updated_content:
-            file.write('{0}\n'.format(vote))
-        file.close()
-
-
-UPVOTES = 0
-DOWNVOTES = 1
-@database_common.connection_handler
-def transform_vote_to_percentage_and_update_question(cursor, question_id, up_down_votes):
-    votes = up_down_votes.split('-')
-    total_votes = int(votes[UPVOTES]) + int(votes[DOWNVOTES])
-    try:
-        up_votes_percentage = float(
-            int(votes[UPVOTES]) / int(total_votes)) * 100
-    except ZeroDivisionError:
-        up_votes_percentage = 0
-    cursor.execute(""" UPDATE question SET vote_number={0} where id={1}; """.format(
-        int(up_votes_percentage), question_id))
+    if vote_name == 'vote-up':
+        cursor.execute(""" UPDATE question SET votes_up=votes_up + 1 WHERE id={0}; """.format(question_id))
+    elif vote_name == 'vote-down':
+        cursor.execute(""" UPDATE question SET votes_down=votes_down + 1 WHERE id={0}; """.format(question_id))
+    cursor.execute(""" SELECT votes_up, votes_down FROM question WHERE id={0}; """.format(question_id))
+    votes = cursor.fetchall()
+    vote_percentage = utl.calculate_vote_percentage(votes[0]['votes_up'], votes[0]['votes_down'])
+    cursor.execute(""" UPDATE question SET vote_number={0}; """.format(vote_percentage))
 
 
 @database_common.connection_handler
@@ -233,39 +161,13 @@ def delete_question(cursor, question_id):
         """ DELETE FROM question_tag WHERE question_id={0}; """.format(question_id))
     cursor.execute(
         """ DELETE FROM question WHERE id={0}; """.format(question_id))
-    with open('sample_data/question_votes.csv', 'r') as file:
-        content = file.readlines()
-        file.close()
-    new_data = []
-    for item in content:
-        item_list = item.split('??')
-        if int(item_list[0]) != int(question_id):
-            new_data.append(item)
-    with open('sample_data/question_votes.csv', 'w') as file:
-        for item in new_data:
-            file.write(item)
-        file.close()
-
+  
 
 @database_common.connection_handler
 def delete_answer(cursor, answer_id):
     cursor.execute(
         """ DELETE FROM comment WHERE answer_id={0}; """.format(answer_id))
     cursor.execute(""" DELETE FROM answer WHERE id={0};""".format(answer_id))
-
-    with open('sample_data/answer_votes.csv', 'r') as file:
-        content = file.readlines()
-        file.close()
-    new_data = []
-    for item in content:
-        item_list = item.split('??')
-        print(item_list)
-        if int(item_list[0]) != int(answer_id):
-            new_data.append(item)
-    with open('sample_data/answer_votes.csv', 'w') as file:
-        for item in new_data:
-            file.write(item)
-        file.close()
 
 
 @database_common.connection_handler
