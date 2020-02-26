@@ -7,6 +7,10 @@ body {
     color: #f8e7d3;
 }
 
+a {
+    text-decoration: none;
+}
+
 th, td {
     padding: 10px 10px;
 }
@@ -329,8 +333,30 @@ a.see-image-link {
     margin-top: 3em;
 }
 
-
 .message-image {
     margin: 3em 0;
     margin-left: 2em;
+}
+
+.show_all_link {
+    text-decoration: none;
+    text-align: center;
+    font-size: 2em;
+}
+
+.show-all-questions {
+    text-align: center ;
+    margin: 0 auto;
+    width: 10em;
+    color: white;
+}
+
+.show-all-questions a {
+    text-decoration: none;
+    color:  #e19639;
+}
+
+.show-all-questions a:hover {
+    text-decoration: none;
+    color:  white;
 }

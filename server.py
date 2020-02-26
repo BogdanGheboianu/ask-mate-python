@@ -27,6 +27,31 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # MAIN ROUTES: home, question, add question, add answer            
 
 @app.route("/", methods=["GET", "POST"])
+def show_latest_questions():
+    table_heading = ["ID", "Submission Time", "Views", "Votes", "Title", "Question", "Image"]
+    sort_options = {"none": "Choose option", "title": "title", "message": "question",
+                    "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
+    order_options = {"none": "Choose order", "ascending": "ascending", "descending": "descending"}
+    show_all_questions = True
+    if request.method == "POST" and dict(request.form)['sort_by'] != 'none' and dict(request.form)['order'] != 'none':
+        sort_info = dict(request.form)
+        all_questions = con.display_latest_questions(sort_info['sort_by'], sort_info['order'])
+        all_questions = utl.check_questions_for_edit(all_questions)
+
+        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading,
+                               empty=False,
+                               sort_options=sort_options, order_options=order_options,
+                               default_sort=sort_info['sort_by'],
+                               default_order=sort_info['order'],  show_all_questions=show_all_questions)
+    if con.display_latest_questions('title', 'ascending') is False: return render_template(WEB_PAGES["home_page"],
+                             questions="", table_heading="", empty=True, show_all_questions=show_all_questions)
+    else:
+        all_questions = con.display_latest_questions('submission_time', 'descending')
+        all_questions = utl.check_questions_for_edit(all_questions)
+        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading,
+        empty=False, sort_options=sort_options, order_options=order_options, default_sort="none",
+                               default_order="none",  show_all_questions=show_all_questions)
+
 @app.route("/list", methods=["GET", "POST"])
 def home():
     '''
@@ -97,7 +122,7 @@ def add_question():
         submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
         question_id = con.get_next_id('question')
         question_info = {"submission_time": submission_time, "view_number": 0,
-                         "vote_number": 87, "title": request.form["title"],
+                         "vote_number": 0, "title": request.form["title"],
                          "message": request.form["message"], "image": f}
         con.add_question(question_info)
         return redirect("/question/{0}".format(question_id))

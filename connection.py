@@ -14,6 +14,17 @@ def get_questions(cursor, sort_factor, sort_order):
     if len(questions) == 0: return False
     else: return questions
 
+@database_common.connection_handler
+def display_latest_questions(cursor, sort_factor, sort_order):
+    if sort_order == 'ascending':
+        cursor.execute("""
+        SELECT * from question ORDER BY {0} ASC LIMIT 5;""".format(sort_factor))
+    elif sort_order == 'descending':
+        cursor.execute("""SELECT * FROM question ORDER BY {0} DESC LIMIT 5;""".format(sort_factor))
+    questions = cursor.fetchall()
+    if len(questions) == 0: return False
+    else : return questions
+
 
 @database_common.connection_handler
 def get_answers(cursor):
@@ -230,8 +241,6 @@ def delete_answer(cursor, answer_id):
         for item in new_data:
             file.write(item)
         file.close()
-
-
 
 
 
