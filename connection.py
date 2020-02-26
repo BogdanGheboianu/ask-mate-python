@@ -49,8 +49,9 @@ def get_tags(cursor):
 
 
 @database_common.connection_handler
-def get_comments(cursor):
-    cursor.execute(""" SELECT * FROM comment ORDER BY submission_time DESC; """)
+def get_comments(cursor, limit):
+    if limit == 'no-limit': cursor.execute(""" SELECT * FROM comment ORDER BY submission_time DESC; """)
+    elif limit == 'limit': cursor.execute(""" SELECT * FROM comment ORDER BY submission_time DESC LIMIT 3; """)
     comments = cursor.fetchall()
     return comments
 

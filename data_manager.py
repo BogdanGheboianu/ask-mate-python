@@ -19,8 +19,9 @@ def get_answers_for_question(question_id):
         return answers_for_question
 
 
-def get_comments_for_question(question_id):
-    comments = con.get_comments()
+def get_comments_for_question(question_id, limit):
+    if limit == 'no-limit': comments = con.get_comments('no-limit')
+    elif limit == 'limit': comments = con.get_comments('limit')
     comments_for_question = []
     for comment in comments:
         if comment['question_id'] != None and comment['question_id'] == int(question_id):
@@ -31,7 +32,7 @@ def get_comments_for_question(question_id):
 
 def get_answers_for_question_comments(question_id):
     answers_for_question = get_answers_for_question(int(question_id))
-    comments = con.get_comments()
+    comments = con.get_comments('no-limit')
     comments_for_answers = []
     if answers_for_question != None:
         for answer in answers_for_question:

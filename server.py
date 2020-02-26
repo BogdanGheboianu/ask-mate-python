@@ -107,22 +107,35 @@ def question(question_id):
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     question['image'] = url_for('static', filename=question['image'])
     answers_for_question = utl.check_answers_for_edit(dmg.get_answers_for_question(question_id))
-    comments_for_question = utl.check_comments_for_edit(dmg.get_comments_for_question(question_id))
+    if request.args.get('show_more_com_for_q') == 'yes':
+        comments_for_question = utl.check_comments_for_edit(dmg.get_comments_for_question(question_id, 'no-limit'))
+    else:
+        comments_for_question = utl.check_comments_for_edit(dmg.get_comments_for_question(question_id, 'limit'))
+    try:
+        num_comments_for_question = len(utl.check_comments_for_edit(dmg.get_comments_for_question(question_id, 'no-limit'))) 
+    except TypeError: num_comments_for_question = 0
+    print(num_comments_for_question)
+    print(request.args.get('show_more_com_for_q'))
     tags_for_question = dmg.get_tags_for_question(question_id)
     comments_for_answers = utl.check_comments_for_edit(dmg.get_answers_for_question_comments(question_id))
     if answers_for_question == None: empty = True
     if empty == False: 
         answers_for_question = utl.prepare_answers_for_hmtl(answers_for_question, question_id)
         num_answers = len(answers_for_question)
+    show_more_com_for_q = request.args.get('show_more_com_for_q')
+    show_more_com_for_ans = request.args.get('show_more_com_for_ans')
     return render_template(WEB_PAGES["question_page"], 
                             question=question, 
                             answers=answers_for_question, 
                             empty=empty, 
                             question_id=question_id, 
                             num_answers=num_answers,
+                            num_comments_for_question=num_comments_for_question,
                             comments_for_question=comments_for_question,
                             comments_for_answers=comments_for_answers,
-                            tags_for_question=tags_for_question)
+                            tags_for_question=tags_for_question,
+                            show_more_com_for_q=show_more_com_for_q,
+                            show_more_com_for_ans=show_more_com_for_ans)
 
 
 @app.route("/list/add-question", methods=["GET", "POST"])

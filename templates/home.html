@@ -46,7 +46,7 @@ Home
     {% for question in questions: %}
     <tr>
         {% for key, value in question.items(): %}
-            {% if key != "title" and key != 'image' and key!= 'vote_number': %}
+            {% if key != "title" and key != 'image' and key!= 'vote_number' and key!= 'votes_up' and key != 'votes_down': %}
                 <td>{{ value }}</td>
             {% else: %}
                 {% if key == 'title' %}
@@ -61,7 +61,7 @@ Home
                         {% endif %}
                     {% else %}
                 
-                        {% if value != "" %}
+                        {% if key == 'image' and value != "" %}
                             <td class="image-column"><a class="see-image-link" href="question/{{ question['id'] }}/show/{{ value }}">
                                 <div id="show-image">See
                                     Image
