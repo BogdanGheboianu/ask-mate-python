@@ -59,15 +59,29 @@ def get_tags_for_question(question_id):
 
 
 def search(search_phrase):
+    search_phrase_list_of_words = search_phrase.split(' ')
+    search_results_in_question_titles = search_in_questions(search_phrase_list_of_words)[1]
+    search_results_in_question_messages = search_in_questions(search_phrase_list_of_words)[0]
+    search_results_in_tags = search_in_tags(search_phrase_list_of_words)
+    search_results_in_answers = search_in_answers(search_phrase_list_of_words)
+    search_results_in_comments = search_in_comments(search_phrase_list_of_words)
+    
+    search_results = {
+        'question_title': search_results_in_question_titles,
+        'question_message': search_results_in_question_messages,
+        'tags': search_results_in_tags,
+        'answers': search_results_in_answers,
+        'comments': search_results_in_comments
+    }
+    
+    for result in search_results.values():
+        if result:
+            return search_results
+
+def search_in_questions(search_phrase_list_of_words):
     search_results_in_question_titles = []
     search_results_in_question_messages = []
-    search_results_in_tags = []
-    search_results_in_answers = []
-    search_results_in_comments = []
-    search_phrase_list_of_words = search_phrase.split(' ')
-
     for search_term in search_phrase_list_of_words:
-        # Search in questions
         questions = con.get_questions_for_search()
         for question in questions:
             if search_term in question['title'].lower():
@@ -76,15 +90,23 @@ def search(search_phrase):
             if search_term in question['message'].lower():
                 if question not in search_results_in_question_messages:
                     search_results_in_question_messages.append(question)
+    return search_results_in_question_messages, search_results_in_question_titles
 
-        # Search in answers
+
+def search_in_answers(search_phrase_list_of_words):
+    search_results_in_answers = []
+    for search_term in search_phrase_list_of_words:
         answers = con.get_answers()
         for answer in answers:
             if search_term in answer['message'].lower():
                 if answer not in search_results_in_answers:
                     search_results_in_answers.append(answer)
+    return search_results_in_answers
 
-        # Search in tags
+
+def search_in_tags(search_phrase_list_of_words):
+    search_results_in_tags = []
+    for search_term in search_phrase_list_of_words:
         tags = con.get_tags()
         question_tags = con.get_question_tags()
         tags_ids = []
@@ -98,6 +120,7 @@ def search(search_phrase):
                 if tag_id == question_tag['tag_id']:
                     if question_tag['tag_id'] not in questions_ids:
                         questions_ids.append(question_tag['question_id'])
+        questions = con.get_questions_for_search()
         for question_id in questions_ids:
             for question in questions:
                 if question_id == question['id']:
@@ -111,26 +134,16 @@ def search(search_phrase):
                         if question_tag['tag_id'] == tag['id']:
                             tags_to_add.append(tag['name'])
             question.update({'tags': tags_to_add})
-                
-        # Search in comments
+    return search_results_in_tags
+
+
+def search_in_comments(search_phrase_list_of_words):
+    search_results_in_comments = []
+    for search_term in search_phrase_list_of_words:
         comments = con.get_comments()
         for com in comments:
             if search_term in com['message'].lower():
                 if com not in search_results_in_comments:
                     search_results_in_comments.append(com)
-   
-    # Get all data together in a dictionary
-    search_results = {
-        'question_title': search_results_in_question_titles,
-        'question_message': search_results_in_question_messages,
-        'tags': search_results_in_tags,
-        'answers': search_results_in_answers,
-        'comments': search_results_in_comments
-    }
-    
-    # Check if there are any search results
-    for result in search_results.values():
-        if result:
-            return search_results
-
+    return search_results_in_comments
 
