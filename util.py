@@ -77,7 +77,11 @@ def calculate_vote_percentage(votes_up, votes_down):
         vote_percentage = 0
     return vote_percentage
 
-def highlight(text, search_term):
-    new_text = text.lower().replace(search_term, '<mark>{0}</mark>'.format(search_term))
-    return new_text
+def highlight(text, search_phrase):
+    if search_phrase in text.lower():
+        text = text.lower().replace(search_phrase, "<span style='color: white; background-color: seagreen;'>{0}</span>".format(search_phrase))
+    else:
+        for search_term in search_phrase.split(" "):
+            text = text.lower().replace(search_term, "<span style='color: white; background-color: seagreen;'>{0}</span>".format(search_term))
+    return text
 

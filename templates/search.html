@@ -16,7 +16,7 @@ Search
             {% for result in in_question_title %}
                 <h3><a class="question-links" href="/question/{{ result['id'] }}">
                 
-                    {{ highlight(result['title'], search_term)|safe }}
+                    {{ highlight(check_edit(result)['title'], search_term)|safe }}
 
                 </a></h3><br>
                 <strong>Question ID:</strong> <em class="question-info">{{ result["id"] }}</em>
@@ -60,7 +60,7 @@ Search
                     <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
                     <strong>TAGS: 
                     {% for tag in result['tags'] %}
-                        <a class="question-links" href="/search?q={{ tag }}">#{{ tag }} </a>
+                        <a class="question-links" href="/search?q={{ tag }}">#{{ highlight(tag, search_term)|safe }} </a>
                     {% endfor %}</strong><br><hr>
                     {% endfor %}
     {% endif %}
@@ -69,7 +69,7 @@ Search
         <h2>Possible question comments to help you out:</h2><br>
         {% for result in in_comments %}
             {% if result['question_id'] != None %}
-            <p>{{ result['message'] }} | 
+            <p>{{ highlight(result['message'], search_term)|safe }} | 
                 <a class="question-links" href="/question/{{ result['question_id'] }}">See question</a></p><br><hr>
             {% endif %}
         {% endfor %}
