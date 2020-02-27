@@ -37,14 +37,30 @@
         <footer>@2020 Gheboianu &amp; Catrina. All rights reserved.</footer>
     </div>
     <script>
-        function myFunction(comment_id) {
+        function deleteComment(comment_id) {
 
-            confirmation = confirm("Delete " + comment_id + " ?");
+            confirmation = confirm("Comment ID: " + comment_id + " Are you sure you want to delete this comment?");
 
-            if (false == confirmation) {
+            if (false == confirmation) 
                 return false;
-            }
-            window.location.pathname = "/comments/" + comment_id + "/delete";
+            
+            window.location.pathname = "/comments/" + comment_id + "/delete";}
+
+        function deleteQuestion(question_id) {
+
+            confirmation = confirm("Question ID: " + question_id + " Are you sure you want to delete this question?");
+
+            if (false == confirmation) 
+                return false;
+            
+            window.location.pathname = "/question/" + question_id + "/delete";}
+
+        function deleteAnswer(question_id, answer_id) {
+            confirmation = confirm("Answer ID: " + answer_id + " Are you sure you want to delete this answer?");
+            if (false == confirmation)
+                return false;
+            
+            window.location.pathname = '/answer/' + question_id + '/' + answer_id + '/delete';}
         
     </script>
 

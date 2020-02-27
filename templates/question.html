@@ -28,7 +28,7 @@ Question
     <strong>Votes:</strong> <em class="question-info">N/A</em>
     {% endif %}
     <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
-    <button id="submit" onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
+    <button id="submit" onclick="deleteQuestion({{ question_id }})">Delete Question</button>
     {% if tags_for_question != None %}
     <p><strong>TAGS:</strong>
         {% for tag in tags_for_question %}
@@ -52,15 +52,18 @@ Question
     {% for comment in comments_for_question %}
     <ul>
         <li>
-            <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
+            <p>{{ comment['message'] }}<br>
+                <div class="answer-info-area">
+                <strong>Comment ID: </strong><em
                     class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
                     class="question-info">{{ comment['submission_time'] }}</em> | <a
                     href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment"><i
                         class="pencil fas fa-pencil-alt"></i></a><a id="recycle-link"
-                    onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
+                    onclick="deleteComment({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
         </li>
     </ul>
     {% endfor %}
+
     <p>{% if num_comments_for_question > 3 and show_more_com_for_q != 'yes' %}
         <a class="question-links" href="/question/{{ question_id }}?show_more_com_for_q=yes">Show all comments</a></p>
     {% endif %}
@@ -102,7 +105,7 @@ Question
                         width="16" height="16"></a>
             </div>
             <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
-            <a href="/answer/{{ question_id }}/{{ answer['id'] }}/delete"><i class="recycle fas fa-trash-alt"></i></a>
+            <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
 
         </div>
         <div class="answer-info-area">
@@ -119,13 +122,16 @@ Question
         {% endif %}
         <div class="question-info-area">
             <strong><em class="question-info">Comments</em></strong>
-           {% if comments_for_answers != None %} {% for comment in comments_for_answers %}
+           {% if comments_for_answers != None %} 
+                {% for comment in comments_for_answers %}
                 {% if comment['answer_id'] == answer['id'] %} <ul>
                 <li>
-                    <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
-                            class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
-                            class="question-info">{{ comment['submission_time'] }}</em>
-                            <a id="recycle-link" onclick="myFunction({{ comment['id'] }})"><i
+                    <p>{{ comment['message'] }} <br>
+                    <div class="answer-info-area">
+                        <strong>Comment ID: </strong><em
+                            class="answer-info">{{ comment['id'] }}</em><strong>Posted: </strong><em
+                            class="answer-info">{{ comment['submission_time'] }}</em>| 
+                            <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
                                 class="recycle fas fa-trash-alt"></i></a>
                     </p>
                 </li>
@@ -133,6 +139,7 @@ Question
                 {% endif %}
                 {% endfor %}
                 {% else %}
+                </div>
                 <p><em>There are no comments for this answer</em></p>
                 {% endif %}
                
