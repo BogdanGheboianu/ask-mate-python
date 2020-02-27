@@ -10,6 +10,23 @@ Question
     <p><input type="text" name="title" required value="{{ question_info['title'] }}" minlength="4"></p>
     <p><textarea name="message" required ="{{ question_info['message'] }}" rows="10" cols="50" minlength="10">{{ question_info['message'] }}</textarea>
     </p>
+    <p>TAGS:
+        {% if tags_for_question != None %}
+    {% for tag in tags_for_question %}
+        #{{ tag }} <a href="/question/{{ question_info['id'] }}/{{ tag }}/delete-tag">X</a>
+    {% endfor %}
+    {% else %}<em>No tags</em>
+    {% endif %}
+    </p>
+    <p>Add some new tags:</p>
+    <p><select name="existing_tag">
+        <option value="none">--Choose Tag--</option>
+        {% for tag in all_tags %}
+            <option value="{{ tag['name'] }}">{{ tag['name'] }}</option>
+        {% endfor %}
+        </select></p><p> ...or create new one(s):</p>
+        <p><textarea name="tags" placeholder="Separate tags by comma..." minlength="3" rows="2" cols="100"></textarea>
+    </p>
     <div><button class="ask-question-button" type="submit">POST</button></div>
 </form>
 

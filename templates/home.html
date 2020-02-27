@@ -8,6 +8,8 @@ Home
 {% block content %}
 {% if empty == True: %}
 <p><strong>There are no questions to show for the moment</strong></p>
+<button class="ask-question-button" onclick="location.href='/list/add-question'">ask
+    question</button>
 {% else: %}
 <div class="sort-area">
     <form method="POST">
@@ -44,7 +46,7 @@ Home
     {% for question in questions: %}
     <tr>
         {% for key, value in question.items(): %}
-            {% if key != "title" and key != 'image' and key!= 'vote_number': %}
+            {% if key != "title" and key != 'image' and key!= 'vote_number' and key!= 'votes_up' and key != 'votes_down': %}
                 <td>{{ value }}</td>
             {% else: %}
                 {% if key == 'title' %}
@@ -52,10 +54,14 @@ Home
                             href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
                 {% else: %}
                     {% if key == 'vote_number' %}
+                        {% if value != None %}
                         <td>{{ value }}%</td>
+                        {% else %}
+                        <td>N/A</td>
+                        {% endif %}
                     {% else %}
                 
-                        {% if value != "" %}
+                        {% if key == 'image' and value != "" %}
                             <td class="image-column"><a class="see-image-link" href="question/{{ question['id'] }}/show/{{ value }}">
                                 <div id="show-image">See
                                     Image
@@ -74,7 +80,7 @@ Home
 </table>
 
     {% if show_all_questions %}
-       <a href="/list"><div class="show-all-questions" id="submit"><p>show all questions</p></div></a>
+       <a id="delete-answer" href="/list?sort-factor={{ default_sort }}&sort-order={{ default_order }}">Show all questions</a>
     {% endif %}
 {% endif %}
 

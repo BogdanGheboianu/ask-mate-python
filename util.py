@@ -14,12 +14,13 @@ def check_specific_question_for_edit(question):
 
 
 def check_questions_for_edit(questions):
-    for question in questions:
-        if "(Edited)" in question['title']:
-            question['submission_time'] = str(
-                question['submission_time']) + " (edited)"
-            question['title'] = question['title'].replace("(Edited)", "")
-    return questions
+    if questions != None:
+        for question in questions:
+            if "(Edited)" in question['title']:
+                question['submission_time'] = str(
+                    question['submission_time']) + " (edited)"
+                question['title'] = question['title'].replace("(Edited)", "")
+        return questions
 
 
 def prepare_answers_for_hmtl(answers, question_id):
@@ -47,20 +48,31 @@ def transform_image_title(filename):
     unique_filename = ".".join(filename_splited)
     return unique_filename
 
-# def convert_unix_time_to_readable_format(list_of_dicts):
-#     '''
-#     Converts and returns the given unix time to a readable format: date and time
-#     '''
-#     try:
-#         for _dict in list_of_dicts:
-#             _dict['submission_time'] = datetime.utcfromtimestamp(int(_dict['submission_time'])).strftime('%Y-%m-%d %H:%M:%S')
-#         return list_of_dicts
-#     except TypeError:
-#         return None
+
+def check_answers_for_edit(answers):
+    if answers != None:
+        for answer in answers:
+            if "(Edited)" in answer['message']:
+                answer['submission_time'] = str(
+                    answer['submission_time']) + " (edited)"
+                answer['message'] = answer['message'].replace("(Edited)", "")
+        return answers
 
 
-# def prepare_questions_for_html(sort_info):
-#     all_questions = convert_unix_time_to_readable_format(dmg.sort_questions(sort_info["sort_by"], sort_info["order"]))
-#     for question in all_questions: question['vote_number'] = "{0}%".format(dmg.vote_percentage(question['id']))
-#     all_questions = check_questions_for_edit(all_questions)
-#     return all_questions
+def check_comments_for_edit(comments):
+    if comments != None:
+        for com in comments:
+            if "(Edited)" in com['message']:
+                com['submission_time'] = str(
+                    com['submission_time']) + " (edited)"
+                com['message'] = com['message'].replace("(Edited)", "")
+        return comments
+
+
+def calculate_vote_percentage(votes_up, votes_down):
+    total_votes = votes_up + votes_down
+    try:
+        vote_percentage = float(votes_up/total_votes) * 100
+    except ZeroDivisionError:
+        vote_percentage = 0
+    return vote_percentage

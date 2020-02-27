@@ -37,28 +37,37 @@ def show_latest_questions():
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
     order_options = {"none": "Choose order",
-                     "ascending": "ascending", "descending": "descending"}
-    show_all_questions = True
+        "ascending": "ascending", "descending": "descending"}
     if request.method == "POST" and dict(request.form)['sort_by'] != 'none' and dict(request.form)['order'] != 'none':
         sort_info = dict(request.form)
-        all_questions = con.display_latest_questions(
+        all_questions = con.get_questions(
             sort_info['sort_by'], sort_info['order'])
-        all_questions = utl.check_questions_for_edit(all_questions)
+        first_questions = con.display_latest_questions(
+            sort_info['sort_by'], sort_info['order'])
+        first_questions = utl.check_questions_for_edit(first_questions)
+        if len(all_questions) > 5:
+            show_all_questions = True
+        else: show_all_questions == False
 
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading,
+        return render_template(WEB_PAGES["home_page"], questions=first_questions, table_heading=table_heading,
                                empty=False,
                                sort_options=sort_options, order_options=order_options,
                                default_sort=sort_info['sort_by'],
                                default_order=sort_info['order'],  show_all_questions=show_all_questions)
     if con.display_latest_questions('title', 'ascending') is False:
+        show_all_questions = True
         return render_template(WEB_PAGES["home_page"],
-                               questions="", table_heading="", empty=True, show_all_questions=show_all_questions)
+                             questions="", table_heading="", empty=True, show_all_questions=show_all_questions)
     else:
-        all_questions = con.display_latest_questions(
+        first_questions = con.display_latest_questions(
             'submission_time', 'descending')
-        all_questions = utl.check_questions_for_edit(all_questions)
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading,
-                               empty=False, sort_options=sort_options, order_options=order_options, default_sort="none",
+        first_questions = utl.check_questions_for_edit(first_questions)
+        all_questions = con.get_questions('id', 'ascending')
+        if len(all_questions) > 5:
+            show_all_questions = True
+        else: show_all_questions = False
+        return render_template(WEB_PAGES["home_page"], questions=first_questions, table_heading=table_heading,
+        empty=False, sort_options=sort_options, order_options=order_options, default_sort="none",
                                default_order="none",  show_all_questions=show_all_questions)
 
 
@@ -68,12 +77,13 @@ def home():
     "GET": displays the table with all the questions, the "ASK" button and the sorting functionality.
     "POST": gets the sorting criteria, sends it to data manager to execute the sorting and displays the home page based on the new result.
     '''
+
     table_heading = ["ID", "Submission Time", "Views",
-                     "Votes", "Title", "Question", "Image"]
+        "Votes", "Title", "Question", "Image"]
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
-                    "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
+        "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
     order_options = {"none": "Choose order",
-                     "ascending": "ascending", "descending": "descending"}
+        "ascending": "ascending", "descending": "descending"}
     if request.method == "POST" and dict(request.form)['sort_by'] != 'none' and dict(request.form)['order'] != 'none':
         sort_info = dict(request.form)
         all_questions = con.get_questions(
@@ -84,10 +94,18 @@ def home():
     if con.get_questions('title', 'ascending') is False:
         return render_template(WEB_PAGES["home_page"], questions="", table_heading="", empty=True)
     else:
-        all_questions = con.get_questions('submission_time', 'descending')
-        all_questions = utl.check_questions_for_edit(all_questions)
-        return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options,
-                               order_options=order_options, default_sort="none", default_order="none")
+        if request.args.get('sort-factor') == 'none':
+            all_questions = con.get_questions('submission_time', 'descending')
+            all_questions = utl.check_questions_for_edit(all_questions)
+            return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options,
+                                    order_options=order_options, default_sort="none", default_order="none")
+        else:
+            sort_factor = request.args.get('sort-factor')
+            sort_order = request.args.get('sort-order')
+            all_questions = con.get_questions(sort_factor, sort_order)
+            all_questions = utl.check_questions_for_edit(all_questions)
+            return render_template(WEB_PAGES["home_page"], questions=all_questions, table_heading=table_heading, empty=False, sort_options=sort_options,
+                                    order_options=order_options, default_sort=sort_factor, default_order=sort_order)
 
 
 @app.route("/question/<question_id>")
@@ -103,30 +121,46 @@ def question(question_id):
     question = utl.check_specific_question_for_edit(
         dmg.get_question_by_id(question_id))
     question['image'] = url_for('static', filename=question['image'])
-    answers_for_question = dmg.get_answers_for_question(question_id)
-    comments_for_question = dmg.get_comments_for_question(question_id)
+    answers_for_question = utl.check_answers_for_edit(
+        dmg.get_answers_for_question(question_id))
+    if request.args.get('show_more_com_for_q') == 'yes':
+        comments_for_question = utl.check_comments_for_edit(
+            dmg.get_comments_for_question(question_id, 'no-limit'))
+    else:
+        comments_for_question = utl.check_comments_for_edit(
+            dmg.get_comments_for_question(question_id, 'limit'))
+    try:
+        num_comments_for_question = len(utl.check_comments_for_edit(
+            dmg.get_comments_for_question(question_id, 'no-limit')))
+    except TypeError: num_comments_for_question = 0
+    tags_for_question = dmg.get_tags_for_question(question_id)
+    comments_for_answers = utl.check_comments_for_edit(
+        dmg.get_answers_for_question_comments(question_id))
     if comments_for_question is not None:
         comment_id = comments_for_question[0]['id']
     else:
         comment_id = None
-    tags_for_question = dmg.get_tags_for_question(question_id)
-    comments_for_answers = dmg.get_answers_for_question_comments(question_id)
-    if answers_for_question == None:
-        empty = True
+    if answers_for_question == None: empty = True
     if empty == False:
         answers_for_question = utl.prepare_answers_for_hmtl(
             answers_for_question, question_id)
         num_answers = len(answers_for_question)
+    show_more_com_for_q = request.args.get('show_more_com_for_q')
+    show_more_com_for_ans = request.args.get('show_more_com_for_ans')
     return render_template(WEB_PAGES["question_page"],
-                           question=question,
-                           answers=answers_for_question,
-                           empty=empty,
-                           question_id=question_id,
-                           num_answers=num_answers,
-                           comments_for_question=comments_for_question,
-                           comments_for_answers=comments_for_answers,
-                           comment_id=comment_id,
-                           tags_for_question=tags_for_question)
+        question=question,
+        answers=answers_for_question,
+        empty=empty,
+        question_id=question_id,
+        num_answers=num_answers,
+        num_comments_for_question=num_comments_for_question,
+        comments_for_question=comments_for_question,
+        comments_for_answers=comments_for_answers,
+        tags_for_question=tags_for_question,
+        show_more_com_for_q=show_more_com_for_q,
+        show_more_com_for_ans=show_more_com_for_ans,
+        comment_id=comment_id
+        )
 
 
 @app.route("/list/add-question", methods=["GET", "POST"])
@@ -148,10 +182,15 @@ def add_question():
         question_id = con.get_next_id('question')
         question_info = {"submission_time": submission_time, "view_number": 0,
                          "vote_number": 0, "title": request.form["title"],
-                         "message": request.form["message"], "image": f}
+                         "message": request.form["message"], "image": f,
+                         'votes_up': 0, 'votes_down': 0}
+        tags_for_question = {'existing_tag': request.form.get('existing_tag'),
+                                'new_tags': request.form.get('tags')}
         con.add_question(question_info)
+        con.add_tags_for_question(tags_for_question, question_id)
         return redirect("/question/{0}".format(question_id))
-    return render_template(WEB_PAGES["add_question_page"])
+    all_tags = con.get_tags()
+    return render_template(WEB_PAGES["add_question_page"], all_tags=all_tags)
 
 
 @app.route("/question/<question_id>/new-answer", methods=["GET", "POST"])
@@ -170,10 +209,20 @@ def new_answer(question_id):
         else:
             f = ""
         answer_id = con.get_next_id('answer')
+
+
+<< << << < HEAD
         submission_time = datetime.utcfromtimestamp(
             int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
         answer_info = {"id": answer_id, "submission_time": submission_time,
                        "vote_number": 0, "question_id": question_id, "message": request.form['answer'], "image": f}
+== == == =
+        submission_time = datetime.utcfromtimestamp(
+            int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        answer_info = {"id": answer_id, "submission_time": submission_time,
+                        "vote_number": 0, "question_id": question_id, "message": request.form['answer'], "image": f,
+                        'votes_up': 0, 'votes_down': 0}
+>>>>>> > 0f300abf11bd1cc9c078e27deccede8d438f4d46
         con.add_answer(answer_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["new_answer_page"], question=question)
@@ -189,15 +238,17 @@ def edit_question(question_id):
     '''
     if request.method == "POST":
         edited_question_info = dict(request.form)
-        edited_question_info['title'] = edited_question_info['title'] + \
-            "(Edited)"
-        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(
-            time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')  # GMT+2
-        con.edit_question(question_id, edited_question_info,
-                          new_submission_time)
+        edited_question_info['title'] = edited_question_info['title'] + "(Edited)"
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S') # GMT+2
+        con.edit_question(question_id, edited_question_info, new_submission_time)
+        tags_for_question = {'existing_tag': request.form.get('existing_tag'),
+                                'new_tags': request.form.get('tags')}
+        con.add_tags_for_question(tags_for_question, question_id)
         return redirect("/question/{0}".format(question_id))
-    question_info = dmg.get_question_by_id(question_id)
-    return render_template("edit_question.html", question_info=question_info)
+    question_info = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
+    all_tags = con.get_tags()
+    tags_for_question = dmg.get_tags_for_question(question_id)
+    return render_template("edit_question.html", question_info=question_info, all_tags=all_tags, tags_for_question=tags_for_question)
 
 
 @app.route("/question/<question_id>/delete")
@@ -227,7 +278,7 @@ def show_image_for_question(question_id, image_path):
         dmg.get_question_by_id(question_id))
     question['image'] = url_for('static', filename=question['image'])
     image = question['image']
-    comments_for_question = dmg.get_comments_for_question(question_id)
+    comments_for_question = dmg.get_comments_for_question(question_id, 'no-limit')
     tags_for_question = dmg.get_tags_for_question(question_id)
     return render_template(WEB_PAGES['show_image_page'],
                            question=question,
@@ -301,6 +352,72 @@ def delete_comments(comment_id):
 
     return redirect('/question/{0}'.format(question_id))
 
+@app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(question_id, answer_id):
+    if request.method == "POST":
+        new_answer = request.form['message'] + ' (Edited)'
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        edited_answer = {'id': answer_id, 'message': new_answer, 'submission_time': new_submission_time}
+        con.edit_answer(edited_answer)
+        return redirect('/question/{0}'.format(question_id))
+    answers = con.get_answers()
+    for answer in answers:
+        if answer['id'] == int(answer_id):
+            selected_answer = answer
+    return render_template('edit_answer.html', selected_answer=selected_answer)
+
+
+@app.route('/question/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
+def edit_comment_for_question(question_id, comment_id):
+    if request.method == 'POST':
+        new_comment = request.form['message'] + ' (Edited)'
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        new_comment_info = {'id': comment_id, 'question_id': question_id, 'message': new_comment, 'submission_time': new_submission_time}
+        con.edit_comment_for_question(new_comment_info)
+        return redirect('/question/{0}'.format(question_id))
+    comments = con.get_comments()
+    for com in comments:
+        if com['id'] == int(comment_id):
+            comment = com
+    return render_template('edit_comment.html', comment=comment)
+
+
+@app.route('/answer/<answer_id>/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
+def edit_comment_for_answer(answer_id, question_id, comment_id):
+    if request.method == 'POST':
+        new_comment = request.form['message'] + ' (Edited)'
+        new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+        answer_id = answer_id
+        new_comment_info = {'id': comment_id, 'answer_id': answer_id, 'message': new_comment, 'submission_time': new_submission_time}
+        con.edit_comment_for_answer(new_comment_info)
+        return redirect('/question/{0}'.format(question_id))
+    comments = con.get_comments()
+    for com in comments:
+        if com['id'] == int(comment_id):
+            comment = com
+    return render_template('edit_comment.html', comment=comment)
+
+
+@app.route('/search')
+def search():
+    search_term = request.args.get('q')
+    search_results = dmg.search(search_term)
+    if search_results != None:
+        return render_template('search.html', search_term=search_term, search_results=search_results,
+                                in_question_title=search_results['question_title'],
+                                in_question_message=search_results['question_message'],
+                                in_answers=search_results['answers'],
+                                in_tags=search_results['tags'],
+                                in_comments=search_results['comments'])
+    else: return render_template('search.html', search_results=search_results, search_term=search_term)
+
+
+@app.route('/question/<question_id>/<tag_name>/delete-tag')
+def delete_tag(question_id, tag_name):
+    con.delete_question_tag(question_id, tag_name)
+    return redirect('/question/{0}/edit'.format(question_id))
+
+# MAIN
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)

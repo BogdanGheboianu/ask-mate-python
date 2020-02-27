@@ -9,9 +9,17 @@ Question
 <h2>Ask a question</h2>
 <form method="POST" enctype="multipart/form-data">
     <p><input type="text" name="title" required placeholder="Question title" minlength="4"></p>
-    <p><textarea name="message" required placeholder="Your question" rows="30" cols="100" minlength="10"></textarea></p>
-    <p> <label for="img">Select image:</label>
-        <input type="file" id="img" name="image" accept="image/*"></p>
+    <p><textarea name="message" required placeholder="Your question..." rows="30" cols="100" minlength="10"></textarea></p>
+    <p><select name="existing_tag">
+        <option value="none">--Choose Tag--</option>
+        {% for tag in all_tags %}
+            <option value="{{ tag['name'] }}">{{ tag['name'] }}</option>
+        {% endfor %}
+        </select></p><p> ...or create new one(s):</p>
+        <p><textarea name="tags" placeholder="Separate tags by comma..." minlength="3" rows="2" cols="100"></textarea>
+    </p>
+    <p> <label for="img">Select image:</label></p>
+        <p><input type="file" id="img" name="image" accept="image/*"></p>
     <p><button class="ask-question-button" type="submit">ask</button></p>
 </form>
 

@@ -1,0 +1,87 @@
+{% extends 'framework.html' %}
+
+{% block title %}
+Search
+{% endblock %}
+
+{% block content%}
+<h1>Search results</h1><br>
+
+{% if search_results == None %}
+    <p>No reults found for '{{ search_term }}'.</p>
+
+{% else %}
+    {% if in_question_title %}
+        <h2>Most Relevant</h2><br>
+            {% for result in in_question_title %}
+                <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
+                <strong>Question ID:</strong> <em class="question-info">{{ result["id"] }}</em>
+                <strong>Posted:</strong> <em class="question-info">{{ result["submission_time"] }}</em>
+                <strong>Views:</strong> <em class="question-info">{{ result["view_number"] }}</em>
+                {% if result['vote_number'] != None %}
+                <strong>Votes:</strong> <em class="question-info">{{ result["vote_number"] }}%</em><br><hr>
+                {% else %}
+                <strong>Votes:</strong> <em class="question-info">N/A</em><br><hr>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+    <br><br>
+    {% if in_question_message %}
+        <h2>You might be interested in:</h2><br>
+            {% for result in in_question_message %}
+                <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
+                <p>{{ result['message'] }}</p>
+                <strong>Question ID:</strong> <em class="question-info">{{ result["id"] }}</em>
+                <strong>Posted:</strong> <em class="question-info">{{ result["submission_time"] }}</em>
+                <strong>Views:</strong> <em class="question-info">{{ result["view_number"] }}</em>
+                {% if result['vote_number'] != None %}
+                <strong>Votes:</strong> <em class="question-info">{{ result["vote_number"] }}%</em><br><hr>
+                {% else %}
+                <strong>Votes:</strong> <em class="question-info">N/A</em><br><hr>
+                {% endif %}
+            {% endfor %}
+    {% endif %}
+    <br><br>
+    {% if in_answers %}
+        <h2>Look through some answers:</h2><br>
+        {% for result in in_answers %}
+            <p>{{ result['message'] }} | 
+            <a class='question-links' href="/question/{{ result['question_id'] }}">See Question</a></p><br><hr>
+        {% endfor %}
+    {% endif %}
+    <br><br>
+    {% if in_tags %}
+                <h2>Results in popular tags: </h2>
+                    {% for result in in_tags %}
+                    <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
+                    <strong>TAGS: 
+                    {% for tag in result['tags'] %}
+                        <a class="question-links" href="/search?q={{ tag }}">#{{ tag }} </a>
+                    {% endfor %}</strong><br><hr>
+                    {% endfor %}
+    {% endif %}
+    <br><br>
+    {% if in_comments %}
+        <h2>Possible question comments to help you out:</h2><br>
+        {% for result in in_comments %}
+            {% if result['question_id'] != None %}
+            <p>{{ result['message'] }} | 
+                <a class="question-links" href="/question/{{ result['question_id'] }}">See question</a></p><br><hr>
+            {% endif %}
+        {% endfor %}
+
+    {% endif %}
+
+
+
+   
+
+
+{% endif %}
+
+
+
+{% endblock %}
+
+
+

@@ -23,8 +23,11 @@ def get_answers_for_question(question_id):
         return answers_for_question
 
 
-def get_comments_for_question(question_id):
-    comments = con.get_comments()
+def get_comments_for_question(question_id, limit):
+    if limit == 'no-limit':
+        comments = con.get_comments('no-limit')
+    elif limit == 'limit':
+        comments = con.get_comments('limit')
     comments_for_question = []
     for comment in comments:
         if comment['question_id'] != None and comment['question_id'] == int(question_id):
@@ -37,7 +40,7 @@ def get_comments_for_question(question_id):
 
 def get_answers_for_question_comments(question_id):
     answers_for_question = get_answers_for_question(int(question_id))
-    comments = con.get_comments()
+    comments = con.get_comments('no-limit')
     comments_for_answers = []
     if answers_for_question != None:
         for answer in answers_for_question:
@@ -68,153 +71,95 @@ def get_tags_for_question(question_id):
         return tags_for_question
 
 
-# def add(info, data_file, fieldnames):
-#     '''
-#     Adds new question or new answer to the specific file.
-#     '''
-#     with open(data_file, "a") as file:
-#         writer = DictWriter(file, fieldnames=fieldnames)
-#         if con.get_all(data_file) is False:
-#             writer.writeheader()
-#         writer.writerow(info)
-#         file.close()
+def search(search_phrase):
+    search_phrase_list_of_words = search_phrase.split(' ')
+    search_results_in_question_titles = search_in_questions(
+        search_phrase_list_of_words)[1]
+    search_results_in_question_messages = search_in_questions(
+        search_phrase_list_of_words)[0]
+    search_results_in_tags = search_in_tags(search_phrase_list_of_words)
+    search_results_in_answers = search_in_answers(search_phrase_list_of_words)
+    search_results_in_comments = search_in_comments(
+        search_phrase_list_of_words)
+
+    search_results = {
+        'question_title': search_results_in_question_titles,
+        'question_message': search_results_in_question_messages,
+        'tags': search_results_in_tags,
+        'answers': search_results_in_answers,
+        'comments': search_results_in_comments
+    }
+
+    for result in search_results.values():
+        if result:
+            return search_results
 
 
-# # QUESTIONS FUNCTIONS: get_question_by_id, add_view, sort_questions, edit_question, delete_question, vote_question
-
-# def get_question_by_id(question_id):
-#     '''
-#     Searches in all questions and returns the questions whose id matches the requested id.
-#     Returns None if no matching id was found.
-#     '''
-#     for question in con.get_all(question_file):
-#         if int(question['id']) == int(question_id): return question
-#     return None
-
-
-# def sort_questions(sort_factor, order):
-#     all_questions = con.get_all()
-#     if order == "ascending": return sorted(all_questions, key=lambda i: int(i[sort_factor]))
-#     else: return sorted(all_questions, key=lambda i: i[sort_factor], reverse=True)
+def search_in_questions(search_phrase_list_of_words):
+    search_results_in_question_titles = []
+    search_results_in_question_messages = []
+    for search_term in search_phrase_list_of_words:
+        questions = con.get_questions_for_search()
+        for question in questions:
+            if search_term in question['title'].lower():
+                if question not in search_results_in_question_titles:
+                    search_results_in_question_titles.append(question)
+            if search_term in question['message'].lower():
+                if question not in search_results_in_question_messages:
+                    search_results_in_question_messages.append(question)
+    return search_results_in_question_messages, search_results_in_question_titles
 
 
-# def edit_question(question_id, edited_question_info, new_submission_time):
-#     '''
-#     Edits the title and the message of the requested question.
-#     '''
-#     original_questions_data = con.get_all(question_file)
-#     updated_questions_data = []
-#     for question in original_questions_data:
-#         if int(question['id']) == int(question_id):
-#             question["title"] = edited_question_info['title']
-#             question['message'] = edited_question_info['message']
-#             question['submission_time'] = str(new_submission_time)
-#             updated_questions_data.append(question)
-#         else:
-#             updated_questions_data.append(question)
-#     con.write_data_to_file(updated_questions_data, question_file, questions_fieldnames)
+def search_in_answers(search_phrase_list_of_words):
+    search_results_in_answers = []
+    for search_term in search_phrase_list_of_words:
+        answers = con.get_answers()
+        for answer in answers:
+            if search_term in answer['message'].lower():
+                if answer not in search_results_in_answers:
+                    search_results_in_answers.append(answer)
+    return search_results_in_answers
 
 
-# def delete_question(question_id):
-#     '''
-#     Deletes the requested question and its answers.
-#     '''
-#     original_questions_data = con.get_all(question_file)
-#     updated_questions_data = []
-#     for question in original_questions_data:
-#         if int(question['id']) != int(question_id):
-#             updated_questions_data.append(question)
-#     con.write_data_to_file(updated_questions_data, question_file, questions_fieldnames)
-#     original_answers = con.get_all(answer_file)
-#     updated_answers = []
-#     for answer in original_answers:
-#         if int(answer['question_id']) != int(question_id):
-#             updated_answers.append(answer)
-#     con.write_data_to_file(updated_answers, answer_file, answer_fieldnames)
-
-# UPVOTES = 0
-# DOWNVOTES = 1
-
-# def vote_question(question_id, vote):
-#     '''
-#     Adds 1 to the vote_number (x-y) key of a question (depending on the request).
-#     '''
-#     original_questions = con.get_all(question_file)
-#     updated_questions = []
-#     for question in original_questions:
-#         if int(question['id']) == int(question_id):
-#             votes = question['vote_number'].split('-')
-#             if vote == "vote-up":
-#                 votes[0] = str(int(votes[UPVOTES]) + 1)
-#             elif vote == "vote-down":
-#                 votes[1] = str(int(votes[DOWNVOTES]) + 1)
-#             vote_number = "-".join(votes)
-#             question['vote_number'] = vote_number
-#             updated_questions.append(question)
-#         else:
-#             updated_questions.append(question)
-#     con.write_data_to_file(updated_questions, question_file, questions_fieldnames)
+def search_in_tags(search_phrase_list_of_words):
+    search_results_in_tags = []
+    for search_term in search_phrase_list_of_words:
+        tags = con.get_tags()
+        question_tags = con.get_question_tags()
+        tags_ids = []
+        for tag in tags:
+            if search_term in tag['name'].lower():
+                if tag['id'] not in tags_ids:
+                    tags_ids.append(tag['id'])
+        questions_ids = []
+        for tag_id in tags_ids:
+            for question_tag in question_tags:
+                if tag_id == question_tag['tag_id']:
+                    if question_tag['tag_id'] not in questions_ids:
+                        questions_ids.append(question_tag['question_id'])
+        questions = con.get_questions_for_search()
+        for question_id in questions_ids:
+            for question in questions:
+                if question_id == question['id']:
+                    if question not in search_results_in_tags:
+                        search_results_in_tags.append(question)
+        for question in search_results_in_tags:
+            tags_to_add = []
+            for question_tag in question_tags:
+                if question['id'] == question_tag['question_id']:
+                    for tag in tags:
+                        if question_tag['tag_id'] == tag['id']:
+                            tags_to_add.append(tag['name'])
+            question.update({'tags': tags_to_add})
+    return search_results_in_tags
 
 
-# def vote_percentage(question_id):
-#     '''
-#     Calculates and returns the percantage voting for the requested question.
-#     '''
-#     question = get_question_by_id(question_id)
-#     votes = question['vote_number'].split('-')
-#     total_votes = int(votes[UPVOTES]) + int(votes[DOWNVOTES])
-#     try:
-#         up_votes_percentage = float(int(votes[UPVOTES]) / int(total_votes)) * 100
-#     except ZeroDivisionError:
-#         return "0"
-#     return int(up_votes_percentage)
-
-
-# # ANSWERS FUNCTIONS: find_answers_by_question_id, get_answer_by_id, vote_answer, delete_answer
-
-# def find_answers_by_question_id(question_id):
-#     '''
-#     Searches the answer file and extracts the answers for a specific question_id.
-#     '''
-#     all_answers = con.get_all(answer_file)
-#     answers_for_question = []
-#     for answer in all_answers:
-#         if int(answer['question_id']) == int(question_id):
-#             answers_for_question.append(answer)
-#     if len(answers_for_question) == 0: return None
-#     else: return answers_for_question
-
-
-# def get_answer_by_id(answer_id, question_id):
-#     '''
-#     Returns the answer that has the exact id as the requested one.
-#     '''
-#     answers = find_answers_by_question_id(question_id)
-#     for answer in answers:
-#         if int(answer['id']) == int(answer_id):
-#             return answer
-
-# def vote_percentage_answer(answer_id, question_id):
-#     '''
-#     Calculates and returns the percentage of a specific answer voting.
-#     '''
-#     answer = get_answer_by_id(answer_id, question_id)
-#     votes = answer['vote_number'].split('-')
-#     total_votes = int(votes[UPVOTES]) + int(votes[DOWNVOTES])
-#     try:
-#         up_votes_percentage = float(int(votes[UPVOTES]) / int(total_votes)) * 100
-#     except ZeroDivisionError:
-#         return "0"
-#     return int(up_votes_percentage)
-
-
-# def delete_answer(answer_id):
-#     '''
-#     Deletes requested answer.
-#     '''
-#     original_answers = con.get_all(answer_file)
-#     updated_answers = []
-#     for answer in original_answers:
-#         if int(answer['id']) != int(answer_id):
-#             updated_answers.append(answer)
-#     con.write_data_to_file(updated_answers, answer_file, answer_fieldnames)
+def search_in_comments(search_phrase_list_of_words):
+    search_results_in_comments = []
+    for search_term in search_phrase_list_of_words:
+        comments = con.get_comments('no-limit')
+        for com in comments:
+            if search_term in com['message'].lower():
+                if com not in search_results_in_comments:
+                    search_results_in_comments.append(com)
+    return search_results_in_comments
