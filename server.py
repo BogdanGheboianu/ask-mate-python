@@ -408,7 +408,10 @@ def search():
                                 in_question_message=search_results['question_message'],
                                 in_answers=search_results['answers'],
                                 in_tags=search_results['tags'],
-                                in_comments=search_results['comments'])
+                                in_comments=search_results['comments'],
+                                question=question,
+                                highlight=utl.highlight
+                                )
     else: return render_template('search.html', search_results=search_results, search_term=search_term)
 
 

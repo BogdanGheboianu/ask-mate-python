@@ -14,7 +14,11 @@ Search
     {% if in_question_title %}
         <h2>Most Relevant</h2><br>
             {% for result in in_question_title %}
-                <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
+                <h3><a class="question-links" href="/question/{{ result['id'] }}">
+                
+                    {{ highlight(result['title'], search_term)|safe }}
+
+                </a></h3><br>
                 <strong>Question ID:</strong> <em class="question-info">{{ result["id"] }}</em>
                 <strong>Posted:</strong> <em class="question-info">{{ result["submission_time"] }}</em>
                 <strong>Views:</strong> <em class="question-info">{{ result["view_number"] }}</em>
@@ -30,7 +34,7 @@ Search
         <h2>You might be interested in:</h2><br>
             {% for result in in_question_message %}
                 <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
-                <p>{{ result['message'] }}</p>
+                <p>{{ highlight(result['message'], search_term)|safe }}</p>
                 <strong>Question ID:</strong> <em class="question-info">{{ result["id"] }}</em>
                 <strong>Posted:</strong> <em class="question-info">{{ result["submission_time"] }}</em>
                 <strong>Views:</strong> <em class="question-info">{{ result["view_number"] }}</em>
@@ -45,7 +49,7 @@ Search
     {% if in_answers %}
         <h2>Look through some answers:</h2><br>
         {% for result in in_answers %}
-            <p>{{ result['message'] }} | 
+            <p>{{ highlight(result['message'], search_term)|safe }} | 
             <a class='question-links' href="/question/{{ result['question_id'] }}">See Question</a></p><br><hr>
         {% endfor %}
     {% endif %}

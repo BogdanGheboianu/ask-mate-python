@@ -76,3 +76,8 @@ def calculate_vote_percentage(votes_up, votes_down):
     except ZeroDivisionError:
         vote_percentage = 0
     return vote_percentage
+
+def highlight(text, search_term):
+    new_text = text.lower().replace(search_term, '<mark>{0}</mark>'.format(search_term))
+    return new_text
+
