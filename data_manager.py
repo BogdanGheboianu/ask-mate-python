@@ -141,7 +141,7 @@ def search_in_tags(search_phrase_list_of_words):
 def search_in_comments(search_phrase_list_of_words):
     search_results_in_comments = []
     for search_term in search_phrase_list_of_words:
-        comments = con.get_comments()
+        comments = con.get_comments('no-limit')
         for com in comments:
             if search_term in com['message'].lower():
                 if com not in search_results_in_comments:

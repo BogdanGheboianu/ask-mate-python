@@ -201,9 +201,14 @@ def edit_question(question_id):
         edited_question_info['title'] = edited_question_info['title'] + "(Edited)"
         new_submission_time = datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S') # GMT+2
         con.edit_question(question_id, edited_question_info, new_submission_time)
+        tags_for_question = {'existing_tag': request.form.get('existing_tag'),
+                                'new_tags': request.form.get('tags')}
+        con.add_tags_for_question(tags_for_question, question_id)
         return redirect("/question/{0}".format(question_id))
-    question_info = dmg.get_question_by_id(question_id)
-    return render_template("edit_question.html", question_info=question_info)
+    question_info = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
+    all_tags = con.get_tags()
+    tags_for_question = dmg.get_tags_for_question(question_id)
+    return render_template("edit_question.html", question_info=question_info, all_tags=all_tags, tags_for_question=tags_for_question)
 
 
 @app.route("/question/<question_id>/delete")
@@ -232,7 +237,7 @@ def show_image_for_question(question_id, image_path):
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     question['image'] = url_for('static', filename=question['image'])
     image = question['image']
-    comments_for_question = dmg.get_comments_for_question(question_id)
+    comments_for_question = dmg.get_comments_for_question(question_id, 'no-limit')
     tags_for_question = dmg.get_tags_for_question(question_id)
     return render_template(WEB_PAGES['show_image_page'], 
                             question=question, 
@@ -354,6 +359,12 @@ def search():
                                 in_tags=search_results['tags'],
                                 in_comments=search_results['comments'])
     else: return render_template('search.html', search_results=search_results, search_term=search_term)
+
+
+@app.route('/question/<question_id>/<tag_name>/delete-tag')
+def delete_tag(question_id, tag_name):
+    con.delete_question_tag(question_id, tag_name)
+    return redirect('/question/{0}/edit'.format(question_id))
 
 # MAIN
 

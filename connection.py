@@ -243,3 +243,12 @@ def add_tags_for_question(cursor, tags, question_id):
             tag_name = tag
             cursor.execute(""" INSERT INTO tag VALUES({0}, '{1}'); """.format(tag_id, tag_name))
             cursor.execute(""" INSERT INTO question_tag VALUES ({0}, {1}); """.format(question_id, tag_id))
+
+
+@database_common.connection_handler
+def delete_question_tag(cursor, question_id, tag_name):
+    all_tags = get_tags()
+    for tag in all_tags:
+        if tag_name == tag['name']:
+            tag_id_to_del = tag['id']
+    cursor.execute(""" DELETE FROM question_tag WHERE question_id={0} AND tag_id={1}; """.format(question_id, tag_id_to_del))
