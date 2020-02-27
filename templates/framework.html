@@ -7,6 +7,7 @@
     <title>{% block title%}{% endblock %}| AskMate</title>
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Galindo&display=swap" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
 </head>
 
@@ -14,12 +15,14 @@
     <div class="all-content">
         <div class="header-container">
             <a class="site-title-link" href="/">
-                <h1 class="site-title">ask.Mate</h1>
+                <h1 class="site-title"><span class="logo-ask">ASK</span>.mate</h1>
             </a>
-            <form style="margin-left: 850px;margin-top: 10px;" action="/search" method="GET">
+            <form class="search-form" action="/search" method="GET">
                 <input type="text" name="q" required value="{{ search_term }}">
-                <input type="submit" value="Search">
+                <input class="search-button" type="submit" value="Search">
             </form>
+            <div class="social"><i class="insta fab fa-instagram"></i><i class="scloud fab fa-soundcloud"></i><i
+                class="snap fab fa-snapchat-ghost"></i></div>
         </div>
 
 
@@ -31,6 +34,7 @@
 
 
         </div>
+        <footer>@2020 Gheboianu &amp; Catrina. All rights reserved.</footer>
     </div>
     <script>
         function myFunction(comment_id) {

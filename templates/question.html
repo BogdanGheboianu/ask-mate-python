@@ -54,8 +54,9 @@ Question
         <li>
             <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
                     class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
-                    class="question-info">{{ comment['submission_time'] }}</em> | <a id="delete-answer"
-                    href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment">Edit Comment</a><a href="/comments/{{ comment['id'] }}/delete"
+                    class="question-info">{{ comment['submission_time'] }}</em> | <a
+                    href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment"><i
+                        class="pencil fas fa-pencil-alt"></i></a><a id="recycle-link"
                     onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
         </li>
     </ul>
@@ -100,8 +101,8 @@ Question
                     href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
                         width="16" height="16"></a>
             </div>
-            <a id="delete-answer" href="/answer/{{ question_id }}/{{ answer['id'] }}/edit">Edit Answer</a>
-            <a id="delete-answer" href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
+            <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
+            <a href="/answer/{{ question_id }}/{{ answer['id'] }}/delete"><i class="recycle fas fa-trash-alt"></i></a>
 
         </div>
         <div class="answer-info-area">
@@ -124,7 +125,8 @@ Question
                     <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
                             class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
                             class="question-info">{{ comment['submission_time'] }}</em>
-                        <a href="/comments/{{ comment['id'] }}/delete" onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
+                            <a id="recycle-link" onclick="myFunction({{ comment['id'] }})"><i
+                                class="recycle fas fa-trash-alt"></i></a>
                     </p>
                 </li>
                 </ul>
@@ -138,7 +140,7 @@ Question
 
                 
                 
-                <p><a id="delete-answer" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a></p>
+                <p><a id="delete-answer" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
               
         </div>
         <hr>

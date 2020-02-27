@@ -42,7 +42,7 @@ tr {
     display: flex;
     align-items: center;
     background-color: black;
-    padding: 10px 50px;
+    padding: 0px 50px;
 }
 
 .site-title-container {
@@ -50,17 +50,16 @@ tr {
 }
 
 .site-title {
-    margin-top: 1.5em;
-    max-width: 94%;
+    align-items: center;
     text-align: left;
     vertical-align: middle;
+    font-family: 'Galindo';
     font-weight: 900;
-    font-size: 1.2em;
-    color: #000;
+    font-size: 1.6em;
+    color:white;
     letter-spacing: 0.05em;
-    background-color: #e19639;
-    padding: 8px 16px;
-    border-radius: 10px;
+    padding: 6px 6px;
+    border-radius: 12%;
 }
 
 .site-title-link {
@@ -71,7 +70,7 @@ tr {
 .main-content {
     max-width: 94%;
     margin: 0 auto;
-    padding-bottom: 2em;
+    min-height: 650px;
 }
 
 .table-style {
@@ -97,6 +96,7 @@ tr {
   text-transform: capitalize;
   font-size: 0.75em;
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 #submit:hover {
@@ -152,7 +152,7 @@ hr { display: block; height: 1px;
     margin-top: 1.5em;
     background-color: #428c40;
     border-color: #428c40;
-    color: white;
+    color:#f8e7d3;
     padding: 6px 6px;
     font-family: Verdana;
     font-weight: 900;
@@ -162,6 +162,7 @@ hr { display: block; height: 1px;
     border-radius: 4px;
     letter-spacing: 0.05em;
     box-shadow: inset 0 1px 0 0 #316930;
+    transition: all 0.3s ease;
 }
 
 .ask-question-button:hover {
@@ -253,26 +254,32 @@ hr { display: block; height: 1px;
     
 }
 
-#delete-answer {
-  background-color: #1a1b1d;
-  color:  #e19639;
-  border: 1px solid #e19639;
-  border-radius: 5px;
-  padding: 4px 16px;
-  outline: none;
-  margin: 4px 2px;
-  cursor: pointer;
-  font-weight: 500;
-  margin-left: 1em;
-  text-transform: capitalize;
-  font-size: 0.75em;
-  text-decoration: none;
-}
+#delete-answer, #show-all {
+    background-color: #1a1b1d;
+    color:  #e19639;
+    border: 1px solid #e19639;
+    border-radius: 5px;
+    padding: 4px 16px;
+    outline: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 1em;
+    text-transform: capitalize;
+    font-size: 0.75em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  #show-all {
+      font-size: 0.9em;
+  }
 
-#delete-answer:hover {
+  #delete-answer:hover, #show-all:hover {
     color:#f8e7d3;
     border: 1px solid #f8e7d3;;
 }
+
 
 
 input {
@@ -301,6 +308,7 @@ textarea {
 a.see-image-link {
     text-decoration: none;
     color: #e19639;
+    max-width: 100px;
 }
 
 .see-image-link:hover {
@@ -321,6 +329,7 @@ a.see-image-link {
   text-transform: capitalize;
   font-size: 0.75em;
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 #show-image:hover {
@@ -365,3 +374,71 @@ a.see-image-link {
     color: #f8e7d3;
 }
 
+
+.search-form {
+    margin-left: 50%;
+}
+
+.search-form input {
+    background-color: #f8e7d3;
+    color: #666;
+    font-weight: 900;
+    outline: none;
+    font-size: 0.8em;
+}
+
+input.search-button {
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+input.search-button:hover {
+    cursor: pointer;
+    color: black;
+}
+
+.social {
+    margin-left: 18%;
+    display: inline-block;
+}
+
+.insta, .snap, .scloud {
+    font-size: 1.8em;
+    color: #f8e7d3;
+    margin-left: 1em;
+    transition: all 0.3s ease;
+}
+
+.insta:hover, .snap:hover, .scloud:hover {
+     cursor: pointer;
+     color: seagreen;
+ }
+
+ #recycle-link:hover {
+    cursor: pointer;
+}
+
+.pencil {
+    color: #f8e7d3;
+    margin-left: 1em;
+    margin-right: 1.5em;
+}
+
+
+footer {
+    bottom: 0px;
+    margin-top:  2em;
+    height: 6em;
+    background-color: #222;
+    text-align: center;
+    line-height: 6em;
+}
+
+.add-something {
+    margin-top: 2em
+}
+
+.remove-tag {
+    color: #ff6666; 
+    margin-left: 0.3em;
+}

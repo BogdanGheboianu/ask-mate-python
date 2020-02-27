@@ -5,7 +5,7 @@ Question
 {% endblock %}
 
 {% block content%}
-<h2>Edit this question</h2>
+<h2 class="add-something">Edit this question</h2>
 <form method="POST">
     <p><input type="text" name="title" required value="{{ question_info['title'] }}" minlength="3"></p>
     <p><textarea name="message" required ="{{ question_info['message'] }}" rows="10" cols="50" minlength="3">{{ question_info['message'] }}</textarea>
@@ -13,7 +13,7 @@ Question
     <p>TAGS:
         {% if tags_for_question != None %}
     {% for tag in tags_for_question %}
-        #{{ tag }} <a href="/question/{{ question_info['id'] }}/{{ tag }}/delete-tag">X</a>
+        #{{ tag }} <a class="remove-tag" href="/question/{{ question_info['id'] }}/{{ tag }}/delete-tag">X</a>
     {% endfor %}
     {% else %}<em>No tags</em>
     {% endif %}

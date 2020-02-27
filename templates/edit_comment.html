@@ -5,7 +5,7 @@ Comment
 {% endblock %}
 
 {% block content%}
-<h2>Edit this comment</h2>
+<h2 class="add-something">Edit this comment</h2>
 <form method="POST">
     <p><textarea name="message" required rows="10" cols="50" minlength="3" required>{{ comment['message'] }}</textarea>
     </p>
