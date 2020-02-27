@@ -56,7 +56,7 @@ Search
                     <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
                     <strong>TAGS: 
                     {% for tag in result['tags'] %}
-                        #{{ tag }} 
+                        <a class="question-links" href="/search?q={{ tag }}">#{{ tag }} </a>
                     {% endfor %}</strong><br><hr>
                     {% endfor %}
     {% endif %}
