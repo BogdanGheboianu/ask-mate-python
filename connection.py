@@ -72,36 +72,41 @@ def get_next_id(cursor, table):
 
 @database_common.connection_handler
 def add_question(cursor, info):
+    title = utl.escape_characters(info['title'])
+    message = utl.escape_characters(info['message'])
     cursor.execute("""INSERT INTO question (id, submission_time, view_number, title, message, image, votes_up, votes_down)
                     VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}', {6}, {7});
                     """.format(info['id'], info['submission_time'], info['view_number'],
-                            info['title'], info['message'], info['image'], info['votes_up'], info['votes_down']))
+                            title, message, info['image'], info['votes_up'], info['votes_down']))
 
 
 @database_common.connection_handler
 def add_answer(cursor, answer_info):
+    message = utl.escape_characters(answer_info['message'])
     cursor.execute(""" INSERT INTO answer (id, submission_time, question_id, message, image, votes_up, votes_down)
                     VALUES ({0}, '{1}', {2}, '{3}', '{4}', {5}, {6});
                     """.format(answer_info['id'], answer_info['submission_time'], answer_info['question_id'],
-                               answer_info['message'], answer_info['image'], answer_info['votes_up'], answer_info['votes_down']))
+                               message, answer_info['image'], answer_info['votes_up'], answer_info['votes_down']))
 
 
 
 @database_common.connection_handler
 def add_comment_for_question(cursor, comment_info):
+    message = utl.escape_characters(comment_info['message'])
     cursor.execute(""" INSERT INTO comment (id, question_id, message, submission_time) VALUES ({0}, {1}, '{2}', '{3}');
                     """.format(comment_info['id'],
                                 comment_info['question_id'],
-                                comment_info['message'],
+                                message,
                                 comment_info['submission_time']))
 
 
 @database_common.connection_handler
 def add_comment_for_answer(cursor, comment_info):
+    message = utl.escape_characters(comment_info['message'])
     cursor.execute(""" INSERT INTO comment (id, answer_id, message, submission_time) VALUES ({0}, {1}, '{2}', '{3}');
                     """.format(comment_info['id'],
                                 comment_info['answer_id'],
-                                comment_info['message'],
+                                message,
                                 comment_info['submission_time']))
 
 
@@ -125,7 +130,7 @@ def add_tags_for_question(cursor, tags, question_id):
                 break
         if not found:
             tag_id = get_next_id('tag')
-            tag_name = tag
+            tag_name = utl.escape_characters(tag)
             cursor.execute(""" INSERT INTO tag VALUES({0}, '{1}'); """.format(tag_id, tag_name))
             cursor.execute(""" INSERT INTO question_tag VALUES ({0}, {1}); """.format(question_id, tag_id))
 
@@ -135,8 +140,10 @@ def add_tags_for_question(cursor, tags, question_id):
 
 @database_common.connection_handler
 def edit_question(cursor, question_id, edited_question_info, new_submission_time):
+    title = utl.escape_characters(edited_question_info['title'])
+    message = utl.escape_characters(edited_question_info['message'])
     cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}' where id={3};
-                    """.format(edited_question_info['title'], edited_question_info['message'], new_submission_time, question_id))
+                    """.format(title, message, new_submission_time, question_id))
 
 
 @database_common.connection_handler
@@ -160,14 +167,16 @@ def vote_question(cursor, question_id, vote_name):
 
 @database_common.connection_handler
 def edit_comment_for_question(cursor, new_comment_info):
+    message = utl.escape_characters(new_comment_info['message'])
     cursor.execute(""" UPDATE comment SET message='{0}', submission_time='{1}' WHERE id={2}; 
-                    """.format(new_comment_info['message'], new_comment_info['submission_time'], new_comment_info['id']))
+                    """.format(message, new_comment_info['submission_time'], new_comment_info['id']))
 
 
 @database_common.connection_handler
 def edit_answer(cursor, answer_new_info):
+    message = utl.escape_characters(answer_new_info['message'])
     cursor.execute(""" UPDATE answer SET message='{0}', submission_time='{1}' WHERE id={2};
-                     """.format(answer_new_info['message'], answer_new_info['submission_time'], answer_new_info['id']))
+                     """.format(message, answer_new_info['submission_time'], answer_new_info['id']))
 
 
 @database_common.connection_handler
@@ -182,8 +191,9 @@ def vote_answer(cursor, answer_id, vote_name):
 
 @database_common.connection_handler
 def edit_comment_for_answer(cursor, new_comment_info):
+    message = utl.escape_characters(new_comment_info['message'])
     cursor.execute(""" UPDATE comment SET message='{0}', submission_time='{1}' WHERE id={2}; 
-                    """.format(new_comment_info['message'], new_comment_info['submission_time'], new_comment_info['id']))
+                    """.format(message, new_comment_info['submission_time'], new_comment_info['id']))
 
 #=================================================================================================================================================
 

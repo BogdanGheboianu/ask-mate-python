@@ -7,7 +7,7 @@ Comment
 {% block content%}
 <h2>Edit this comment</h2>
 <form method="POST">
-    <p><textarea name="message" required rows="10" cols="50" minlength="10">{{ comment['message'] }}</textarea>
+    <p><textarea name="message" required rows="10" cols="50" minlength="3" required>{{ comment['message'] }}</textarea>
     </p>
     <div><button class="ask-question-button" type="submit">POST</button></div>
 </form>

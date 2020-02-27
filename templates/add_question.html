@@ -8,8 +8,8 @@ Question
 
 <h2>Ask a question</h2>
 <form method="POST" enctype="multipart/form-data">
-    <p><input type="text" name="title" required placeholder="Question title" minlength="4"></p>
-    <p><textarea name="message" required placeholder="Your question..." rows="30" cols="100" minlength="10"></textarea></p>
+    <p><input type="text" name="title" required placeholder="Question title" minlength="3"></p>
+    <p><textarea name="message" required placeholder="Your question..." rows="30" cols="100" minlength="3"></textarea></p>
     <p><select name="existing_tag">
         <option value="none">--Choose Tag--</option>
         {% for tag in all_tags %}

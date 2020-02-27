@@ -5,7 +5,6 @@ from flask import url_for
 
 
 def check_specific_question_for_edit(question):
-    print(question)
     if "(Edited)" in question['title']:
         question['submission_time'] = str(
             question['submission_time']) + " (edited)"
@@ -85,3 +84,8 @@ def highlight(text, search_phrase):
             text = text.lower().replace(search_term, "<span style='color: white; background-color: seagreen;'>{0}</span>".format(search_term))
     return text
 
+
+def escape_characters(text):
+    if '\'' in text:
+        text = text.replace('\'', '\'\'')
+    return text
