@@ -47,7 +47,7 @@ def show_latest_questions():
         first_questions = utl.check_questions_for_edit(first_questions)
         if len(all_questions) > 5:
             show_all_questions = True
-        else: show_all_questions == False
+        else: show_all_questions = False
 
         return render_template(WEB_PAGES["home_page"], questions=first_questions, table_heading=table_heading,
                                empty=False,
@@ -211,18 +211,18 @@ def new_answer(question_id):
         answer_id = con.get_next_id('answer')
 
 
-<< << << < HEAD
+
         submission_time = datetime.utcfromtimestamp(
             int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
         answer_info = {"id": answer_id, "submission_time": submission_time,
                        "vote_number": 0, "question_id": question_id, "message": request.form['answer'], "image": f}
-== == == =
+
         submission_time = datetime.utcfromtimestamp(
             int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
         answer_info = {"id": answer_id, "submission_time": submission_time,
                         "vote_number": 0, "question_id": question_id, "message": request.form['answer'], "image": f,
                         'votes_up': 0, 'votes_down': 0}
->>>>>> > 0f300abf11bd1cc9c078e27deccede8d438f4d46
+
         con.add_answer(answer_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["new_answer_page"], question=question)

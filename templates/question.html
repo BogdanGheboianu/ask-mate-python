@@ -32,7 +32,7 @@ Question
     {% if tags_for_question != None %}
     <p><strong>TAGS:</strong>
         {% for tag in tags_for_question %}
-        <em class="question-info"><a class="question-links" href="/search?q={{ tag }}">#{{ tag }}</a>as</em>
+        <em class="question-info"><a class="question-links" href="/search?q={{ tag }}">#{{ tag }}</a></em>
         {% endfor %}
         {% endif %}
     </p>
@@ -118,7 +118,7 @@ Question
         {% endif %}
         <div class="question-info-area">
             <strong><em class="question-info">Comments</em></strong>
-            <<<<<<< HEAD {% if comments_for_answers != None %} {% for comment in comments_for_answers %}
+           {% if comments_for_answers != None %} {% for comment in comments_for_answers %}
                 {% if comment['answer_id'] == answer['id'] %} <ul>
                 <li>
                     <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
@@ -133,31 +133,13 @@ Question
                 {% else %}
                 <p><em>There are no comments for this answer</em></p>
                 {% endif %}
-                <a class="question-links" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add
-                    Comment</a>
-                =======
-                {% if comments_for_answers != None %}
-                {% for comment in comments_for_answers %}
-                {% if comment['answer_id'] == answer['id'] %}
-                <ul>
-                    <li>
-                        <p>{{ comment['message'] }} |
-                            <strong>Comment ID: </strong><em class="question-info">{{ comment['id'] }}</em> |
-                            <strong>Posted: </strong><em class="question-info">{{ comment['submission_time'] }}</em> |
-                            <a id="delete-answer"
-                                href="/answer/{{ answer['id'] }}/{{ question_id }}/{{ comment['id'] }}/edit-comment">Edit
-                                Comment</a></p>
-                    </li>
-                </ul>
+               
+                
 
-                {% endif %}
-                {% endfor %}
-
-                {% else %}
-                <p><em>There are no comments for this answer</em></p>
-                {% endif %}
-                <a id="delete-answer" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
-                >>>>>>> 0f300abf11bd1cc9c078e27deccede8d438f4d46
+                
+                
+                <p><a id="delete-answer" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a></p>
+              
         </div>
         <hr>
     </div>
