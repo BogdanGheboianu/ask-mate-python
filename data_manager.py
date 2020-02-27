@@ -1,14 +1,11 @@
 import connection as con
 import os
 
-
+# REQUESTS FROM connection.py
 def get_question_by_id(question_id):
     questions = con.get_questions('id', 'ascending')
-
-    print(question_id)
     for question in questions:
-        if question['id'] == int(question_id):
-            return question
+        if question['id'] == int(question_id): return question
 
 
 def get_answers_for_question(question_id):
@@ -17,10 +14,8 @@ def get_answers_for_question(question_id):
     for answer in answers:
         if answer['question_id'] == int(question_id):
             answers_for_question.append(answer)
-    if len(answers_for_question) == 0:
-        return None
-    else:
-        return answers_for_question
+    if len(answers_for_question) == 0: return None
+    else: return answers_for_question
 
 
 def get_comments_for_question(question_id, limit):
@@ -32,10 +27,8 @@ def get_comments_for_question(question_id, limit):
     for comment in comments:
         if comment['question_id'] != None and comment['question_id'] == int(question_id):
             comments_for_question.append(comment)
-    if len(comments_for_question) == 0:
-        return None
-    else:
-        return comments_for_question
+    if len(comments_for_question) == 0: return None
+    else: return comments_for_question
 
 
 def get_answers_for_question_comments(question_id):
@@ -47,10 +40,8 @@ def get_answers_for_question_comments(question_id):
             for comment in comments:
                 if comment['answer_id'] != None and comment['answer_id'] == answer['id']:
                     comments_for_answers.append(comment)
-    if len(comments_for_answers) == 0:
-        return None
-    else:
-        return comments_for_answers
+    if len(comments_for_answers) == 0: return None
+    else: return comments_for_answers
 
 
 def get_tags_for_question(question_id):
@@ -65,31 +56,28 @@ def get_tags_for_question(question_id):
         for tag in tags:
             if tag['id'] == tag_id:
                 tags_for_question.append(tag['name'])
-    if len(tags_for_question) == 0:
-        return None
-    else:
-        return tags_for_question
+    if len(tags_for_question) == 0: return None
+    else: return tags_for_question
 
+#===================================================================================================================================================
+
+# SEARCH FUNCTIONS
 
 def search(search_phrase):
+    TITLES = 1
+    MESSAGES = 0
     search_phrase_list_of_words = search_phrase.split(' ')
-    search_results_in_question_titles = search_in_questions(
-        search_phrase_list_of_words)[1]
-    search_results_in_question_messages = search_in_questions(
-        search_phrase_list_of_words)[0]
+    search_results_in_question_titles = search_in_questions(search_phrase_list_of_words)[TITLES]
+    search_results_in_question_messages = search_in_questions(search_phrase_list_of_words)[MESSAGES]
     search_results_in_tags = search_in_tags(search_phrase_list_of_words)
     search_results_in_answers = search_in_answers(search_phrase_list_of_words)
-    search_results_in_comments = search_in_comments(
-        search_phrase_list_of_words)
-
+    search_results_in_comments = search_in_comments(search_phrase_list_of_words)
     search_results = {
         'question_title': search_results_in_question_titles,
         'question_message': search_results_in_question_messages,
         'tags': search_results_in_tags,
         'answers': search_results_in_answers,
-        'comments': search_results_in_comments
-    }
-
+        'comments': search_results_in_comments}
     for result in search_results.values():
         if result:
             return search_results

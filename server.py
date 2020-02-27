@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
-import time, calendar, os, uuid
-from datetime import datetime
+import os, uuid
 import data_manager as dmg
 import connection as con
 import util as utl
@@ -104,7 +103,7 @@ def question(question_id):
         comment_id = None
     if answers_for_question == None: empty = True
     if empty == False:
-        answers_for_question = utl.prepare_answers_for_hmtl(answers_for_question, question_id)
+        answers_for_question = utl.link_answer_with_image(answers_for_question, question_id)
         num_answers = len(answers_for_question)
     show_more_com_for_q = request.args.get('show_more_com_for_q')
     show_more_com_for_ans = request.args.get('show_more_com_for_ans')
@@ -165,7 +164,7 @@ def add_question():
         question_id = con.get_next_id('question')
         f = save_image(request.files['image'])
         question_info = {'id': question_id, 
-                        "submission_time": get_current_time(), 
+                        "submission_time": utl.get_current_time(), 
                         "view_number": 0,
                          "vote_number": 0, 
                          "title": request.form["title"],
@@ -187,7 +186,7 @@ def add_answer(question_id):
     if request.method == "POST":
         f = save_image(request.files['image'])
         answer_info = {"id": con.get_next_id('answer'), 
-                        "submission_time": get_current_time(),
+                        "submission_time": utl.get_current_time(),
                         "vote_number": 0, 
                         "question_id": question_id, 
                         "message": request.form['answer'], 
@@ -204,7 +203,7 @@ def add_comment_for_question(question_id):
         comment_info = {'id': con.get_next_id('comment'), 
                         'question_id': question_id,
                         'message': request.form['comment'], 
-                        'submission_time': get_current_time()}
+                        'submission_time': utl.get_current_time()}
         con.add_comment_for_question(comment_info)
         return redirect('/question/{0}'.format(question_id))
     return render_template(WEB_PAGES['add_comm'], question_id=question_id)
@@ -215,7 +214,7 @@ def add_comment_for_answer(question_id, answer_id):
     if request.method == 'POST':
         comment_info = {'id': con.get_next_id('comment'), 
                         'answer_id': answer_id,
-                        'submission_time': get_current_time(), 
+                        'submission_time': utl.get_current_time(), 
                         'message': request.form['comment']}
         con.add_comment_for_answer(comment_info)
         return redirect('/question/{0}'.format(question_id))
@@ -236,7 +235,7 @@ def edit_question(question_id):
     if request.method == "POST":
         edited_question_info = dict(request.form)
         edited_question_info['title'] = edited_question_info['title'] + "(Edited)"
-        new_submission_time = get_current_time()
+        new_submission_time = utl.get_current_time()
         con.edit_question(question_id, edited_question_info, new_submission_time)
         tags_for_question = {'existing_tag': request.form.get('existing_tag'),
                                 'new_tags': request.form.get('tags')}
@@ -252,7 +251,7 @@ def edit_question(question_id):
 def edit_answer(question_id, answer_id):
     if request.method == "POST":
         new_answer = request.form['message'] + ' (Edited)'
-        new_submission_time = get_current_time()
+        new_submission_time = utl.get_current_time()
         edited_answer = {'id': answer_id, 'message': new_answer, 'submission_time': new_submission_time}
         con.edit_answer(edited_answer)
         return redirect('/question/{0}'.format(question_id))
@@ -269,7 +268,7 @@ def edit_comment_for_question(question_id, comment_id):
         new_comment_info = {'id': comment_id, 
                             'question_id': question_id, 
                             'message': request.form['message'] + ' (Edited)', 
-                            'submission_time': get_current_time()}
+                            'submission_time': utl.get_current_time()}
         con.edit_comment_for_question(new_comment_info)
         return redirect('/question/{0}'.format(question_id))
     comments = con.get_comments('no-limit')
@@ -284,7 +283,7 @@ def edit_comment_for_answer(answer_id, question_id, comment_id):
         new_comment_info = {'id': comment_id, 
                             'answer_id': answer_id, 
                             'message': request.form['message'] + ' (Edited)', 
-                            'submission_time': get_current_time()}
+                            'submission_time': utl.get_current_time()}
         con.edit_comment_for_answer(new_comment_info)
         return redirect('/question/{0}'.format(question_id))
     comments = con.get_comments()
@@ -345,10 +344,6 @@ def save_image(file):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], f))
     else: f = ""
     return f
-
-
-def get_current_time():
-    return datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
 
 #=================================================================================================================================================
 

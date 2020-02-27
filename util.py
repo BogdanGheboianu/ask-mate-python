@@ -1,10 +1,14 @@
-import uuid
+import uuid, calendar, time
 from datetime import datetime
 import data_manager as dmg
 from flask import url_for
 
 
 def check_specific_question_for_edit(question):
+    """
+    Looks through the title of the requested question for the phrase '(Edited)'. 
+    If found, it takes it out and inserts '(edited)' after the submission time.
+    """
     if "(Edited)" in question['title']:
         question['submission_time'] = str(
             question['submission_time']) + " (edited)"
@@ -13,6 +17,9 @@ def check_specific_question_for_edit(question):
 
 
 def check_questions_for_edit(questions):
+    """
+    Does the same thing as the function above, but for a list of questions.
+    """
     if questions != None:
         for question in questions:
             if "(Edited)" in question['title']:
@@ -22,7 +29,7 @@ def check_questions_for_edit(questions):
         return questions
 
 
-def prepare_answers_for_hmtl(answers, question_id):
+def link_answer_with_image(answers, question_id):
     for answer in answers:
         if answer['image'] != '':
             answer['image'] = url_for('static', filename=answer['image'])
@@ -49,6 +56,9 @@ def transform_image_title(filename):
 
 
 def check_answers_for_edit(answers):
+    """
+    Same as the 'check_questions_for_edit()' function
+    """
     if answers != None:
         for answer in answers:
             if "(Edited)" in answer['message']:
@@ -59,6 +69,9 @@ def check_answers_for_edit(answers):
 
 
 def check_comments_for_edit(comments):
+    """
+    Same as the 'check_questions_for_edit()' function
+    """
     if comments != None:
         for com in comments:
             if "(Edited)" in com['message']:
@@ -76,7 +89,11 @@ def calculate_vote_percentage(votes_up, votes_down):
         vote_percentage = 0
     return vote_percentage
 
+
 def highlight(text, search_phrase):
+    """
+    Looks for the search phrase and/or search terms in a given text and prepares the results to be highlighted in HTML
+    """
     if search_phrase in text.lower():
         text = text.lower().replace(search_phrase, "<span style='color: white; background-color: seagreen;'>{0}</span>".format(search_phrase))
     else:
@@ -86,6 +103,13 @@ def highlight(text, search_phrase):
 
 
 def escape_characters(text):
+    """
+    Allows for special char: ' to be inserted in every string that goes into sql tables
+    """
     if '\'' in text:
         text = text.replace('\'', '\'\'')
     return text
+
+
+def get_current_time():
+    return datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
