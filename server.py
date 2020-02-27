@@ -32,7 +32,7 @@ def index():
         sort_order = request.form.get('order')
         if sort_factor != 'none' and sort_order != 'none':
             show_all_questions = False
-            first_questions = utl.check_questions_for_edit(con.display_latest_questions(sort_factor, sort_order))
+            first_questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
             if first_questions != False: num_all_questions = len(con.get_questions(sort_factor, sort_order))
             if num_all_questions > 5: show_all_questions = True
             return render_template(WEB_PAGES['home_page'],
@@ -55,7 +55,7 @@ def index():
         if request.args.get('show-all') == 'all':
             questions = utl.check_questions_for_edit(con.get_questions('submission_time', 'descending'))
         elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
-            questions = utl.check_questions_for_edit(con.display_latest_questions('submission_time', 'descending'))
+            questions = utl.check_questions_for_edit(con.get_latest_questions('submission_time', 'descending'))
         sort_factor = 'none'
         sort_order = 'none'
     elif request.args.get('sort-factor') != 'none' or request.args.get('sort-factor') != None:
@@ -64,7 +64,7 @@ def index():
         if request.args.get('show-all') == 'all':
             questions = utl.check_questions_for_edit(con.get_questions(sort_factor, sort_order))
         elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
-            questions = utl.check_questions_for_edit(con.display_latest_questions(sort_factor, sort_order))
+            questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
     all_questions = con.get_questions('id', 'ascending')
     if all_questions != False: num_all_questions = len(all_questions)
     show_all_questions = False
