@@ -5,15 +5,19 @@ from flask import url_for
 
 
 def check_specific_question_for_edit(question):
+    print(question)
     if "(Edited)" in question['title']:
-        question['submission_time'] = str(question['submission_time']) + " (edited)"
+        question['submission_time'] = str(
+            question['submission_time']) + " (edited)"
         question['title'] = question['title'].replace("(Edited)", "")
     return question
+
 
 def check_questions_for_edit(questions):
     for question in questions:
         if "(Edited)" in question['title']:
-            question['submission_time'] = str(question['submission_time']) + " (edited)"
+            question['submission_time'] = str(
+                question['submission_time']) + " (edited)"
             question['title'] = question['title'].replace("(Edited)", "")
     return questions
 
@@ -29,7 +33,7 @@ def allowed_file(filename):
     '''
     Verifies if the uploaded file has a valid file extension.
     '''
-    ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}  
+    ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -55,18 +59,8 @@ def transform_image_title(filename):
 #         return None
 
 
-
-
-
-
-
-
-
-
-
 # def prepare_questions_for_html(sort_info):
 #     all_questions = convert_unix_time_to_readable_format(dmg.sort_questions(sort_info["sort_by"], sort_info["order"]))
 #     for question in all_questions: question['vote_number'] = "{0}%".format(dmg.vote_percentage(question['id']))
 #     all_questions = check_questions_for_edit(all_questions)
 #     return all_questions
-

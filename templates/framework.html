@@ -7,6 +7,7 @@
     <title>{% block title%}{% endblock %}| AskMate</title>
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
 </head>
 
 <body>
@@ -27,6 +28,18 @@
 
         </div>
     </div>
+    <script>
+        function myFunction(comment_id) {
+
+            confirmation = confirm("Delete " + comment_id + " ?");
+
+            if (false == confirmation) {
+                return false;
+            }
+            window.location.pathname = "/comments/" + comment_id + "/delete";
+        }
+    </script>
+
 </body>
 
 </html>

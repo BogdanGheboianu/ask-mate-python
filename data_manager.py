@@ -4,8 +4,11 @@ import os
 
 def get_question_by_id(question_id):
     questions = con.get_questions('id', 'ascending')
+
+    print(question_id)
     for question in questions:
-        if question['id'] == int(question_id): return question
+        if question['id'] == int(question_id):
+            return question
 
 
 def get_answers_for_question(question_id):
@@ -14,7 +17,8 @@ def get_answers_for_question(question_id):
     for answer in answers:
         if answer['question_id'] == int(question_id):
             answers_for_question.append(answer)
-    if len(answers_for_question) == 0: return None
+    if len(answers_for_question) == 0:
+        return None
     else:
         return answers_for_question
 
@@ -25,8 +29,10 @@ def get_comments_for_question(question_id):
     for comment in comments:
         if comment['question_id'] != None and comment['question_id'] == int(question_id):
             comments_for_question.append(comment)
-    if len(comments_for_question) == 0: return None
-    else: return comments_for_question
+    if len(comments_for_question) == 0:
+        return None
+    else:
+        return comments_for_question
 
 
 def get_answers_for_question_comments(question_id):
@@ -38,8 +44,10 @@ def get_answers_for_question_comments(question_id):
             for comment in comments:
                 if comment['answer_id'] != None and comment['answer_id'] == answer['id']:
                     comments_for_answers.append(comment)
-    if len(comments_for_answers) == 0: return None
-    else: return comments_for_answers
+    if len(comments_for_answers) == 0:
+        return None
+    else:
+        return comments_for_answers
 
 
 def get_tags_for_question(question_id):
@@ -54,16 +62,10 @@ def get_tags_for_question(question_id):
         for tag in tags:
             if tag['id'] == tag_id:
                 tags_for_question.append(tag['name'])
-    if len(tags_for_question) == 0: return None
-    else: return tags_for_question
-
-
-    
-
-
-
-
-
+    if len(tags_for_question) == 0:
+        return None
+    else:
+        return tags_for_question
 
 
 # def add(info, data_file, fieldnames):
@@ -90,14 +92,11 @@ def get_tags_for_question(question_id):
 #     return None
 
 
-
-
-
 # def sort_questions(sort_factor, order):
 #     all_questions = con.get_all()
 #     if order == "ascending": return sorted(all_questions, key=lambda i: int(i[sort_factor]))
 #     else: return sorted(all_questions, key=lambda i: i[sort_factor], reverse=True)
-    
+
 
 # def edit_question(question_id, edited_question_info, new_submission_time):
 #     '''
@@ -155,7 +154,7 @@ def get_tags_for_question(question_id):
 #         else:
 #             updated_questions.append(question)
 #     con.write_data_to_file(updated_questions, question_file, questions_fieldnames)
-    
+
 
 # def vote_percentage(question_id):
 #     '''
@@ -207,10 +206,6 @@ def get_tags_for_question(question_id):
 #     except ZeroDivisionError:
 #         return "0"
 #     return int(up_votes_percentage)
-
-
-
-
 
 
 # def delete_answer(answer_id):

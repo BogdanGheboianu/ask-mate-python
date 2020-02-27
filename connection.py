@@ -208,7 +208,7 @@ def transform_vote_to_percentage_and_update_question(cursor, question_id, up_dow
 
 @database_common.connection_handler
 def edit_question(cursor, question_id, edited_question_info, new_submission_time):
-    cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}' where id={3}; 
+    cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}' where id={3};
                     """.format(edited_question_info['title'], edited_question_info['message'],
                                new_submission_time, question_id))
 
@@ -219,7 +219,7 @@ def delete_question(cursor, question_id):
     answers_for_question_ids = []
     for answer in answers:
         if answer['question_id'] == int(question_id):
-            answers_for_question_ids.append(answer['id'])
+            answers_for_s.append(answer['id'])
     for ans_id in answers_for_question_ids:
         cursor.execute(
             """  DELETE FROM comment WHERE id={0}; """.format(ans_id))
@@ -270,7 +270,7 @@ def delete_answer(cursor, answer_id):
 @database_common.connection_handler
 def add_comment_for_question(cursor, comment_info):
     cursor.execute(""" INSERT INTO comment (id, question_id, message, submission_time)
-                        VALUES ({0}, {1}, '{2}', '{3}'); 
+                        VALUES ({0}, {1}, '{2}', '{3}');
                     """.format(
         comment_info['id'],
         comment_info['question_id'],
@@ -279,92 +279,49 @@ def add_comment_for_question(cursor, comment_info):
     ))
 
 
-# def get_all_and_sort(cursor, sort_factor, sort_order):
-#     """
-#     Returns list of dictionaries with all the questions(+properties, comments and answers(+properties, comments))
-#     """
-#     data = []
-#     # Add questions: id, submission_time, view_number, vote_number, title, message, image
-#     if sort_order == 'ascending':
-#         cursor.execute(""" select * from question order by {0} asc; """.format(sort_factor))
-#     elif sort_order == 'descending':
-#         cursor.execute(""" select * from question order by {0} desc; """.format(sort_factor))
-#     questions = cursor.fetchall()
-#     for question in questions:
-#         data.append({'id': question['id'],
-#                     'submission_time': question['submission_time'].strftime(f),
-#                     'view_number': question['view_number'],
-#                     'vote_number': utl.vote_percentage(question['vote_number']),
-#                     'title': question['title'],
-#                     'message': question['message'],
-#                     'image': question['image']})
-#     # Add question tags
-#     cursor.execute(""" select * from tag; """)
-#     tags = cursor.fetchall()
-#     cursor.execute(""" select * from question_tag; """)
-#     question_tags = cursor.fetchall()
-#     for question_tag in question_tags:
-#         tags_to_add = []
-#         for question in data:
-#             if question['id'] == question_tag['question_id']:
-#                 for tag in tags:
-#                     if tag['id'] == question_tag['tag_id']:
-#                         tags_to_add.append((tag['id'], tag['name']))
-#                 question.update({'tags': tags_to_add})
-#     # Add question comments
-#     cursor.execute(""" select * from comment; """)
-#     comments = cursor.fetchall()
-#     for question in data:
-#         comments_to_add = []
-#         for comment in comments:
-#             if comment['question_id'] != None and comment['question_id'] == question['id']:
-#                 comments_to_add.append({'id': comment['id'],
-#                                             'question_id': comment['question_id'],
-#                                             'message': comment['message'],
-#                                             'submission_time': comment['submission_time'].strftime(f),
-#                                             'edited_count': comment['edited_count']})
-#         question.update({'comments': comments_to_add})
-#     # Add answers
-#     cursor.execute(""" select * from answer; """)
-#     answers = cursor.fetchall()
-#     all_answers = []
-#     for answer in answers:
-#         comments_to_add = []
-#         for comment in comments:
-#             if comment['answer_id'] != None and comment['answer_id'] == answer['id']:
-#                 comments_to_add.append({'id': comment['id'],
-#                                             'answer_id': comment['answer_id'],
-#                                             'message': comment['message'],
-#                                             'submission_time': comment['submission_time'].strftime(f),
-#                                             'edited_count': comment['edited_count']})
-#         answer_to_add = {
-#             'id': answer['id'],
-#             'question_id': answer['question_id'],
-#             'message': answer['message'],
-#             'submission_time': answer['submission_time'].strftime(f),
-#             'vote_number': utl.vote_percentage(answer['vote_number']),
-#             'image': answer['image'],
-#             'comments': comments_to_add
-#         }
-#         all_answers.append(answer_to_add)
-#     for question in data:
-#         answers_to_add = []
-#         for answer in all_answers:
-#             if question['id'] == answer['question_id']:
-#                 answers_to_add.append(answer)
-#         question.update({'answers': answers_to_add})
-
-#     if len(data) == 0: return False
-#     else: return data
-
-# print(get_all_and_sort('id', 'ascending'))
 @database_common.connection_handler
 def add_comment_for_answer(cursor, comment_info):
     cursor.execute(""" INSERT INTO comment (id, answer_id, message, submission_time)
-                        VALUES ({0}, {1}, '{2}', '{3}'); 
+                        VALUES ({0}, {1}, '{2}', '{3}');
                     """.format(
         comment_info['id'],
         comment_info['answer_id'],
         comment_info['message'],
         comment_info['submission_time']
     ))
+
+
+@database_common.connection_handler
+def delete_comment(cursor, comment_id):
+
+    cursor.execute("""
+        SELECT question_id from comment
+        WHERE id={0}
+    """.format(comment_id))
+    question_id = cursor.fetchone()['question_id']
+    q_id = {'question_id': question_id}
+
+    cursor.execute("""
+        SELECT answer_id from comment
+        WHERE id={0}
+    """.format(comment_id))
+    answer_id = cursor.fetchone()['answer_id']
+
+    if question_id is not None:
+        cursor.execute("""
+            DELETE FROM comment
+            WHERE id={0}
+        """.format(comment_id))
+        return q_id
+    else:
+        cursor.execute("""
+        SELECT question_id from answer
+        WHERE id={0}
+        """.format(answer_id))
+        question_id = cursor.fetchone()['question_id']
+        q_a_id = {"question_id": question_id, "answer_id": answer_id}
+        cursor.execute("""
+            DELETE FROM comment
+            WHERE id={0}
+        """.format(comment_id))
+        return q_a_id

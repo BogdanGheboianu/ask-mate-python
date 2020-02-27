@@ -28,7 +28,7 @@ Question
     {% if tags_for_question != None %}
     <p>{% for tag in tags_for_question %}
         <em class="question-info">#{{ tag }} </em></p>
-        {% endfor %}
+    {% endfor %}
     {% endif %}
 </div>
 
@@ -38,28 +38,36 @@ Question
 <h4 class="question-details">{{ question['message'] }}</h4>
 {% if question['image'] != "/static/" %}
 <img class="title-image" src="{{ question['image'] }}" width="480" height="280">
-{% endif %}<hr>
+{% endif %}
+<hr>
 <div class="question-info-area">
     <strong><em class="question-info">Comments</em></strong>
-        {% if comments_for_question != None %}
-            {% for comment in comments_for_question %}
-            <ul>
-                <li><p>{{ comment['message'] }} | <strong>Comment ID: </strong><em class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em class="question-info">{{ comment['submission_time'] }}</em></p></li>
-            </ul>
-            {% endfor %}
-        {% else %}
-            <p><em>There are no comments for this question</em></p>
-        {% endif %}
-    <button id='submit' onclick="location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
+    {% if comments_for_question != None %}
+    {% for comment in comments_for_question %}
+    <ul>
+        <li>
+            <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
+                    class="question-info">{{ comment['id'] }}</em> |
+                <strong>Posted: </strong><em class="question-info">{{ comment['submission_time'] }}</em><a
+                    onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
+            </p>
+
+        </li>
+    </ul>
+    {% endfor %}
+    {% else %}
+    <p><em>There are no comments for this question</em></p>
+    {% endif %}
+    <button id='submit' onclick=" location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
 </div>
 <hr>
-<div class="answers-section">
+<div class=" answers-section">
     {% if num_answers != 0: %}
-        {% if num_answers > 1 %}
-            <h2>{{ num_answers }} Answers</h2><br>
-        {% else %}
-        <h2>{{ num_answers }} Answer</h2><br>
-        {% endif %}
+    {% if num_answers > 1 %}
+    <h2>{{ num_answers }} Answers</h2><br>
+    {% else %}
+    <h2>{{ num_answers }} Answer</h2><br>
+    {% endif %}
     {% else: %}
     <h2>Answers</h2><br>
     {% endif %}
@@ -76,10 +84,10 @@ Question
                 <p>{{answer['message']}}</p>
             </div>
             <div class="voting-area">
-                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img src="../static/upvote.png"
-                        width="16" height="16"></a> <a class="voting-link"
-                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png" width="16"
-                        height="16"></a>
+                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
+                        src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
+                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
+                        width="16" height="16"></a>
             </div>
             <a id="delete-answer" href="/answer/{{ question_id }}/{{ answer['id'] }}/delete">Delete Answer</a>
 
@@ -94,17 +102,23 @@ Question
         {% endif %}
         <div class="question-info-area">
             <strong><em class="question-info">Comments</em></strong>
-                {% if comments_for_answers != None %}
-                    {% for comment in comments_for_answers %}
-                    {% if comment['answer_id'] == answer['id'] %}
-                    <ul>
-                        <li><p>{{ comment['message'] }} | <strong>Comment ID: </strong><em class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em class="question-info">{{ comment['submission_time'] }}</em></p></li>
-                    </ul>
-                    {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <p><em>There are no comments for this answer</em></p>
-                {% endif %}
+            {% if comments_for_answers != None %}
+            {% for comment in comments_for_answers %}
+            {% if comment['answer_id'] == answer['id'] %}
+            <ul>
+                <li>
+                    <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
+                            class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
+                            class="question-info">{{ comment['submission_time'] }}</em>
+                        <a onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
+                    </p>
+                </li>
+            </ul>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <p><em>There are no comments for this answer</em></p>
+            {% endif %}
             <a class="question-links" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
         </div>
         <hr>
