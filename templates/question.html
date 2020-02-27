@@ -55,7 +55,7 @@ Question
             <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
                     class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
                     class="question-info">{{ comment['submission_time'] }}</em> | <a id="delete-answer"
-                    href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment">Edit Comment</a><a
+                    href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment">Edit Comment</a><a href="/comments/{{ comment['id'] }}/delete"
                     onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
         </li>
     </ul>
@@ -124,7 +124,7 @@ Question
                     <p>{{ comment['message'] }} | <strong>Comment ID: </strong><em
                             class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
                             class="question-info">{{ comment['submission_time'] }}</em>
-                        <a onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
+                        <a href="/comments/{{ comment['id'] }}/delete" onclick="myFunction({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
                     </p>
                 </li>
                 </ul>
@@ -147,7 +147,7 @@ Question
     {% endif %}
 
 </div>
-<p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/new-answer'">post
+<p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/add-answer'">post
         answer</button>
 </p>
 

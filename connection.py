@@ -102,12 +102,12 @@ def add_question(cursor, info):
     '''
     Adds a new question
     '''
-    next_id = get_next_id('question')
+    
     cursor.execute("""
     INSERT INTO question
     (id, submission_time, view_number, title, message, image, votes_up, votes_down)
     VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}', {6}, {7});
-    """.format(next_id, info['submission_time'], info['view_number'],
+    """.format(info['id'], info['submission_time'], info['view_number'],
                info['title'], info['message'], info['image'], info['votes_up'], info['votes_down']))
 
 
@@ -159,7 +159,7 @@ def delete_question(cursor, question_id):
     answers_for_question_ids = []
     for answer in answers:
         if answer['question_id'] == int(question_id):
-            answers_for_s.append(answer['id'])
+            answers_for_question_ids.append(answer['id'])
     for ans_id in answers_for_question_ids:
         cursor.execute(
             """  DELETE FROM comment WHERE answer_id={0}; """.format(ans_id))
