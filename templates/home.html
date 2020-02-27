@@ -51,7 +51,7 @@ Home
             {% else: %}
                 {% if key == 'title' %}
                     <td class="question-column"><a class="question-links"
-                            href="/question/{{ question['id'] }}/view/add">{{ value }}</a></td>
+                            href="/question/{{ question['id'] }}?view=add">{{ value }}</a></td>
                 {% else: %}
                     {% if key == 'vote_number' %}
                         {% if value != None %}

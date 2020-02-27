@@ -50,22 +50,70 @@ tr {
 }
 
 .site-title {
-    align-items: center;
     text-align: left;
+    align-items: center;
     vertical-align: middle;
     font-family: 'Galindo';
     font-weight: 900;
     font-size: 1.6em;
-    color:white;
+    color: white;
     letter-spacing: 0.05em;
+    /* background-color: #e6e6e6; */
     padding: 6px 6px;
     border-radius: 12%;
+}
+
+.logo-ask {
+    color: seagreen;
 }
 
 .site-title-link {
     text-decoration: none;
     font-weight: bold;
 }
+
+.search-form {
+    margin-left: 50%;
+    
+}
+
+.search-form input {
+    background-color: #f8e7d3;
+    color: #666;
+    font-weight: 900;
+    outline: none;
+    font-size: 0.8em;
+}
+
+input.search-button {
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+
+input.search-button:hover {
+    cursor: pointer;
+    color: black;
+}
+
+
+.social {
+    margin-left: 18%;
+    display: inline-block;
+}
+
+.insta, .snap, .scloud {
+    font-size: 1.8em;
+    color: #f8e7d3;
+    margin-left: 1em;
+    transition: all 0.3s ease;
+}
+
+.insta:hover, .snap:hover, .scloud:hover {
+     cursor: pointer;
+     color: seagreen;
+ }
+
 
 .main-content {
     max-width: 94%;
@@ -74,6 +122,7 @@ tr {
 }
 
 .table-style {
+    width: 100%;
     color:#bfbfbf;
     text-align: center;
     border-collapse:separate; 
@@ -168,7 +217,7 @@ hr { display: block; height: 1px;
 .ask-question-button:hover {
     background-color: #316930;
     border-color: #316930;
-    color:white;
+    color: #f1cea7;
     box-shadow: inset 0 1px 0 0 #214620;
 }
 
@@ -255,31 +304,30 @@ hr { display: block; height: 1px;
 }
 
 #delete-answer, #show-all {
-    background-color: #1a1b1d;
-    color:  #e19639;
-    border: 1px solid #e19639;
-    border-radius: 5px;
-    padding: 4px 16px;
-    outline: none;
-    margin: 4px 2px;
-    cursor: pointer;
-    font-weight: 500;
-    margin-left: 1em;
-    text-transform: capitalize;
-    font-size: 0.75em;
-    text-decoration: none;
-    transition: all 0.3s ease;
-  }
-  
-  #show-all {
-      font-size: 0.9em;
-  }
+  background-color: #1a1b1d;
+  color:  #e19639;
+  border: 1px solid #e19639;
+  border-radius: 5px;
+  padding: 4px 16px;
+  outline: none;
+  margin: 4px 2px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: 1em;
+  text-transform: capitalize;
+  font-size: 0.75em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
 
-  #delete-answer:hover, #show-all:hover {
+#show-all {
+    font-size: 0.9em;
+}
+
+#delete-answer:hover, #show-all:hover {
     color:#f8e7d3;
     border: 1px solid #f8e7d3;;
 }
-
 
 
 input {
@@ -374,47 +422,7 @@ a.see-image-link {
     color: #f8e7d3;
 }
 
-
-.search-form {
-    margin-left: 50%;
-}
-
-.search-form input {
-    background-color: #f8e7d3;
-    color: #666;
-    font-weight: 900;
-    outline: none;
-    font-size: 0.8em;
-}
-
-input.search-button {
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-}
-
-input.search-button:hover {
-    cursor: pointer;
-    color: black;
-}
-
-.social {
-    margin-left: 18%;
-    display: inline-block;
-}
-
-.insta, .snap, .scloud {
-    font-size: 1.8em;
-    color: #f8e7d3;
-    margin-left: 1em;
-    transition: all 0.3s ease;
-}
-
-.insta:hover, .snap:hover, .scloud:hover {
-     cursor: pointer;
-     color: seagreen;
- }
-
- #recycle-link:hover {
+#recycle-link:hover {
     cursor: pointer;
 }
 

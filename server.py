@@ -21,7 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
 def index():
-    table_heading = ["ID", "Submission Time", "Views", "Votes", "Title", "Question", "Image"]
+    table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
     order_options = {"none": "Choose order", "ascending": "ascending", "descending": "descending"}
@@ -82,6 +82,7 @@ def index():
 
 @app.route("/question/<question_id>")
 def question(question_id):
+    if request.args.get('view') == 'add': con.add_view(question_id)
     empty = False
     num_answers = 0
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
@@ -219,12 +220,6 @@ def add_comment_for_answer(question_id, answer_id):
         con.add_comment_for_answer(comment_info)
         return redirect('/question/{0}'.format(question_id))
     return render_template(WEB_PAGES['add_comm'], question_id=question_id)
-
-
-@app.route("/question/<question_id>/view/add")
-def add_view_for_question(question_id):
-    con.add_view(question_id)
-    return redirect("/question/{0}".format(question_id))
 
 #=====================================================================================================================================================
 

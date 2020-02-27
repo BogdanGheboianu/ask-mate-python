@@ -14,7 +14,7 @@ Search
     {% if in_question_title %}
         <h2>Most Relevant</h2><br>
             {% for result in in_question_title %}
-                <h3><a class="question-links" href="/question/{{ result['id'] }}">
+                <h3><a class="question-links" href="/question/{{ result['id'] }}?view=add">
                 
                     {{ highlight(check_edit(result)['title'], search_term)|safe }}
 
@@ -33,7 +33,7 @@ Search
     {% if in_question_message %}
         <h2>You might be interested in:</h2><br>
             {% for result in in_question_message %}
-                <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
+                <h3><a class="question-links" href="/question/{{ result['id'] }}?view=add">{{ result['title'] }}</a></h3><br>
                 <p>{{ highlight(result['message'], search_term)|safe }}</p>
                 <strong>Question ID:</strong> <em class="question-info">{{ result["id"] }}</em>
                 <strong>Posted:</strong> <em class="question-info">{{ result["submission_time"] }}</em>
@@ -50,14 +50,14 @@ Search
         <h2>Look through some answers:</h2><br>
         {% for result in in_answers %}
             <p>{{ highlight(result['message'], search_term)|safe }} | 
-            <a class='question-links' href="/question/{{ result['question_id'] }}">See Question</a></p><br><hr>
+            <a class='question-links' href="/question/{{ result['question_id'] }}?view=add">See Question</a></p><br><hr>
         {% endfor %}
     {% endif %}
     <br><br>
     {% if in_tags %}
                 <h2>Results in popular tags: </h2>
                     {% for result in in_tags %}
-                    <h3><a class="question-links" href="/question/{{ result['id'] }}">{{ result['title'] }}</a></h3><br>
+                    <h3><a class="question-links" href="/question/{{ result['id'] }}?view=add">{{ result['title'] }}</a></h3><br>
                     <strong>TAGS: 
                     {% for tag in result['tags'] %}
                         <a class="question-links" href="/search?q={{ tag }}">#{{ highlight(tag, search_term)|safe }} </a>
@@ -70,7 +70,7 @@ Search
         {% for result in in_comments %}
             {% if result['question_id'] != None %}
             <p>{{ highlight(result['message'], search_term)|safe }} | 
-                <a class="question-links" href="/question/{{ result['question_id'] }}">See question</a></p><br><hr>
+                <a class="question-links" href="/question/{{ result['question_id'] }}?view=add">See question</a></p><br><hr>
             {% endif %}
         {% endfor %}
 

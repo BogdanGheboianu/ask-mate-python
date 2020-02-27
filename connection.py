@@ -10,7 +10,7 @@ def get_questions(cursor, sort_factor, sort_order):
     elif sort_order == 'descending': cursor.execute(""" SELECT * FROM question ORDER BY {0} DESC; """.format(sort_factor))
     questions = cursor.fetchall()
     if len(questions) == 0: return False
-    else: return questions
+    else: return utl.rearrange_order_of_keys_for_questions(questions)
 
 
 @database_common.connection_handler
@@ -19,12 +19,12 @@ def get_latest_questions(cursor, sort_factor, sort_order):
     elif sort_order == 'descending': cursor.execute("""SELECT * FROM question ORDER BY {0} DESC LIMIT 5;""".format(sort_factor))
     questions = cursor.fetchall()
     if len(questions) == 0: return False
-    else: return questions
+    else: return utl.rearrange_order_of_keys_for_questions(questions)
 
 
 @database_common.connection_handler
 def get_questions_for_search(cursor):
-    cursor.execute(""" SELECT * FROM question ORDER BY vote_number  DESC; """)
+    cursor.execute(""" SELECT * FROM question ORDER BY vote_number DESC; """)
     questions = cursor.fetchall()
     return questions
 

@@ -113,3 +113,20 @@ def escape_characters(text):
 
 def get_current_time():
     return datetime.utcfromtimestamp(int(calendar.timegm(time.gmtime())) + 7200).strftime('%Y-%m-%d %H:%M:%S')
+
+
+def rearrange_order_of_keys_for_questions(questions):
+    questions_modified_keys_order = []
+    for question in questions:
+        modified_question = {
+            'title': question['title'],
+            'message': question['message'],
+            'vote_number': question['vote_number'],
+            'view_number': question['view_number'],
+            'submission_time': question['submission_time'],
+            'id': question['id'],
+            'image': question['image'],
+            'votes_up': question['votes_up'],
+            'votes_down': question['votes_down']}
+        questions_modified_keys_order.append(modified_question)
+    return questions_modified_keys_order
