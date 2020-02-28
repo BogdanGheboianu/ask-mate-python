@@ -164,6 +164,8 @@ def add_question():
     if request.method == "POST":
         question_id = con.get_next_id('question')
         f = save_image(request.files['image'])
+        code_snippet = request.form.get('code_snippet')
+        if code_snippet == None: code_snippet = ''
         question_info = {'id': question_id, 
                         "submission_time": utl.get_current_time(), 
                         "view_number": 0,
@@ -171,7 +173,8 @@ def add_question():
                          "title": request.form["title"],
                          "message": request.form["message"], 
                          "image": f,
-                         'votes_up': 0, 'votes_down': 0}
+                         'votes_up': 0, 'votes_down': 0,
+                         'code_snippet': code_snippet}
         tags_for_question = {'existing_tag': request.form.get('existing_tag'),
                             'new_tags': request.form.get('tags')}
         con.add_question(question_info)
@@ -184,6 +187,8 @@ def add_question():
 @app.route("/question/<question_id>/add-answer", methods=["GET", "POST"])
 def add_answer(question_id):
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
+    code_snippet = request.form.get('code_snippet')
+    if code_snippet == None: code_snippet = ''
     if request.method == "POST":
         f = save_image(request.files['image'])
         answer_info = {"id": con.get_next_id('answer'), 
@@ -192,7 +197,8 @@ def add_answer(question_id):
                         "question_id": question_id, 
                         "message": request.form['answer'], 
                         "image": f,
-                        'votes_up': 0, 'votes_down': 0}
+                        'votes_up': 0, 'votes_down': 0,
+                        'code_snippet': code_snippet}
         con.add_answer(answer_info)
         return redirect("/question/{0}".format(question_id))
     return render_template(WEB_PAGES["new_answer_page"], question=question)

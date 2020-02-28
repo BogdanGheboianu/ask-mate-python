@@ -42,6 +42,9 @@ Question
 
 <hr>
 <h4 class="question-details">{{ question['message'] }}</h4>
+{% if question['code_snippet'] != "" %}
+<pre><code>{{ question['code_snippet'] }}</code></pre>
+{% endif %}
 {% if question['image'] != "/static/" %}
 <img class="title-image" src="{{ question['image'] }}" width="480" height="280">
 {% endif %}
@@ -97,6 +100,9 @@ Question
         <div class="answer-title-area">
             <div class="answer-details">
                 <p>{{answer['message']}}</p>
+                {% if answer['code_snippet'] != '' %}
+                <pre><code>{{ answer['code_snippet'] }}</code></pre>
+                {% endif %}
             </div>
             <div class="voting-area">
                 <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
@@ -159,6 +165,5 @@ Question
 <p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/add-answer'">post
         answer</button>
 </p>
-
 
 {% endblock %}

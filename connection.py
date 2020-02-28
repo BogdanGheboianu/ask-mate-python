@@ -74,19 +74,21 @@ def get_next_id(cursor, table):
 def add_question(cursor, info):
     title = utl.escape_characters(info['title'])
     message = utl.escape_characters(info['message'])
-    cursor.execute("""INSERT INTO question (id, submission_time, view_number, title, message, image, votes_up, votes_down)
-                    VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}', {6}, {7});
+    code_snippet = utl.escape_characters(info['code_snippet'])
+    cursor.execute("""INSERT INTO question (id, submission_time, view_number, title, message, image, votes_up, votes_down, code_snippet)
+                    VALUES ({0}, '{1}', {2}, '{3}', '{4}', '{5}', {6}, {7}, '{8}');
                     """.format(info['id'], info['submission_time'], info['view_number'],
-                            title, message, info['image'], info['votes_up'], info['votes_down']))
+                            title, message, info['image'], info['votes_up'], info['votes_down'], code_snippet))
 
 
 @database_common.connection_handler
 def add_answer(cursor, answer_info):
     message = utl.escape_characters(answer_info['message'])
-    cursor.execute(""" INSERT INTO answer (id, submission_time, question_id, message, image, votes_up, votes_down)
-                    VALUES ({0}, '{1}', {2}, '{3}', '{4}', {5}, {6});
+    code_snippet = utl.escape_characters(answer_info['code_snippet'])
+    cursor.execute(""" INSERT INTO answer (id, submission_time, question_id, message, image, votes_up, votes_down, code_snippet)
+                    VALUES ({0}, '{1}', {2}, '{3}', '{4}', {5}, {6}, '{7}');
                     """.format(answer_info['id'], answer_info['submission_time'], answer_info['question_id'],
-                               message, answer_info['image'], answer_info['votes_up'], answer_info['votes_down']))
+                               message, answer_info['image'], answer_info['votes_up'], answer_info['votes_down'], code_snippet))
 
 
 

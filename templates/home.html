@@ -46,7 +46,7 @@ Home
     {% for question in questions: %}
     <tr>
         {% for key, value in question.items(): %}
-            {% if key != "title" and key != 'image' and key!= 'vote_number' and key!= 'votes_up' and key != 'votes_down': %}
+            {% if key != "title" and key != 'image' and key!= 'vote_number' and key!= 'votes_up' and key != 'votes_down' and key != 'code_snippet'%}
                 <td>{{ value }}</td>
             {% else: %}
                 {% if key == 'title' %}
@@ -80,7 +80,7 @@ Home
 </table>
 
     {% if show_all_questions %}
-    <a id="show-all" href="/list?sort-factor={{ default_sort }}&sort-order={{ default_order }}">Show all questions</a>
+    <a id="show-all" href="/list?sort-factor={{ default_sort }}&sort-order={{ default_order }}&show-all=all">Show all questions</a>
     {% endif %}
 {% endif %}
 

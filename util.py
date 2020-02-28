@@ -127,6 +127,7 @@ def rearrange_order_of_keys_for_questions(questions):
             'id': question['id'],
             'image': question['image'],
             'votes_up': question['votes_up'],
-            'votes_down': question['votes_down']}
+            'votes_down': question['votes_down'],
+            'code_snippet': question['code_snippet']}
         questions_modified_keys_order.append(modified_question)
     return questions_modified_keys_order
