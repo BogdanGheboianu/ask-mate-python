@@ -28,8 +28,9 @@ Search
                 <strong>Votes:</strong> <em class="question-info">N/A</em><br><hr>
                 {% endif %}
             {% endfor %}
+            <br><br>
     {% endif %}
-    <br><br>
+    
     {% if in_question_message %}
         <h2>You might be interested in:</h2><br>
             {% for result in in_question_message %}
@@ -44,16 +45,18 @@ Search
                 <strong>Votes:</strong> <em class="question-info">N/A</em><br><hr>
                 {% endif %}
             {% endfor %}
+            <br><br>
     {% endif %}
-    <br><br>
+    
     {% if in_answers %}
         <h2>Look through some answers:</h2><br>
         {% for result in in_answers %}
             <p>{{ highlight(result['message'], search_term)|safe }} | 
             <a class='question-links' href="/question/{{ result['question_id'] }}?view=add">See Question</a></p><br><hr>
         {% endfor %}
+        <br><br>
     {% endif %}
-    <br><br>
+    
     {% if in_tags %}
                 <h2>Results in popular tags: </h2>
                     {% for result in in_tags %}
@@ -63,8 +66,9 @@ Search
                         <a class="question-links" href="/search?q={{ tag }}">#{{ highlight(tag, search_term)|safe }} </a>
                     {% endfor %}</strong><br><hr>
                     {% endfor %}
+                    <br><br>
     {% endif %}
-    <br><br>
+    
     {% if in_comments %}
         <h2>Possible question comments to help you out:</h2><br>
         {% for result in in_comments %}
