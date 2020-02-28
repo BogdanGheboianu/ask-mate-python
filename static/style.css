@@ -1,7 +1,10 @@
 
+
+
 body {
+    min-height: 100%;
+    background-image: linear-gradient(to top right, #ff4000, orange);
     padding: 0;
-    background-color: #e19639;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9em;
     color: #f8e7d3;
@@ -35,6 +38,7 @@ tr {
     background-color: #1a1b1d;
     border-radius: 10px;
     box-shadow: 1px 3px 10px 1px#1a1b1d;
+    height: 100%;
 }
 
 .header-container {
@@ -53,7 +57,7 @@ tr {
     text-align: left;
     align-items: center;
     vertical-align: middle;
-    font-family: 'Galindo';
+    font-family: 'Verdana';
     font-weight: 900;
     font-size: 1.6em;
     color: white;
@@ -73,7 +77,7 @@ tr {
 }
 
 .search-form {
-    margin-left: 50%;
+    margin-left: 30%;
     
 }
 
@@ -98,7 +102,7 @@ input.search-button:hover {
 
 
 .social {
-    margin-left: 18%;
+    margin-left: 23%;
     display: inline-block;
 }
 
@@ -118,7 +122,7 @@ input.search-button:hover {
 .main-content {
     max-width: 94%;
     margin: 0 auto;
-    min-height: 650px;
+    min-height: 700px;
 }
 
 .table-style {
@@ -131,7 +135,7 @@ input.search-button:hover {
 } 
 
 
-#submit {
+#submit, #add-comment {
   background-color: #1a1b1d;
   color:  #e19639;
   border: 1px solid #e19639;
@@ -146,6 +150,10 @@ input.search-button:hover {
   font-size: 0.75em;
   text-decoration: none;
   transition: all 0.2s ease;
+}
+
+#add-comment {
+    margin-top: 1em;
 }
 
 #submit:hover {
@@ -245,9 +253,24 @@ hr { display: block; height: 1px;
     margin-right: 1em;
 }
 
+.comment-info {
+    color: #eec490;
+    margin-right: 1em;
+    margin-left: 2em;
+}
+
+
+.comment-style {
+    border-bottom: 1px dotted #444;
+    list-style: none;
+    width: 70%;
+    font-size: 0.8em;
+}
+
 .question-info-area {
     margin-bottom: 2em;
 }
+
 
 .voting-link {
     text-decoration: none;
@@ -280,6 +303,8 @@ hr { display: block; height: 1px;
 
 .each-answer {
     margin-bottom: 3em;
+    background-color: #222;
+    padding: 20px;
 }
 
 .answer-info-area {
@@ -449,4 +474,13 @@ footer {
 .remove-tag {
     color: #ff6666; 
     margin-left: 0.3em;
+}
+
+.code-snippet {
+    background-color: #222;
+    color: #e19639;
+    padding: 20px;
+    font-weight: 900;
+    width: 600px;
+    margin-left: 2em;
 }

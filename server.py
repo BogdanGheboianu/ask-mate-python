@@ -98,6 +98,7 @@ def question(question_id):
         num_comments_for_question = 0
     tags_for_question = dmg.get_tags_for_question(question_id)
     comments_for_answers = utl.check_comments_for_edit(dmg.get_answers_for_question_comments(question_id))
+    print(comments_for_answers)
     if comments_for_question is not None:
         comment_id = comments_for_question[0]['id']
     else:

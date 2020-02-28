@@ -43,23 +43,22 @@ Question
 <hr>
 <h4 class="question-details">{{ question['message'] }}</h4>
 {% if question['code_snippet'] != "" %}
-<pre><code>{{ question['code_snippet'] }}</code></pre>
+    <div class="code-snippet">
+    <pre><code>{{ question['code_snippet'] }}</code></pre></div>
 {% endif %}
+
+<br><br>
 {% if question['image'] != "/static/" %}
 <img class="title-image" src="{{ question['image'] }}" width="480" height="280">
 {% endif %}
 <hr>
 <div class="question-info-area">
-    <strong><em class="question-info">Comments</em></strong>
+    <strong class="comment-header"><em id="comment-header" class="question-info">Comments</em></strong>
     {% if comments_for_question != None %}
     {% for comment in comments_for_question %}
     <ul>
-        <li>
-            <p>{{ comment['message'] }}<br>
-                <div class="answer-info-area">
-                <strong>Comment ID: </strong><em
-                    class="question-info">{{ comment['id'] }}</em> | <strong>Posted: </strong><em
-                    class="question-info">{{ comment['submission_time'] }}</em> | <a
+        <li class="comment-style">
+            <p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em> <a
                     href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment"><i
                         class="pencil fas fa-pencil-alt"></i></a><a id="recycle-link"
                     onclick="deleteComment({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
@@ -76,9 +75,9 @@ Question
     {% else %}
     <p><em>There are no comments for this question</em></p>
     {% endif %}
-    <button id='submit' onclick="location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
+    <button id='add-comment' onclick="location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
 </div>
-<hr>
+<hr style="background-color: #eec490">
 <div class=" answers-section">
     {% if num_answers != 0: %}
     {% if num_answers > 1 %}
@@ -100,20 +99,16 @@ Question
         <div class="answer-title-area">
             <div class="answer-details">
                 <p>{{answer['message']}}</p>
+                
                 {% if answer['code_snippet'] != '' %}
-                <pre><code>{{ answer['code_snippet'] }}</code></pre>
+                
+                <pre><code style="color: #e19639;">{{ answer['code_snippet'] }}</code></pre><br>
                 {% endif %}
+               
             </div>
-            <div class="voting-area">
-                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
-                        src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
-                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
-                        width="16" height="16"></a>
-            </div>
-            <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
-            <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
-
+            
         </div>
+    </div>
         <div class="answer-info-area">
             <strong>Answer ID: </strong><em class="answer-info">{{ answer['id'] }}</em>
             <strong>Answered: </strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
@@ -122,48 +117,50 @@ Question
             {% else %}
             <strong>Votes: </strong> <em class="answer-info">N/A</em>
             {% endif %}
+            <div class="voting-area">
+                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
+                        src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
+                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
+                        width="16" height="16"></a>
+            </div>
+            <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
+            <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a><br><br>
         </div>
+        
         {% if answer['image'] != '': %}
         <p><img src="{{answer['image']}}" width="480" height="280"></p>
         {% endif %}
+        
         <div class="question-info-area">
             <strong><em class="question-info">Comments</em></strong>
            {% if comments_for_answers != None %} 
                 {% for comment in comments_for_answers %}
-                {% if comment['answer_id'] == answer['id'] %} <ul>
-                <li>
-                    <p>{{ comment['message'] }} <br>
-                    <div class="answer-info-area">
-                        <strong>Comment ID: </strong><em
-                            class="answer-info">{{ comment['id'] }}</em><strong>Posted: </strong><em
-                            class="answer-info">{{ comment['submission_time'] }}</em>| 
-                            <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
-                                class="recycle fas fa-trash-alt"></i></a>
-                    </p>
-                </li>
-                </ul>
-                {% endif %}
+                    {% if comment['answer_id'] == answer['id'] %} 
+                    <ul>
+                        <li class="comment-style">
+                            <p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em>
+                                <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
+                                    class="recycle fas fa-trash-alt"></i></a></p>
+                        </li>
+                    </ul></div>
+                    {% endif %}
                 {% endfor %}
-                {% else %}
-                </div>
+            {% else %}
                 <p><em>There are no comments for this answer</em></p>
-                {% endif %}
-               
-                
-
-                
-                
-                <p><a id="delete-answer" href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
+            {% endif %}
+            <p style="margin-top: 2em"><a id="add-comment"
+                    href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
+            </p>
               
-        </div>
+        
         <hr>
     </div>
     {% endfor %}
     {% endif %}
 
-</div>
+
 <p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/add-answer'">post
         answer</button>
 </p>
-
+</div>
 {% endblock %}

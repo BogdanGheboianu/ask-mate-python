@@ -24,7 +24,7 @@ Home
         {% if tags_for_question != None %}
         <p><strong>TAGS:</strong>
         {% for tag in tags_for_question %}
-            <em class="question-info">#{{ tag }}</em>
+            <em class="question-info"><a class="question-links" href="/search?q={{ tag }}">#{{ tag }}</a></em>
             {% endfor %}
         {% endif %}
         </p>
