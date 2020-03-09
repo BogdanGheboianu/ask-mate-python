@@ -1,0 +1,42 @@
+{% extends 'framework.html' %}
+{% block title %}
+Home
+{% endblock %}
+
+
+{% block content %}
+
+
+
+
+
+
+        <div class="user-all-content">
+            {% if user['profile_pic'] != None %}
+            <img src="{{ user['profile_pic'] }}" width="240" height="320">
+            {% else %}
+            
+            <i class="fas fa-user-tie"></i>
+            {% endif %}
+
+            <div class="profile-info">
+                <div>Username: {{ user['username'] }}</div>
+                <div>Email: {{ user['email'] }}</div>
+                <div>Profile created: {{ user['created'] }}</div>
+                <div>User rank: </div>
+                <div class="user-button">
+                    <button onclick="location.href='#'">CHANGE PASSWORD</button>
+                    <button onclick="location.href='/logout'">LOG OUT</button>
+                    <button onclick="location.href='#'">DELETE ACCOUNT</button>
+                </div>
+            </div>
+
+            
+            
+
+
+
+
+
+        </div>
+{% endblock %}

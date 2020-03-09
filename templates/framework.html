@@ -25,7 +25,11 @@
                 <i class="insta fab fa-instagram"></i>
                 <i class="scloud fab fa-soundcloud"></i>
                 <i class="snap fab fa-snapchat-ghost"></i>
+                {% if username != None %}
+                <a href="/user/{{ username }}"><i class="user fas fa-user"> {{ username }}</i></a>
+                {% else %}
                 <a href="/registration/signup"><i class="user fas fa-user"></i></a>
+                {% endif %}
             </div> 
         </div>
 
@@ -67,6 +71,7 @@
             window.location.pathname = '/answer/' + question_id + '/' + answer_id + '/delete';}
         
     </script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?autorun=true&skin=desert"></script>
 
 
 </body>

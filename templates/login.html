@@ -18,8 +18,12 @@
                 <form method="POST">
                     <div><input type="text" name="username" required placeholder="Username"></div>
                     <div><input type="password" name="password" required minlength="8" placeholder="Password"></div>
-                    <div><button type="submit">Sign Up</button></div>
+                    {% if login_error == True %}
+                    <em id="comment-header" class="question-info">Invalid username or password</em>
+                    {% endif %}
+                    <div><button type="submit">Log In</button></div>
                 </form>
+                <div style="margin-bottom: 40px;"><a href="/registration/signup"><u>Don't have an account yet? Click here to Sign Up</u></a></div>
 
         </div></div>
 

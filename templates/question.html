@@ -44,10 +44,10 @@ Question
 <h4 class="question-details">{{ question['message'] }}</h4>
 {% if question['code_snippet'] != "" %}
     <div class="code-snippet">
-    <pre><code>{{ question['code_snippet'] }}</code></pre></div>
+    <pre><code class="prettyprint">{{ question['code_snippet'] }}</code></pre></div>
 {% endif %}
 
-<br><br>
+
 {% if question['image'] != "/static/" %}
 <img class="title-image" src="{{ question['image'] }}" width="480" height="280">
 {% endif %}
@@ -81,12 +81,12 @@ Question
 <div class=" answers-section">
     {% if num_answers != 0: %}
     {% if num_answers > 1 %}
-    <h2>{{ num_answers }} Answers</h2><br>
+    <h2>{{ num_answers }} Answers</h2>
     {% else %}
-    <h2>{{ num_answers }} Answer</h2><br>
+    <h2>{{ num_answers }} Answer</h2>
     {% endif %}
     {% else: %}
-    <h2>Answers</h2><br>
+    <h2>Answers</h2>
     {% endif %}
 </div>
 
@@ -102,13 +102,13 @@ Question
                 
                 {% if answer['code_snippet'] != '' %}
                 
-                <pre><code style="color: #e19639;">{{ answer['code_snippet'] }}</code></pre><br>
+                <pre><code class="prettyprint">{{ answer['code_snippet'] }}</code></pre>
                 {% endif %}
                
             </div>
             
         </div>
-    </div>
+    
         <div class="answer-info-area">
             <strong>Answer ID: </strong><em class="answer-info">{{ answer['id'] }}</em>
             <strong>Answered: </strong> <em class="answer-info">{{ answer["submission_time"] }}</em>
@@ -124,13 +124,13 @@ Question
                         width="16" height="16"></a>
             </div>
             <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
-            <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a><br><br>
+            <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
         </div>
         
         {% if answer['image'] != '': %}
         <p><img src="{{answer['image']}}" width="480" height="280"></p>
         {% endif %}
-        
+     
         <div class="question-info-area">
             <strong><em class="question-info">Comments</em></strong>
            {% if comments_for_answers != None %} 
@@ -142,7 +142,7 @@ Question
                                 <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
                                     class="recycle fas fa-trash-alt"></i></a></p>
                         </li>
-                    </ul></div>
+                    </ul>
                     {% endif %}
                 {% endfor %}
             {% else %}
@@ -151,16 +151,19 @@ Question
             <p style="margin-top: 2em"><a id="add-comment"
                     href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
             </p>
-              
-        
-        <hr>
+</div>
     </div>
     {% endfor %}
+</div>
     {% endif %}
+
+
+  
+    <hr>
 
 
 <p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/add-answer'">post
         answer</button>
 </p>
-</div>
+
 {% endblock %}

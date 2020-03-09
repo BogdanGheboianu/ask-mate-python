@@ -106,12 +106,21 @@ input.search-button:hover {
     display: inline-block;
 }
 
-.insta, .snap, .scloud, .user{
+.insta, .snap, .scloud{
     font-size: 1.8em;
     color: #f8e7d3;
     margin-left: 1em;
     transition: all 0.3s ease;
 }
+
+.social .user {
+    font-size: 1.8em;
+    color: #f8e7d3;
+    margin-left: 2em;
+    transition: all 0.3s ease;
+
+}
+
 
 .insta:hover, .snap:hover, .scloud:hover, .user:hover{
      cursor: pointer;
@@ -477,12 +486,13 @@ footer {
 }
 
 .code-snippet {
-    background-color: #222;
-    color: #e19639;
-    padding: 20px;
-    font-weight: 900;
-    width: 600px;
     margin-left: 2em;
+
+}
+
+.code-snippet-add-answer {
+    margin-left: 0.2em;
+
 }
 
 
@@ -570,5 +580,64 @@ footer {
 .box-1 a {
     color: #f8e7d3;
     font-family: 'Verdana';
-    margin-bottom: 1000px;
 }
+
+
+/* USER */
+
+.user-all-content {
+    max-width: 94%;
+    margin: 2.8em;
+    margin-left: 5px;
+    background-color: #1a1b1d;
+    border-radius: 10px;
+    box-shadow: 1px 3px 10px 1px#1a1b1d;
+    height: 100%;
+    display: flex;
+}
+
+.user-all-content img {
+    margin: 40px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #e19639;
+    border-radius: 10px;
+}
+
+
+.user-all-content .profile-info {
+    margin-top: 60px;
+    margin-left: 5px;
+    color: #f8e7d3;
+    font-size: 1.5em;
+    font-family: 'Verdana';
+}
+
+.user-all-content .profile-info div {
+    padding: 15px;
+}
+
+.user-all-content .user-button button {
+    background-color: #1a1b1d;
+    color:  #e19639;
+    border: 1px solid #e19639;
+    border-radius: 5px;
+    padding: 4px 16px;
+    outline: none;
+    margin-top: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 3px;
+    text-transform: capitalize;
+    font-size: 0.75em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+
+
+.user-all-content .user-button button:hover {
+    border: 1px solid white;
+      color: white;
+}
+

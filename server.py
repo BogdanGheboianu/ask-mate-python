@@ -13,6 +13,7 @@ UPLOAD_FOLDER = "static"
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = os.urandom(16) 
 
 #===================================================================================================================================================
 
@@ -21,63 +22,68 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
 def index():
-    table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
-    sort_options = {"none": "Choose option", "title": "title", "message": "question",
-                    "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
-    order_options = {"none": "Choose order", "ascending": "ascending", "descending": "descending"}
-    # Display question list after sorting
-    if request.method == 'POST':
-        sort_factor = request.form.get('sort_by')
-        sort_order = request.form.get('order')
-        if sort_factor != 'none' and sort_order != 'none':
-            show_all_questions = False
-            first_questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
-            if first_questions != False: num_all_questions = len(con.get_questions(sort_factor, sort_order))
-            if num_all_questions > 5: show_all_questions = True
+    global username
+    if 'username' in session:
+        table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
+        sort_options = {"none": "Choose option", "title": "title", "message": "question",
+                        "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
+        order_options = {"none": "Choose order", "ascending": "ascending", "descending": "descending"}
+        # Display question list after sorting
+        if request.method == 'POST':
+            sort_factor = request.form.get('sort_by')
+            sort_order = request.form.get('order')
+            if sort_factor != 'none' and sort_order != 'none':
+                show_all_questions = False
+                first_questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
+                if first_questions != False: num_all_questions = len(con.get_questions(sort_factor, sort_order))
+                if num_all_questions > 5: show_all_questions = True
+                return render_template(WEB_PAGES['home_page'],
+                                        questions=first_questions,
+                                        table_heading=table_heading,
+                                        sort_options=sort_options,
+                                        order_options=order_options,
+                                        default_sort=sort_factor,
+                                        default_order=sort_order,
+                                        show_all_questions=show_all_questions,
+                                        empty=False)
+        # Check if there are questions in the database
+        if con.get_questions('id', 'ascending') is False: 
             return render_template(WEB_PAGES['home_page'],
-                                    questions=first_questions,
-                                    table_heading=table_heading,
-                                    sort_options=sort_options,
-                                    order_options=order_options,
-                                    default_sort=sort_factor,
-                                    default_order=sort_order,
-                                    show_all_questions=show_all_questions,
-                                    empty=False)
-    # Check if there are questions in the database
-    if con.get_questions('id', 'ascending') is False: 
+                                    questions='',
+                                    table_heading='',
+                                    empty=True)
+        # Check for sort and for how many questions to display
+        if request.args.get('sort-factor') == 'none' or request.args.get('sort-factor') == None:
+            if request.args.get('show-all') == 'all':
+                questions = utl.check_questions_for_edit(con.get_questions('submission_time', 'descending'))
+            elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
+                questions = utl.check_questions_for_edit(con.get_latest_questions('submission_time', 'descending'))
+            sort_factor = 'none'
+            sort_order = 'none'
+        elif request.args.get('sort-factor') != 'none' or request.args.get('sort-factor') != None:
+            sort_factor = request.args.get('sort-factor')
+            sort_order = request.args.get('sort-order')
+            if request.args.get('show-all') == 'all':
+                questions = utl.check_questions_for_edit(con.get_questions(sort_factor, sort_order))
+            elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
+                questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
+        all_questions = con.get_questions('id', 'ascending')
+        if all_questions != False: num_all_questions = len(all_questions)
+        show_all_questions = False
+        if num_all_questions > 5 and request.args.get('show-all') != 'all': show_all_questions = True
+        username = escape(session['username'])
         return render_template(WEB_PAGES['home_page'],
-                                questions='',
-                                table_heading='',
-                                empty=True)
-    # Check for sort and for how many questions to display
-    if request.args.get('sort-factor') == 'none' or request.args.get('sort-factor') == None:
-        if request.args.get('show-all') == 'all':
-            questions = utl.check_questions_for_edit(con.get_questions('submission_time', 'descending'))
-        elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
-            questions = utl.check_questions_for_edit(con.get_latest_questions('submission_time', 'descending'))
-        sort_factor = 'none'
-        sort_order = 'none'
-    elif request.args.get('sort-factor') != 'none' or request.args.get('sort-factor') != None:
-        sort_factor = request.args.get('sort-factor')
-        sort_order = request.args.get('sort-order')
-        if request.args.get('show-all') == 'all':
-            questions = utl.check_questions_for_edit(con.get_questions(sort_factor, sort_order))
-        elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
-            questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
-    all_questions = con.get_questions('id', 'ascending')
-    if all_questions != False: num_all_questions = len(all_questions)
-    show_all_questions = False
-    if num_all_questions > 5 and request.args.get('show-all') != 'all': show_all_questions = True
-    
-    return render_template(WEB_PAGES['home_page'],
-                            questions=questions,
-                            empty=False,
-                            table_heading=table_heading,
-                            sort_options=sort_options,
-                            order_options=order_options,
-                            default_sort=sort_factor,
-                            default_order=sort_order,
-                            show_all_questions=show_all_questions)
+                                questions=questions,
+                                empty=False,
+                                table_heading=table_heading,
+                                sort_options=sort_options,
+                                order_options=order_options,
+                                default_sort=sort_factor,
+                                default_order=sort_order,
+                                show_all_questions=show_all_questions,
+                                username=username)
+    else:
+        return redirect('/registration/signup')
     
 
 @app.route("/question/<question_id>")
@@ -98,7 +104,6 @@ def question(question_id):
         num_comments_for_question = 0
     tags_for_question = dmg.get_tags_for_question(question_id)
     comments_for_answers = utl.check_comments_for_edit(dmg.get_answers_for_question_comments(question_id))
-    print(comments_for_answers)
     if comments_for_question is not None:
         comment_id = comments_for_question[0]['id']
     else:
@@ -155,6 +160,16 @@ def search():
                                 highlight=utl.highlight,
                                 check_edit=utl.check_specific_question_for_edit)
     else: return render_template(WEB_PAGES['search'], search_results=search_results, search_term=search_term)
+
+
+@app.route('/user/<username>')
+def user(username):
+    user = con.get_user(username)
+    if user['profile_pic'] != None:
+        user['profile_pic'] = url_for('static', filename=user['profile_pic'])
+    else:
+        user['profile_pic'] = url_for('static', filename='no_profile_pic.png')
+    return render_template('user.html', user=user)
 
 #===================================================================================================================================================
 
@@ -347,7 +362,8 @@ def signup():
         email = request.form.get('email')
         plain_text_password = request.form.get('password')
         password = athn.hash_password(plain_text_password)
-        user = {'username': username, 'email': email, 'password': password}
+        created = utl.get_current_time()
+        user = {'username': username, 'email': email, 'password': password, 'role': 'normal_user', 'created': created}
         con.add_new_user(user)
         return redirect('/registration/login')
     return render_template('signup.html')
@@ -355,16 +371,29 @@ def signup():
 
 @app.route('/registration/login', methods=['GET', 'POST'])
 def login():
+    login_error = False
     if request.method == 'POST':
         username = request.form.get('username')
         plain_text_password = request.form.get('password')
         db_hashed_password = con.get_hashed_pass(username)
+        if db_hashed_password == None:
+            login_error = True
+            return render_template('login.html', login_error=login_error)
         is_matching = athn.verify_password(plain_text_password, db_hashed_password)
         if is_matching:
+            session['username'] = username
             return redirect('/')
         else:
-            return redirect('/registration/login')
-    return render_template('login.html')
+            login_error = True
+            return render_template('login.html', login_error=login_error)
+    return render_template('login.html', login_error=login_error)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect('/registration/signup')
+
 #==================================================================================================================================================
 
 # AUXILIARY FUNCTIONS

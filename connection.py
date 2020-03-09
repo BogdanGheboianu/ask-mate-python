@@ -15,7 +15,7 @@ def get_questions(cursor, sort_factor, sort_order):
 
 @database_common.connection_handler
 def get_latest_questions(cursor, sort_factor, sort_order):
-    if sort_order == 'ascending': cursor.execute("""SELECT * from question ORDER BY CASE WHEN {0} ASC LIMIT 5;""".format(sort_factor))
+    if sort_order == 'ascending': cursor.execute("""SELECT * from question ORDER BY {0} ASC LIMIT 5;""".format(sort_factor))
     elif sort_order == 'descending': cursor.execute("""SELECT * FROM question ORDER BY {0} DESC LIMIT 5;""".format(sort_factor))
     questions = cursor.fetchall()
     if len(questions) == 0: return False
@@ -70,8 +70,18 @@ def get_next_id(cursor, table):
 @database_common.connection_handler
 def get_hashed_pass(cursor, username):
     cursor.execute(f""" SELECT password FROM user_info WHERE username='{username}'; """)
-    password = cursor.fetchone()['password']
-    return password
+    try:
+        password = cursor.fetchone()['password']
+        return password
+    except TypeError:
+        return None
+
+
+@database_common.connection_handler
+def get_user(cursor, username):
+    cursor.execute(f""" SELECT * FROM user_info WHERE username='{username}'; """)
+    user = cursor.fetchone()
+    return user
 
 
 #=============================================================================================================================================
@@ -147,7 +157,8 @@ def add_tags_for_question(cursor, tags, question_id):
 
 @database_common.connection_handler
 def add_new_user(cursor, user):
-    cursor.execute(f""" INSERT INTO user_info VALUES ('{user['username']}', '{user['email']}', '{user['password']}'); """)
+    cursor.execute(f""" INSERT INTO user_info (username, email, password, created, role)
+                        VALUES ('{user['username']}', '{user['email']}', '{user['password']}', '{user['created']}', '{user['role']}'); """)
 
 #===============================================================================================================================================
 

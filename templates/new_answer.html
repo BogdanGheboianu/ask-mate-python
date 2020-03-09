@@ -9,8 +9,8 @@ New Answer
 <div class="answer-area">
     <h4>{{ question['message'] }}</h4>
     {% if question['code_snippet'] != '' %}
-    <div class="code-snippet">
-    <pre><code>{{ question['code_snippet'] }}</code></pre></div>
+    <div class="code-snippet-add-answer">
+    <pre><code class="prettyprint">{{ question['code_snippet'] }}</code></pre></div>
     {% endif %}
 </div>
 <hr>
