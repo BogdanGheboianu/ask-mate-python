@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import *
 from werkzeug.utils import secure_filename
 import os, uuid
 import data_manager as dmg
@@ -335,6 +335,36 @@ def vote_answer(question_id, answer_id, vote):
     con.vote_answer(answer_id, vote)
     return redirect("/question/{0}".format(question_id))
 
+#=====================================================================================================================================================
+
+# REGISTRATION
+import authentication as athn
+
+@app.route('/registration/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        plain_text_password = request.form.get('password')
+        password = athn.hash_password(plain_text_password)
+        user = {'username': username, 'email': email, 'password': password}
+        con.add_new_user(user)
+        return redirect('/registration/login')
+    return render_template('signup.html')
+
+
+@app.route('/registration/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        plain_text_password = request.form.get('password')
+        db_hashed_password = con.get_hashed_pass(username)
+        is_matching = athn.verify_password(plain_text_password, db_hashed_password)
+        if is_matching:
+            return redirect('/')
+        else:
+            return redirect('/registration/login')
+    return render_template('login.html')
 #==================================================================================================================================================
 
 # AUXILIARY FUNCTIONS

@@ -66,6 +66,14 @@ def get_next_id(cursor, table):
     except IndexError: next_id = 0
     return next_id
 
+
+@database_common.connection_handler
+def get_hashed_pass(cursor, username):
+    cursor.execute(f""" SELECT password FROM user_info WHERE username='{username}'; """)
+    password = cursor.fetchone()['password']
+    return password
+
+
 #=============================================================================================================================================
 
 # ADDING DATA TO TABLES: question, answer, comm for question and for answer, tags for question
@@ -135,6 +143,11 @@ def add_tags_for_question(cursor, tags, question_id):
             tag_name = utl.escape_characters(tag)
             cursor.execute(""" INSERT INTO tag VALUES({0}, '{1}'); """.format(tag_id, tag_name))
             cursor.execute(""" INSERT INTO question_tag VALUES ({0}, {1}); """.format(question_id, tag_id))
+
+
+@database_common.connection_handler
+def add_new_user(cursor, user):
+    cursor.execute(f""" INSERT INTO user_info VALUES ('{user['username']}', '{user['email']}', '{user['password']}'); """)
 
 #===============================================================================================================================================
 
