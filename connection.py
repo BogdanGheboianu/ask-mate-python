@@ -124,7 +124,7 @@ def add_comment_for_question(cursor, comment_info):
 @database_common.connection_handler
 def add_comment_for_answer(cursor, comment_info):
     message = utl.escape_characters(comment_info['message'])
-    cursor.execute(""" INSERT INTO comment (id, answer_id, message, submission_time) VALUES ({0}, {1}, '{2}', '{3}', {4});
+    cursor.execute(""" INSERT INTO comment (id, answer_id, message, submission_time, userid) VALUES ({0}, {1}, '{2}', '{3}', {4});
                     """.format(comment_info['id'],
                                 comment_info['answer_id'],
                                 message,
