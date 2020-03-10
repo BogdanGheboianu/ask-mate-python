@@ -16,6 +16,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.urandom(16) 
 
 username = None
+account_type = None
 
 #===================================================================================================================================================
 
@@ -24,9 +25,10 @@ username = None
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
 def index():
-    global username
+    global username, account_type
     if 'username' in session:
         username = escape(session['username'])
+        account_type = con.get_user(username)['role']
     table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
@@ -374,12 +376,12 @@ import authentication as athn
 def signup():
     global username
     if request.method == 'POST':
-        username = request.form.get('username')
+        _username_ = request.form.get('username')
         email = request.form.get('email')
         plain_text_password = request.form.get('password')
         password = athn.hash_password(plain_text_password)
         created = utl.get_current_time()
-        user = {'username': username, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0}
+        user = {'username': _username_, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0}
         con.add_new_user(user)
         return redirect('/registration/login')
     return render_template('signup.html', username=username)
