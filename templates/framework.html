@@ -22,9 +22,6 @@
                 <input class="search-button" type="submit" value="Search">
             </form>
             <div class="social">
-                <i class="insta fab fa-instagram"></i>
-                <i class="scloud fab fa-soundcloud"></i>
-                <i class="snap fab fa-snapchat-ghost"></i>
                 {% if username != None %}
                 <a href="/user/{{ username }}"><i class="user fas fa-user"> {{ username }}</i></a>
                 {% else %}
@@ -42,7 +39,13 @@
 
             
         </div>
-        <footer>@2020 Gheboianu &amp; Catrina. All rights reserved.</footer>
+        <footer>@2020 Gheboianu &amp; Catrina. All rights reserved.
+            <!-- <div class="social"> -->
+                <i class="insta fab fa-instagram"></i>
+                <i class="fb fab fa-facebook-f"></i>
+                <i class="twit fab fa-twitter"></i>
+            
+        </footer>
     </div>
     <script>
         function deleteComment(comment_id) {

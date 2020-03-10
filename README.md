@@ -1,2 +1,2 @@
 # wswp-ask-mate
-Web and SQL with Python / 1st TW week / Ask Mate project
+Web and SQL with Python / 3rd TW week / Ask Mate project

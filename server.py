@@ -15,6 +15,8 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.urandom(16) 
 
+username = ''
+
 #===================================================================================================================================================
 
 # DISPLAY ROUTES: index, question, show_image, search
@@ -24,6 +26,7 @@ app.secret_key = os.urandom(16)
 def index():
     global username
     if 'username' in session:
+        username = escape(session['username'])
         table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
         sort_options = {"none": "Choose option", "title": "title", "message": "question",
                         "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
@@ -45,13 +48,15 @@ def index():
                                         default_sort=sort_factor,
                                         default_order=sort_order,
                                         show_all_questions=show_all_questions,
-                                        empty=False)
+                                        empty=False,
+                                        username=username)
         # Check if there are questions in the database
         if con.get_questions('id', 'ascending') is False: 
             return render_template(WEB_PAGES['home_page'],
                                     questions='',
                                     table_heading='',
-                                    empty=True)
+                                    empty=True,
+                                    username=username)
         # Check for sort and for how many questions to display
         if request.args.get('sort-factor') == 'none' or request.args.get('sort-factor') == None:
             if request.args.get('show-all') == 'all':
@@ -71,7 +76,6 @@ def index():
         if all_questions != False: num_all_questions = len(all_questions)
         show_all_questions = False
         if num_all_questions > 5 and request.args.get('show-all') != 'all': show_all_questions = True
-        username = escape(session['username'])
         return render_template(WEB_PAGES['home_page'],
                                 questions=questions,
                                 empty=False,
@@ -126,7 +130,8 @@ def question(question_id):
         tags_for_question=tags_for_question,
         show_more_com_for_q=show_more_com_for_q,
         show_more_com_for_ans=show_more_com_for_ans,
-        comment_id=comment_id)
+        comment_id=comment_id,
+        username=username)
 
 
 @app.route("/question/<question_id>/show/<image_path>")
@@ -141,7 +146,8 @@ def show_image_for_question(question_id, image_path):
                            image=image,
                            question_id=question_id,
                            comments_for_question=comments_for_question,
-                           tags_for_question=tags_for_question)
+                           tags_for_question=tags_for_question,
+                           username=username)
 
 
 @app.route('/search')
@@ -158,18 +164,19 @@ def search():
                                 in_tags=search_results['tags'],
                                 in_comments=search_results['comments'],
                                 highlight=utl.highlight,
-                                check_edit=utl.check_specific_question_for_edit)
-    else: return render_template(WEB_PAGES['search'], search_results=search_results, search_term=search_term)
+                                check_edit=utl.check_specific_question_for_edit,
+                                username=username)
+    else: return render_template(WEB_PAGES['search'], search_results=search_results, search_term=search_term, username=username)
 
 
-@app.route('/user/<username>')
-def user(username):
-    user = con.get_user(username)
+@app.route('/user/<_username_>')
+def user(_username_):
+    user = con.get_user(_username_)
     if user['profile_pic'] != None:
         user['profile_pic'] = url_for('static', filename=user['profile_pic'])
     else:
         user['profile_pic'] = url_for('static', filename='no_profile_pic.png')
-    return render_template('user.html', user=user)
+    return render_template('user.html', user=user, username=username)
 
 #===================================================================================================================================================
 
@@ -197,7 +204,7 @@ def add_question():
         con.add_tags_for_question(tags_for_question, question_id)
         return redirect("/question/{0}".format(question_id))
     all_tags = con.get_tags()
-    return render_template(WEB_PAGES["add_question_page"], all_tags=all_tags)
+    return render_template(WEB_PAGES["add_question_page"], all_tags=all_tags, username=username)
 
 
 @app.route("/question/<question_id>/add-answer", methods=["GET", "POST"])
@@ -217,7 +224,7 @@ def add_answer(question_id):
                         'code_snippet': code_snippet}
         con.add_answer(answer_info)
         return redirect("/question/{0}".format(question_id))
-    return render_template(WEB_PAGES["new_answer_page"], question=question)
+    return render_template(WEB_PAGES["new_answer_page"], question=question, username=username)
 
 
 @app.route('/question/<question_id>/add-comment', methods=['GET', 'POST'])
@@ -229,7 +236,7 @@ def add_comment_for_question(question_id):
                         'submission_time': utl.get_current_time()}
         con.add_comment_for_question(comment_info)
         return redirect('/question/{0}'.format(question_id))
-    return render_template(WEB_PAGES['add_comm'], question_id=question_id)
+    return render_template(WEB_PAGES['add_comm'], question_id=question_id, username=username)
 
 
 @app.route('/<question_id>/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
@@ -241,7 +248,7 @@ def add_comment_for_answer(question_id, answer_id):
                         'message': request.form['comment']}
         con.add_comment_for_answer(comment_info)
         return redirect('/question/{0}'.format(question_id))
-    return render_template(WEB_PAGES['add_comm'], question_id=question_id)
+    return render_template(WEB_PAGES['add_comm'], question_id=question_id, username=username)
 
 #=====================================================================================================================================================
 
@@ -261,7 +268,7 @@ def edit_question(question_id):
     question_info = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     all_tags = con.get_tags()
     tags_for_question = dmg.get_tags_for_question(question_id)
-    return render_template(WEB_PAGES['edit_q'], question_info=question_info, all_tags=all_tags, tags_for_question=tags_for_question)
+    return render_template(WEB_PAGES['edit_q'], question_info=question_info, all_tags=all_tags, tags_for_question=tags_for_question, username=username)
 
 
 @app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
@@ -275,7 +282,7 @@ def edit_answer(question_id, answer_id):
     answers = con.get_answers()
     for answer in answers:
         if answer['id'] == int(answer_id): selected_answer = answer
-    return render_template(WEB_PAGES['edit_ans'], selected_answer=selected_answer)
+    return render_template(WEB_PAGES['edit_ans'], selected_answer=selected_answer, username=username)
 
 
 
@@ -291,7 +298,7 @@ def edit_comment_for_question(question_id, comment_id):
     comments = con.get_comments('no-limit')
     for com in comments:
         if com['id'] == int(comment_id): comment = com
-    return render_template('edit_comment.html', comment=comment)
+    return render_template('edit_comment.html', comment=comment, username=username)
 
 
 @app.route('/answer/<answer_id>/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
@@ -306,7 +313,7 @@ def edit_comment_for_answer(answer_id, question_id, comment_id):
     comments = con.get_comments()
     for com in comments:
         if com['id'] == int(comment_id): comment = com
-    return render_template('edit_comment.html', comment=comment)
+    return render_template('edit_comment.html', comment=comment, username=username)
 
 #====================================================================================================================================================
 
@@ -363,7 +370,7 @@ def signup():
         plain_text_password = request.form.get('password')
         password = athn.hash_password(plain_text_password)
         created = utl.get_current_time()
-        user = {'username': username, 'email': email, 'password': password, 'role': 'normal_user', 'created': created}
+        user = {'username': username, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0}
         con.add_new_user(user)
         return redirect('/registration/login')
     return render_template('signup.html')
@@ -392,7 +399,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    return redirect('/registration/signup')
+    return redirect('/registration/login')
 
 #==================================================================================================================================================
 

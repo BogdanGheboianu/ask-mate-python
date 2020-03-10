@@ -157,8 +157,8 @@ def add_tags_for_question(cursor, tags, question_id):
 
 @database_common.connection_handler
 def add_new_user(cursor, user):
-    cursor.execute(f""" INSERT INTO user_info (username, email, password, created, role)
-                        VALUES ('{user['username']}', '{user['email']}', '{user['password']}', '{user['created']}', '{user['role']}'); """)
+    cursor.execute(f""" INSERT INTO user_info (username, email, password, created, role, rank)
+                        VALUES ('{user['username']}', '{user['email']}', '{user['password']}', '{user['created']}', '{user['role']}', {user['rank']}); """)
 
 #===============================================================================================================================================
 

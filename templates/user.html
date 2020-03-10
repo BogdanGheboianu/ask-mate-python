@@ -20,16 +20,32 @@ Home
             {% endif %}
 
             <div class="profile-info">
-                <div>Username: {{ user['username'] }}</div>
-                <div>Email: {{ user['email'] }}</div>
-                <div>Profile created: {{ user['created'] }}</div>
-                <div>User rank: </div>
+                <div><strong>Username:</strong> <em class="question-info">{{ user['username'] }}</em></div><hr>
+                <div><strong>Email:</strong> <em class="question-info">{{ user['email'] }}</em></div><hr>
+                <div><strong>Profile created:</strong> <em class="question-info">{{ user['created'] }}</em></div><hr>
+                <div><strong>User rank:</strong> <em class="question-info">999</em></div><hr>
+                {% if user['username'] == username %}
                 <div class="user-button">
                     <button onclick="location.href='#'">CHANGE PASSWORD</button>
                     <button onclick="location.href='/logout'">LOG OUT</button>
                     <button onclick="location.href='#'">DELETE ACCOUNT</button>
                 </div>
+                {% else %}
+                <div class="follow-button">
+                    <button onclick="location.href='#'">FOLOW</button> <em style="font-size: 15px;">24.4k followers</em>
+                </div>
             </div>
+            <div class="user-contrbutions" style="margin-left: 150px; margin-top: 15px;">
+                <h2>User's Contributions</h2>
+
+            </div>
+</div>  
+
+
+
+                {% endif %}
+                
+            
 
             
             
@@ -38,5 +54,5 @@ Home
 
 
 
-        </div>
+        
 {% endblock %}
