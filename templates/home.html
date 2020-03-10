@@ -8,8 +8,13 @@ Home
 {% block content %}
 {% if empty == True: %}
 <p><strong>There are no questions to show for the moment</strong></p>
+{% if username != None %}
 <button class="ask-question-button" onclick="location.href='/list/add-question'">ask
     question</button>
+{% else %}
+<button class="ask-question-button" onclick="location.href='/registration/login'">ask
+    question</button>
+{% endif %}
 {% else: %}
 <div class="sort-area">
     <form method="POST">
@@ -35,8 +40,15 @@ Home
         <button id="submit" type="submit">sort</button>
     </form>
 </div>
-<div class="ask-question-area"><button class="ask-question-button" onclick="location.href='/list/add-question'">ask
-        question</button></div>
+<div class="ask-question-area">
+    {% if username != None %}
+<button class="ask-question-button" onclick="location.href='/list/add-question'">ask
+    question</button>
+{% else %}
+<button class="ask-question-button" onclick="location.href='/registration/login'">ask
+    question</button>
+{% endif %}
+    </div>
 <hr />
 <table class="table-style">
     {% for heading in table_heading: %}

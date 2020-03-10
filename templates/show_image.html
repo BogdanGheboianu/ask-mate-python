@@ -36,8 +36,15 @@ Question Img
     </div>
 </p>
 <hr>
+{% if username != None %}
 <p>
     <button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/new-answer'">post
         answer</button>
 </p>
+{% else %}
+<p>
+    <button class="ask-question-button" onclick="location.href='/registration/login'">post
+        answer</button>
+</p>
+{% endif %}
 {% endblock %}

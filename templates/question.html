@@ -10,9 +10,15 @@ Question
 <div class="question-title-area">
     <h2 class="question-title">{{ question['title'] }}</h2>
     <div class="voting-area">
+        {% if username != None %}
         <a class="voting-link" href="/question/{{ question_id }}/vote-up"><img src="../static/upvote.png" width="20"
                 height="20"></a> <a class="voting-link" href="/question/{{ question_id }}/vote-down"><img
                 src="../static/downvote.png" width="20" height="20"></a>
+        {% else %}
+        <a class="voting-link" href="/registration/login"><img src="../static/upvote.png" width="20"
+            height="20"></a> <a class="voting-link" href="/registration/login"><img
+            src="../static/downvote.png" width="20" height="20"></a>
+        {% endif %}
     </div>
 </div>
 
@@ -75,7 +81,11 @@ Question
     {% else %}
     <p><em>There are no comments for this question</em></p>
     {% endif %}
+    {% if username != None %}
     <button id='add-comment' onclick="location.href='/question/{{ question_id }}/add-comment'">Add Comment</button>
+    {% else %}
+    <button id='add-comment' onclick="location.href='/registration/login'">Add Comment</button>
+    {% endif %}
 </div>
 <hr style="background-color: #eec490">
 <div class=" answers-section">
@@ -118,10 +128,17 @@ Question
             <strong>Votes: </strong> <em class="answer-info">N/A</em>
             {% endif %}
             <div class="voting-area">
+                {% if username != None %}
                 <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
                         src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
                     href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
                         width="16" height="16"></a>
+                {% else %}
+                <a class="voting-link" href="/registration/login"><img
+                    src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
+                href="/registration/login"><img src="../static/downvote.png"
+                    width="16" height="16"></a>
+                {% endif %}
             </div>
             <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
             <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
@@ -148,8 +165,14 @@ Question
             {% else %}
                 <p><em>There are no comments for this answer</em></p>
             {% endif %}
-            <p style="margin-top: 2em"><a id="add-comment"
+            <p style="margin-top: 2em">
+                {% if username != None %}
+                <a id="add-comment"
                     href="/{{ question['id'] }}/answer/{{ answer['id'] }}/new-comment">Add Comment</a>
+                {% else %}
+                <a id="add-comment"
+                href="/registration/login">Add Comment</a>
+                {% endif %}
             </p>
 </div>
     
@@ -163,9 +186,14 @@ Question
   
     <hr>
 
-
+{% if username != None %}
 <p><button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/add-answer'">post
         answer</button>
 </p>
+{% else %}
+<p><button class="ask-question-button" onclick="location.href='/registration/login'">post
+    answer</button>
+</p>
+{% endif %}
 
 {% endblock %}

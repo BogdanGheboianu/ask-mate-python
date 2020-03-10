@@ -32,7 +32,11 @@ Home
                 </div>
                 {% else %}
                 <div class="follow-button">
+                    {% if username != None %}
                     <button onclick="location.href='#'">FOLOW</button> <em style="font-size: 15px;">24.4k followers</em>
+                    {% else %}
+                    <button onclick="location.href='/registration/login'">FOLOW</button> <em style="font-size: 15px;">24.4k followers</em>
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>
