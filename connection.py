@@ -84,6 +84,13 @@ def get_user(cursor, username):
     return user
 
 
+@database_common.connection_handler
+def get_user_by_id(cursor, userid):
+    cursor.execute(f""" SELECT * FROM user_info WHERE id={userid}; """)
+    user = cursor.fetchone()
+    return user
+
+
 #=============================================================================================================================================
 
 # ADDING DATA TO TABLES: question, answer, comm for question and for answer, tags for question

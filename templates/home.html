@@ -58,7 +58,7 @@ Home
     {% for question in questions: %}
     <tr>
         {% for key, value in question.items(): %}
-            {% if key != "title" and key != 'image' and key!= 'vote_number' and key!= 'votes_up' and key != 'votes_down' and key != 'code_snippet'%}
+            {% if key != "title" and key != 'image' and key!= 'vote_number' and key!= 'votes_up' and key != 'votes_down' and key != 'code_snippet' and key != 'userid' %}
                 <td>{{ value }}</td>
             {% else: %}
                 {% if key == 'title' %}

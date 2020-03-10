@@ -33,6 +33,7 @@ Question
     {% else %}
     <strong>Votes:</strong> <em class="question-info">N/A</em>
     {% endif %}
+    <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info">{{ question['username'] }}</em></a>
     <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
     <button id="submit" onclick="deleteQuestion({{ question_id }})">Delete Question</button>
     {% if tags_for_question != None %}
@@ -64,7 +65,7 @@ Question
     {% for comment in comments_for_question %}
     <ul>
         <li class="comment-style">
-            <p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em> <a
+            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em> <a
                     href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment"><i
                         class="pencil fas fa-pencil-alt"></i></a><a id="recycle-link"
                     onclick="deleteComment({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
@@ -127,6 +128,7 @@ Question
             {% else %}
             <strong>Votes: </strong> <em class="answer-info">N/A</em>
             {% endif %}
+            <strong>Answered by </strong> <a href="/user/{{ answer['username'] }}"><em class="answer-info">{{ answer['username'] }}</em></a>
             <div class="voting-area">
                 {% if username != None %}
                 <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
@@ -155,7 +157,7 @@ Question
                     {% if comment['answer_id'] == answer['id'] %} 
                     <ul>
                         <li class="comment-style">
-                            <p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em>
+                            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em>
                                 <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
                                     class="recycle fas fa-trash-alt"></i></a></p>
                         </li>

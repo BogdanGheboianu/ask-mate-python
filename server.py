@@ -99,6 +99,7 @@ def question(question_id):
     empty = False
     num_answers = 0
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
+    question.update({'username': con.get_user_by_id(question['userid'])['username']})
     question['image'] = url_for('static', filename=question['image'])
     answers_for_question = utl.check_answers_for_edit(dmg.get_answers_for_question(question_id))
     if request.args.get('show_more_com_for_q') == 'yes':
@@ -107,10 +108,17 @@ def question(question_id):
         comments_for_question = utl.check_comments_for_edit(dmg.get_comments_for_question(question_id, 'limit'))
     try:
         num_comments_for_question = len(utl.check_comments_for_edit(dmg.get_comments_for_question(question_id, 'no-limit')))
+        for comm in comments_for_question:
+            comm_username = con.get_user_by_id(comm['userid'])['username']
+            comm.update({'username': comm_username})
     except TypeError: 
         num_comments_for_question = 0
     tags_for_question = dmg.get_tags_for_question(question_id)
     comments_for_answers = utl.check_comments_for_edit(dmg.get_answers_for_question_comments(question_id))
+    if comments_for_answers != None:
+        for comm in comments_for_answers:
+            comm_username = con.get_user_by_id(comm['userid'])['username']
+            comm.update({'username': comm_username})
     if comments_for_question is not None:
         comment_id = comments_for_question[0]['id']
     else:
@@ -118,6 +126,9 @@ def question(question_id):
     if answers_for_question == None: empty = True
     if empty == False:
         answers_for_question = utl.link_answer_with_image(answers_for_question, question_id)
+        for ans in answers_for_question:
+            ans_username = con.get_user_by_id(ans['userid'])['username']
+            ans.update({'username': ans_username})
         num_answers = len(answers_for_question)
     show_more_com_for_q = request.args.get('show_more_com_for_q')
     show_more_com_for_ans = request.args.get('show_more_com_for_ans')
