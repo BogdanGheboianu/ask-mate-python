@@ -78,7 +78,7 @@ tr {
 }
 
 .search-form {
-   margin-left: 550px;
+   margin-left: 250px;
 }
 
 .search-form input {
@@ -115,7 +115,7 @@ input.search-button:hover {
 }
 
 .social .user {
-    font-size: 1.8em;
+    font-size: 1em;
     color: #f8e7d3;
     transition: all 0.3s ease;
 
@@ -512,7 +512,7 @@ footer {
 
 .box-1 {
     flex: 1;
-    background-color: #1a1b1d;
+    background-color: black;
     margin: 20px;
     padding:0;
     box-shadow: 0 1px 5px rgba(0, 0, 0, .9);
