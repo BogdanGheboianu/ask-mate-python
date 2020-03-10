@@ -11,9 +11,11 @@ Question
     <h2 class="question-title">{{ question['title'] }}</h2>
     <div class="voting-area">
         {% if username != None %}
+        {% if username != question['username'] %}
         <a class="voting-link" href="/question/{{ question_id }}/vote-up"><img src="../static/upvote.png" width="20"
                 height="20"></a> <a class="voting-link" href="/question/{{ question_id }}/vote-down"><img
                 src="../static/downvote.png" width="20" height="20"></a>
+        {% endif %}
         {% else %}
         <a class="voting-link" href="/registration/login"><img src="../static/upvote.png" width="20"
             height="20"></a> <a class="voting-link" href="/registration/login"><img
@@ -34,8 +36,10 @@ Question
     <strong>Votes:</strong> <em class="question-info">N/A</em>
     {% endif %}
     <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info">{{ question['username'] }}</em></a>
+    {% if username == question['username'] %}
     <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
     <button id="submit" onclick="deleteQuestion({{ question_id }})">Delete Question</button>
+    {% endif %}
     {% if tags_for_question != None %}
     <p><strong>TAGS:</strong>
         {% for tag in tags_for_question %}
@@ -65,10 +69,13 @@ Question
     {% for comment in comments_for_question %}
     <ul>
         <li class="comment-style">
-            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em> <a
+            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em> 
+                {% if username == comment['username'] %}
+                <a
                     href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment"><i
                         class="pencil fas fa-pencil-alt"></i></a><a id="recycle-link"
                     onclick="deleteComment({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
+                    {% endif %}
         </li>
     </ul>
     {% endfor %}
@@ -131,10 +138,12 @@ Question
             <strong>Answered by </strong> <a href="/user/{{ answer['username'] }}"><em class="answer-info">{{ answer['username'] }}</em></a>
             <div class="voting-area">
                 {% if username != None %}
+                {% if username != answer['username'] %}
                 <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
                         src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
                     href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
                         width="16" height="16"></a>
+                {% endif %}
                 {% else %}
                 <a class="voting-link" href="/registration/login"><img
                     src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
@@ -142,8 +151,10 @@ Question
                     width="16" height="16"></a>
                 {% endif %}
             </div>
+            {% if username == answer['username'] %}
             <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
             <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
+            {% endif %}
         </div>
         
         {% if answer['image'] != '': %}
@@ -158,8 +169,10 @@ Question
                     <ul>
                         <li class="comment-style">
                             <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em>
+                                {% if username == comment['username'] %}
                                 <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
                                     class="recycle fas fa-trash-alt"></i></a></p>
+                                {% endif %}
                         </li>
                     </ul>
                     {% endif %}
@@ -177,12 +190,15 @@ Question
                 {% endif %}
             </p>
 </div>
-    
+
+</div>
     {% endfor %}
+
 </div>
     {% endif %}
 
-</div>
+
+
 
 
   
