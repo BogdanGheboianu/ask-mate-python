@@ -235,7 +235,6 @@ def list_interests(_username_):
 def followers(_username_):
     user_followers = con.get_user_followers(con.get_user(_username_)['id'])
     user_num_followers = len(user_followers)
-    print(user_followers)
     return render_template('followers.html', _username_=_username_, user_followers=user_followers, user_num_followers=user_num_followers, username=username)
 
 #===================================================================================================================================================

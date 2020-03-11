@@ -95,7 +95,12 @@ Home
                             <p><strong style="font-size: large;">Answers given:</strong></p><br>
                             <p>
                             {% for item in contributions['answers'] %}
+                                {% if item['accepted'] == True %}
+                    
+                                <p style="font-size: large; color: wheat;"><i style="color: seagreen; font-size: x-large; margin-right: 10px; border-style: solid; border-radius: 4px; border-color: seagreen;" class="fas fa-check"></i>{{item['message']}}</p>
+                                {% else %}
                                 <p style="font-size: large; color: wheat;">{{ item['message'] }}</p>
+                                {% endif %}
                                 <a style="font-size: medium; color: #e19639;" href="/question/{{ item['question_id'] }}">Go to Question</a><br><br>
                                 <strong>Answer ID:</strong> <em class="question-info">{{ item["id"] }}</em>
                                 <strong>Posted:</strong> <em class="question-info">{{ item["submission_time"] }}</em>
