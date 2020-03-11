@@ -4,11 +4,20 @@ Interests
 {% endblock %}
 {% block content %}
 
-
+<p style="margin-top: 1.5em; margin-left: 5px; font-size: x-large;">Choose your Interests:</p>
+<div class="tags-all-content">
+    
 {% for tag in new_tags %}
-    {{ tag }}
+    {% if username != None %}
+    <a class="question-links" style="border-style: solid; padding: 10px; font-size: 20px;;" 
+        href="/user/{{ username }}/{{ tag['id'] }}/add-interest-to-user">{{ tag['name'] }}</a>
+    {% else %}
+    <a class="question-links" href="/">{{ tag['name'] }}</a><br>
+    {% endif %}
 {% endfor %}
 
 
-
+</div>
 {% endblock %}
+
+

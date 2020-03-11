@@ -130,7 +130,7 @@ def get_user_tags(cursor, userid):
 
 @database_common.connection_handler
 def get_new_tags_for_user(cursor, userid):
-    cursor.execute(f""" SELECT name, tagid FROM tag LEFT JOIN user_tag ON tag.id = user_tag.tagid WHERE userid!={userid} OR userid IS NULL; """)
+    cursor.execute(f""" SELECT name, id FROM tag LEFT JOIN user_tag ON tag.id = user_tag.tagid WHERE userid!={userid} OR userid IS NULL; """)
     new_tags = cursor.fetchall()
     return new_tags
 
@@ -212,6 +212,11 @@ def add_tags_for_question(cursor, tags, question_id):
 def add_new_user(cursor, user):
     cursor.execute(f""" INSERT INTO user_info (username, email, password, created, role, rank)
                         VALUES ('{user['username']}', '{user['email']}', '{user['password']}', '{user['created']}', '{user['role']}', {user['rank']}); """)
+
+
+@database_common.connection_handler
+def add_interest_to_user(cursor, userid, tagid):
+    cursor.execute(f""" INSERT INTO user_tag VALUES ({userid}, {tagid}); """)
 
 #===============================================================================================================================================
 

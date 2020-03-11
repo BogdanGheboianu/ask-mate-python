@@ -712,3 +712,16 @@ footer {
 .user-interest:hover {
     text-decoration: line-through;
 }
+
+.tags-all-content {
+    max-width: 20%;
+    margin: 2.8em;
+    margin-left: 5px;
+    background-color: #1a1b1d;
+    border-radius: 10px;
+    box-shadow: 1px 3px 10px 1px#1a1b1d;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(10, 4fr);
+    grid-gap: 10px;
+}

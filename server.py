@@ -305,6 +305,12 @@ def add_comment_for_answer(question_id, answer_id):
         return redirect('/question/{0}'.format(question_id))
     return render_template(WEB_PAGES['add_comm'], question_id=question_id, username=username, account_type=account_type)
 
+
+@app.route('/user/<_username_>/<tagid>/add-interest-to-user')
+def add_interest_to_user(_username_, tagid):
+    con.add_interest_to_user(con.get_user(_username_)['id'], tagid)
+    return redirect(f'/user/{_username_}/choose-interests')
+
 #=====================================================================================================================================================
 
 # EDITING ROUTES: edit question, edit answer, edit comment for question, edit comment for answer

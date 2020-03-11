@@ -30,6 +30,8 @@ Home
                     {% for tag in user_tags %}
                         {% if username == user['username'] or account_type == 'admin' %}
                         <a href="/user/{{ username }}/{{ tag['tagid'] }}/remove-tag"><em class="user-interest">{{ tag['name'] }}</em></a>
+                        {% else %}
+                        <a href="/search?q={{ tag['name'] }}"><em class="question-links">{{ tag['name'] }}</em></a>
                         {% endif %}
                     {% endfor %}
                     {% if username == user['username'] or account_type == 'admin' %}
