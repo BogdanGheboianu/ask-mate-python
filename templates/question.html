@@ -77,12 +77,14 @@ Question
     {% for comment in comments_for_question %}
     <ul>
         <li class="comment-style">
-            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em> 
+            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a> <em class="comment-info">{{ comment['submission_time'] }}</em>
                 {% if username == comment['username'] or account_type == 'admin' %}
                 <a
                     href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment"><i
                         class="pencil fas fa-pencil-alt"></i></a><a id="recycle-link"
-                    onclick="deleteComment({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a></p>
+                    onclick="deleteComment({{ comment['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
+                    <p>{{ comment['message'] }}  
+                </p>
                     {% endif %}
         </li>
     </ul>
@@ -182,10 +184,12 @@ Question
                     {% if comment['answer_id'] == answer['id'] %} 
                     <ul>
                         <li class="comment-style">
-                            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em>
+                            <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a> <em class="comment-info">{{ comment['submission_time'] }}</em>
                                 {% if username == comment['username'] or account_type == 'admin' %}
                                 <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
-                                    class="recycle fas fa-trash-alt"></i></a></p>
+                                    class="recycle fas fa-trash-alt"></i></a>
+                                    <p>{{ comment['message'] }} 
+                                </p>
                                 {% endif %}
                         </li>
                     </ul>

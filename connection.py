@@ -317,6 +317,7 @@ def delete_question(cursor, question_id):
             answers_for_question_ids.append(answer['id'])
     for ans_id in answers_for_question_ids:
         cursor.execute("""  DELETE FROM comment WHERE answer_id={0}; """.format(ans_id))
+        cursor.execute(f"""  DELETE FROM user_vote WHERE answerid={ans_id}; """)
     cursor.execute("""  DELETE FROM answer WHERE question_id={0}; """.format(question_id))
     cursor.execute("""  DELETE FROM comment WHERE question_id={0}; """.format(question_id))
     cursor.execute(""" DELETE FROM question_tag WHERE question_id={0}; """.format(question_id))
@@ -326,6 +327,7 @@ def delete_question(cursor, question_id):
 @database_common.connection_handler
 def delete_answer(cursor, answer_id):
     cursor.execute(""" DELETE FROM comment WHERE answer_id={0}; """.format(answer_id))
+    cursor.execute(f"""  DELETE FROM user_vote WHERE answerid={answer_id}; """)
     cursor.execute(""" DELETE FROM answer WHERE id={0};""".format(answer_id))
 
 
