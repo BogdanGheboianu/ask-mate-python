@@ -27,6 +27,13 @@ Edit Question
         </select></p><p> ...or create new one(s):</p>
         <p><textarea name="tags" placeholder="Separate tags by comma..." minlength="3" rows="2" cols="100"></textarea>
     </p>
+     <p>Code Snippet</p>
+    <textarea name="code_snippet" minlength="3" rows="10" cols="100">{{ question['code_snippet'] }}</textarea>
+    <p> <label for="img">Replace image:</label></p>
+    <p><input type="file" id="img" name="image" accept="image/*"></p>
+    {% if question['image'] != "/static/" %}
+    <img class="title-image" src="{{question['image']}}" width="480" height="280">
+    {% endif %}
     <div><button class="ask-question-button" type="submit">POST</button></div>
 </form>
 

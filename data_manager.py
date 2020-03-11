@@ -7,6 +7,11 @@ def get_question_by_id(question_id):
     for question in questions:
         if question['id'] == int(question_id): return question
 
+def get_answer_by_id(answer_id):
+    answers = con.get_answers()
+    for answer in answers:
+        if answer['id'] == int(answer_id): return answer
+
 
 def get_answers_for_question(question_id):
     answers = con.get_answers()
