@@ -260,9 +260,24 @@ def vote_answer(cursor, answer_id, vote_name):
 
 
 @database_common.connection_handler
+def unvote_answer(cursor, answer_id, vote_name):
+    if vote_name == 'vote-up': cursor.execute(""" UPDATE answer SET votes_up=votes_up - 1 WHERE id={0}; """.format(answer_id))
+    elif vote_name == 'vote-down': cursor.execute(""" UPDATE answer SET votes_down=votes_down - 1 WHERE id={0}; """.format(answer_id))
+    cursor.execute(""" SELECT votes_up, votes_down FROM answer WHERE id={0}; """.format(answer_id))
+    votes = cursor.fetchall()
+    vote_percentage = utl.calculate_vote_percentage(votes[0]['votes_up'], votes[0]['votes_down'])
+    cursor.execute(""" UPDATE answer SET vote_number={0}; """.format(vote_percentage))
+
+
+@database_common.connection_handler
 def user_vote_answer(cursor, answer_id, userid, vote_type):
     cursor.execute(f""" INSERT INTO user_vote (userid, answerid, vote_type)
                         VALUES ({userid}, {answer_id}, '{vote_type}'); """)
+
+
+@database_common.connection_handler
+def user_unvote_answer(cursor, answer_id, userid):
+    cursor.execute(f""" DELETE FROM user_vote WHERE userid={userid} AND answerid={answer_id}; """)
 
 
 @database_common.connection_handler

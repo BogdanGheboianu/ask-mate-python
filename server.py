@@ -130,7 +130,7 @@ def question(question_id):
         answers_for_question = utl.link_answer_with_image(answers_for_question, question_id)
         for ans in answers_for_question:
             ans_username = con.get_user_by_id(ans['userid'])['username']
-            ans.update({'username': ans_username})
+            ans.update({'username': ans_username, 'voted': False, 'vote_type': ''})
         num_answers = len(answers_for_question)
     show_more_com_for_q = request.args.get('show_more_com_for_q')
     show_more_com_for_ans = request.args.get('show_more_com_for_ans')
@@ -138,13 +138,16 @@ def question(question_id):
     vote_type = None
     user_votes = None
     if userid != None:
-        print("here")
         user_votes = con.get_user_votes(userid)
         for uv in user_votes:
             if uv['questionid'] == question['id']:
                 question_voted = True
                 vote_type = uv['vote_type']
-        print(user_votes)
+            if empty is False:
+                for ans in answers_for_question:
+                    if ans['id'] == uv['answerid']:
+                        ans['voted'] = True
+                        ans['vote_type'] = uv['vote_type']
     return render_template(WEB_PAGES["question_page"],
         question=question,
         answers=answers_for_question,
@@ -410,6 +413,13 @@ def vote_answer(question_id, answer_id, vote):
     con.vote_answer(answer_id, vote)
     userid = con.get_user(username)['id']
     con.user_vote_answer(answer_id, userid, vote)
+    return redirect("/question/{0}".format(question_id))
+
+
+@app.route("/answer/<question_id>/<answer_id>/<vote>/unvote-answer")
+def unvote_answer(question_id, answer_id, vote):
+    con.unvote_answer(answer_id, vote)
+    con.user_unvote_answer(answer_id, userid)
     return redirect("/question/{0}".format(question_id))
 
 #=====================================================================================================================================================

@@ -147,16 +147,22 @@ Question
             <div class="voting-area">
                 {% if username != None %}
                 {% if username != answer['username'] or account_type == 'admin' %}
-                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
-                        src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
-                    href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
-                        width="16" height="16"></a>
+                {% if answer['voted'] == False %}
+                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><i class="fas fa-thumbs-up" style="color: #e19639;"></i></a> 
+                <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><i class="fas fa-thumbs-down" style="color: #e19639;"></i></a>
+                {% else %}
+                    {% if answer['vote_type'] == 'vote-up' %}
+                        <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up/unvote-answer"><i class="fas fa-thumbs-up" style="color: #428c40;"></i></a> 
+                        <a class="voting-link" href="#"><i class="fas fa-thumbs-down" style="color: #e19639;"></i></a>
+                    {% else %}
+                        <a class="voting-link" href="#"><i class="fas fa-thumbs-up" style="color: #e19639;"></i></a> 
+                        <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down/unvote-answer"><i class="fas fa-thumbs-down" style="color: red;"></i></a>
+                    {% endif %}
+                {% endif %}
                 {% endif %}
                 {% else %}
-                <a class="voting-link" href="/registration/login"><img
-                    src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
-                href="/registration/login"><img src="../static/downvote.png"
-                    width="16" height="16"></a>
+                <a class="voting-link" href="/registration/login"><i class="fas fa-thumbs-up" style="color: #e19639;"></i></a> 
+                <a class="voting-link" href="/registration/login"><i class="fas fa-thumbs-down" style="color: #e19639;"></i></a>
                 {% endif %}
             </div>
             {% if username == answer['username'] or account_type == 'admin' %}
