@@ -392,16 +392,22 @@ import authentication as athn
 @app.route('/registration/signup', methods=['GET', 'POST'])
 def signup():
     global username
+    username_error = False
+    email_error = False
     if request.method == 'POST':
         _username_ = request.form.get('username')
         email = request.form.get('email')
+        if not dmg.check_for_unique_username(_username_): username_error = True
+        if not dmg.check_for_unique_email(email): email_error = True
+        if username_error == True or email_error == True:
+            return render_template('signup.html', username=username, account_type=account_type, username_error=username_error, email_error=email_error)
         plain_text_password = request.form.get('password')
         password = athn.hash_password(plain_text_password)
         created = utl.get_current_time()
         user = {'username': _username_, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0}
         con.add_new_user(user)
         return redirect('/registration/login')
-    return render_template('signup.html', username=username, account_type=account_type)
+    return render_template('signup.html', username=username, account_type=account_type, username_error=username_error, email_error=email_error)
 
 
 @app.route('/registration/login', methods=['GET', 'POST'])
