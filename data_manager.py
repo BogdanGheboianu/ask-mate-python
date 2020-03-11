@@ -156,3 +156,21 @@ def search_in_comments(search_phrase_list_of_words):
                 if com not in search_results_in_comments:
                     search_results_in_comments.append(com)
     return search_results_in_comments
+
+
+def check_for_unique_username(username):
+    unique = True
+    all_users = con.get_all_users()
+    for user in all_users:
+        if username == user['username']:
+            unique = False
+    return unique
+
+
+def check_for_unique_email(email):
+    unique = True
+    all_users = con.get_all_users()
+    for user in all_users:
+        if email == user['email']:
+            unique = False
+    return unique

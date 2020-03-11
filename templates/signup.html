@@ -8,8 +8,17 @@ Sign Up
         <div class="box-1">
             <h2>SIGN UP</h2>
                 <form method="POST">
+                    {% if username_error == True %}
+                    <em id="comment-header" class="question-info">Username already in use</em>
+                    {% endif %}
                     <div><input type="text" name="username" required placeholder="Username"></div>
+                    {% if email_error == True %}
+                    <em id="comment-header" class="question-info">Email already in use</em>
+                    {% endif %}
                     <div><input type="text" name="email" required placeholder="Email"></div>
+                    {% if password_match_error == True %}
+                    <em id="comment-header" class="question-info">Passwords don't match</em>
+                    {% endif %}
                     <div><input type="password" name="password" required minlength="8" placeholder="Password"></div>
                     <div><input type="password" name="repeat_password" required minlength="8" placeholder="Repeat password"></div>
                     <div><button type="submit">Sign Up</button></div>

@@ -17,6 +17,7 @@ app.secret_key = os.urandom(16)
 
 username = None
 account_type = None
+userid = None
 
 #===================================================================================================================================================
 
@@ -25,10 +26,11 @@ account_type = None
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
 def index():
-    global username, account_type
+    global username, account_type, userid
     if 'username' in session:
         username = escape(session['username'])
         account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
     table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
@@ -128,10 +130,24 @@ def question(question_id):
         answers_for_question = utl.link_answer_with_image(answers_for_question, question_id)
         for ans in answers_for_question:
             ans_username = con.get_user_by_id(ans['userid'])['username']
-            ans.update({'username': ans_username})
+            ans.update({'username': ans_username, 'voted': False, 'vote_type': ''})
         num_answers = len(answers_for_question)
     show_more_com_for_q = request.args.get('show_more_com_for_q')
     show_more_com_for_ans = request.args.get('show_more_com_for_ans')
+    question_voted = False
+    vote_type = None
+    user_votes = None
+    if userid != None:
+        user_votes = con.get_user_votes(userid)
+        for uv in user_votes:
+            if uv['questionid'] == question['id']:
+                question_voted = True
+                vote_type = uv['vote_type']
+            if empty is False:
+                for ans in answers_for_question:
+                    if ans['id'] == uv['answerid']:
+                        ans['voted'] = True
+                        ans['vote_type'] = uv['vote_type']
     return render_template(WEB_PAGES["question_page"],
         question=question,
         answers=answers_for_question,
@@ -146,7 +162,11 @@ def question(question_id):
         show_more_com_for_ans=show_more_com_for_ans,
         comment_id=comment_id,
         username=username,
-        account_type=account_type)
+        account_type=account_type,
+        user_votes=user_votes,
+        userid=userid,
+        question_voted=question_voted,
+        vote_type=vote_type)
 
 
 @app.route("/question/<question_id>/show/<image_path>")
@@ -381,12 +401,30 @@ def delete_tag(question_id, tag_name):
 @app.route("/question/<question_id>/<vote>")
 def vote_question(question_id, vote):
     con.vote_question(question_id, vote)
+    userid = con.get_user(username)['id']
+    con.user_vote_question(question_id, userid, vote)
+    return redirect("/question/{0}".format(question_id))
+
+
+@app.route('/question/<question_id>/<vote>/unvote-question')
+def unvote_question(question_id, vote):
+    con.unvote_question(question_id, vote)
+    con.user_unvote_question(question_id, userid)
     return redirect("/question/{0}".format(question_id))
 
 
 @app.route("/answer/<question_id>/<answer_id>/<vote>")
 def vote_answer(question_id, answer_id, vote):
     con.vote_answer(answer_id, vote)
+    userid = con.get_user(username)['id']
+    con.user_vote_answer(answer_id, userid, vote)
+    return redirect("/question/{0}".format(question_id))
+
+
+@app.route("/answer/<question_id>/<answer_id>/<vote>/unvote-answer")
+def unvote_answer(question_id, answer_id, vote):
+    con.unvote_answer(answer_id, vote)
+    con.user_unvote_answer(answer_id, userid)
     return redirect("/question/{0}".format(question_id))
 
 #=====================================================================================================================================================
@@ -397,16 +435,30 @@ import authentication as athn
 @app.route('/registration/signup', methods=['GET', 'POST'])
 def signup():
     global username
+    username_error = False
+    email_error = False
+    password_match_error = False
     if request.method == 'POST':
         _username_ = request.form.get('username')
         email = request.form.get('email')
+        if not dmg.check_for_unique_username(_username_): username_error = True
+        if not dmg.check_for_unique_email(email): email_error = True
+        if username_error == True or email_error == True:
+            return render_template('signup.html', username=username, account_type=account_type, 
+                                    username_error=username_error, email_error=email_error, password_match_error=password_match_error)
         plain_text_password = request.form.get('password')
+        repeat_password = request.form.get('repeat_password')
+        if plain_text_password != repeat_password:
+            password_match_error = True
+            return render_template('signup.html', username=username, account_type=account_type, 
+                                        username_error=username_error, email_error=email_error, password_match_error=password_match_error)
         password = athn.hash_password(plain_text_password)
         created = utl.get_current_time()
         user = {'username': _username_, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0}
         con.add_new_user(user)
         return redirect('/registration/login')
-    return render_template('signup.html', username=username, account_type=account_type)
+    return render_template('signup.html', username=username, account_type=account_type, 
+                            username_error=username_error, email_error=email_error, password_match_error=password_match_error)
 
 
 @app.route('/registration/login', methods=['GET', 'POST'])
