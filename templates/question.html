@@ -11,7 +11,7 @@ Question
     <h2 class="question-title">{{ question['title'] }}</h2>
     <div class="voting-area">
         {% if username != None %}
-        {% if username != question['username'] %}
+        {% if username != question['username'] or account_type == 'admin' %}
         <a class="voting-link" href="/question/{{ question_id }}/vote-up"><img src="../static/upvote.png" width="20"
                 height="20"></a> <a class="voting-link" href="/question/{{ question_id }}/vote-down"><img
                 src="../static/downvote.png" width="20" height="20"></a>
@@ -36,7 +36,7 @@ Question
     <strong>Votes:</strong> <em class="question-info">N/A</em>
     {% endif %}
     <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info">{{ question['username'] }}</em></a>
-    {% if username == question['username'] %}
+    {% if username == question['username'] or account_type == 'admin' %}
     <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
     <button id="submit" onclick="deleteQuestion({{ question_id }})">Delete Question</button>
     {% endif %}
@@ -70,7 +70,7 @@ Question
     <ul>
         <li class="comment-style">
             <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em> 
-                {% if username == comment['username'] %}
+                {% if username == comment['username'] or account_type == 'admin' %}
                 <a
                     href="/question/{{ question_id }}/{{ comment['id'] }}/edit-comment"><i
                         class="pencil fas fa-pencil-alt"></i></a><a id="recycle-link"
@@ -138,7 +138,7 @@ Question
             <strong>Answered by </strong> <a href="/user/{{ answer['username'] }}"><em class="answer-info">{{ answer['username'] }}</em></a>
             <div class="voting-area">
                 {% if username != None %}
-                {% if username != answer['username'] %}
+                {% if username != answer['username'] or account_type == 'admin' %}
                 <a class="voting-link" href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-up"><img
                         src="../static/upvote.png" width="16" height="16"></a> <a class="voting-link"
                     href="/answer/{{ question_id }}/{{ answer['id'] }}/vote-down"><img src="../static/downvote.png"
@@ -151,7 +151,7 @@ Question
                     width="16" height="16"></a>
                 {% endif %}
             </div>
-            {% if username == answer['username'] %}
+            {% if username == answer['username'] or account_type == 'admin' %}
             <a href="/answer/{{ question_id }}/{{ answer['id'] }}/edit"><i class="pencil fas fa-pencil-alt"></i></a>
             <a onclick="deleteAnswer({{ question_id }}, {{ answer['id'] }})"><i class="recycle fas fa-trash-alt"></i></a>
             {% endif %}
@@ -169,7 +169,7 @@ Question
                     <ul>
                         <li class="comment-style">
                             <a style="text-decoration: none; color: #eec490;" href="/user/{{ comment['username'] }}"> {{ comment['username'] }}</a><p>{{ comment['message'] }} <em class="comment-info">{{ comment['submission_time'] }}</em>
-                                {% if username == comment['username'] %}
+                                {% if username == comment['username'] or account_type == 'admin' %}
                                 <a id="recycle-link" onclick="deleteComment({{ comment['id'] }})"><i
                                     class="recycle fas fa-trash-alt"></i></a></p>
                                 {% endif %}
