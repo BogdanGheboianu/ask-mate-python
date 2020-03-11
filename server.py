@@ -281,7 +281,11 @@ def add_comment_for_answer(question_id, answer_id):
 
 @app.route("/question/<question_id>/edit", methods=["GET", "POST"])
 def edit_question(question_id):
+    question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
+    question.update({'username': con.get_user_by_id(question['userid'])['username']})
+    question['image'] = url_for('static', filename=question['image'])
     if request.method == "POST":
+
         edited_question_info = dict(request.form)
         edited_question_info['title'] = edited_question_info['title'] + "(Edited)"
         new_submission_time = utl.get_current_time()
@@ -289,27 +293,28 @@ def edit_question(question_id):
         tags_for_question = {'existing_tag': request.form.get('existing_tag'),
                                 'new_tags': request.form.get('tags')}
         con.add_tags_for_question(tags_for_question, question_id)
+
         return redirect("/question/{0}".format(question_id))
     question_info = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     all_tags = con.get_tags()
     tags_for_question = dmg.get_tags_for_question(question_id)
     return render_template(WEB_PAGES['edit_q'], question_info=question_info, 
                                         all_tags=all_tags, tags_for_question=tags_for_question, 
-                                        username=username, account_type=account_type)
+                                        username=username, account_type=account_type, question=question)
 
 
 @app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(question_id, answer_id):
+    answer = dmg.get_answer_by_id(answer_id)
+    answer['image'] = url_for('static', filename=answer['image'])
     if request.method == "POST":
-        new_answer = request.form['message'] + ' (Edited)'
+        edited_answer_info = dict(request.form)
+        edited_answer_info['message'] = edited_answer_info['message'] + ' (Edited)'
         new_submission_time = utl.get_current_time()
-        edited_answer = {'id': answer_id, 'message': new_answer, 'submission_time': new_submission_time}
-        con.edit_answer(edited_answer)
+        con.edit_answer(answer_id, edited_answer_info, new_submission_time)
         return redirect('/question/{0}'.format(question_id))
     answers = con.get_answers()
-    for answer in answers:
-        if answer['id'] == int(answer_id): selected_answer = answer
-    return render_template(WEB_PAGES['edit_ans'], selected_answer=selected_answer, username=username, account_type=account_type)
+    return render_template(WEB_PAGES['edit_ans'], selected_answer=answer, username=username, account_type=account_type)
 
 
 

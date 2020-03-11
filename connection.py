@@ -177,8 +177,10 @@ def add_new_user(cursor, user):
 def edit_question(cursor, question_id, edited_question_info, new_submission_time):
     title = utl.escape_characters(edited_question_info['title'])
     message = utl.escape_characters(edited_question_info['message'])
-    cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}' where id={3};
-                    """.format(title, message, new_submission_time, question_id))
+    code_snippet = edited_question_info['code_snippet']
+    image = edited_question_info['image']
+    cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}', code_snippet='{3}', image='{4}' where id={5};
+                    """.format(title, message, new_submission_time, code_snippet, image, question_id))
 
 
 @database_common.connection_handler
@@ -208,10 +210,10 @@ def edit_comment_for_question(cursor, new_comment_info):
 
 
 @database_common.connection_handler
-def edit_answer(cursor, answer_new_info):
+def edit_answer(cursor, answer_id, answer_new_info, new_submission_time):
     message = utl.escape_characters(answer_new_info['message'])
-    cursor.execute(""" UPDATE answer SET message='{0}', submission_time='{1}' WHERE id={2};
-                     """.format(message, answer_new_info['submission_time'], answer_new_info['id']))
+    cursor.execute(""" UPDATE answer SET message='{0}', submission_time='{1}', code_snippet='{2}', image='{3}' WHERE id={4};
+                     """.format(message, new_submission_time, answer_new_info['code-snippet'], answer_new_info['image'], answer_id))
 
 
 @database_common.connection_handler
