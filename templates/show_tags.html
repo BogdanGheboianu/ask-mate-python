@@ -12,7 +12,8 @@ Interests
     <a class="question-links" style="border-style: solid; padding: 10px; font-size: 20px;;" 
         href="/user/{{ username }}/{{ tag['id'] }}/add-interest-to-user">{{ tag['name'] }}</a>
     {% else %}
-    <a class="question-links" href="/">{{ tag['name'] }}</a><br>
+    <a class="question-links" style="border-style: solid; padding: 10px; font-size: 20px;;" 
+        href="/">{{ tag['name'] }}</a>
     {% endif %}
 {% endfor %}
 

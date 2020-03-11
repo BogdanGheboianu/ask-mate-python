@@ -1,0 +1,22 @@
+{% extends 'framework.html' %}
+{% block title %}
+User followers
+{% endblock %}
+{% block content %}
+
+<p style="margin-top: 1.5em; margin-left: 5px; font-size: x-large;">{{ _username_ }}'s Followers:</p>
+<div class="followers">
+    {% if user_num_followers != 0 %}
+    {% for user in user_followers %}
+    <a class="question-links" style="border-style: solid; padding: 10px; font-size: 20px;;" 
+    href="/user/{{ user['username'] }}">{{ user['username'] }}</a>
+    {% endfor %}
+    {% else %}
+    No followers
+    {% endif %}
+    
+
+
+
+</div>
+{% endblock %}

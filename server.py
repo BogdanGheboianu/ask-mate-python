@@ -228,7 +228,15 @@ def user(_username_):
 @app.route('/user/<_username_>/choose-interests')
 def list_interests(_username_):
     new_tags = con.get_new_tags_for_user(con.get_user(_username_)['id'])
-    return render_template('show_tags.html', username=username, account_type=account_type, new_tags=new_tags)
+    return render_template('show_tags.html', username=_username_, account_type=account_type, new_tags=new_tags)
+
+
+@app.route('/user/<_username_>/followers')
+def followers(_username_):
+    user_followers = con.get_user_followers(con.get_user(_username_)['id'])
+    user_num_followers = len(user_followers)
+    print(user_followers)
+    return render_template('followers.html', _username_=_username_, user_followers=user_followers, user_num_followers=user_num_followers, username=username)
 
 #===================================================================================================================================================
 
