@@ -6,12 +6,12 @@ Edit Answer
 
 {% block content%}
 <h2 class="add-something">Edit this answer</h2>
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     <p><textarea name="message" required rows="10" cols="100" minlength="3">{{ selected_answer['message'] }}</textarea>
     </p>
     <p>Code Snippet: </p>
     <textarea name="code-snippet" minlength="3" rows="10" cols="100">{{ selected_answer['code_snippet'] }}</textarea>
-    <p> <label for="img">Replace image:</label></p>
+    <p> <label for="img">Add/Replace image:</label></p>
     <p><input type="file" id="img" name="image" accept="image/*"></p>
     {% if selected_answer['image'] != "/static/" %}
     <img class="title-image" src="{{selected_answer['image']}}" width="480" height="280">

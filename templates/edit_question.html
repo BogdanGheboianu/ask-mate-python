@@ -6,7 +6,7 @@ Edit Question
 
 {% block content%}
 <h2 class="add-something">Edit this question</h2>
-<form method="POST">
+<form method="POST"  enctype="multipart/form-data">
     <p><input type="text" name="title" required value="{{ question_info['title'] }}" minlength="3"></p>
     <p><textarea name="message" required ="{{ question_info['message'] }}" rows="10" cols="100" minlength="3">{{ question_info['message'] }}</textarea>
     </p>
@@ -29,7 +29,7 @@ Edit Question
     </p>
      <p>Code Snippet</p>
     <textarea name="code_snippet" minlength="3" rows="10" cols="100">{{ question['code_snippet'] }}</textarea>
-    <p> <label for="img">Replace image:</label></p>
+    <p> <label for="img">Add/Replace image:</label></p>
     <p><input type="file" id="img" name="image" accept="image/*"></p>
     {% if question['image'] != "/static/" %}
     <img class="title-image" src="{{question['image']}}" width="480" height="280">
