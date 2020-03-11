@@ -369,6 +369,12 @@ def edit_comment_for_answer(answer_id, question_id, comment_id):
         if com['id'] == int(comment_id): comment = com
     return render_template('edit_comment.html', comment=comment, username=username, account_type=account_type)
 
+
+@app.route('/answer/<question_id>/<answer_id>/mark-accepted')
+def mark_answer_accepted(question_id, answer_id):
+    con.mark_answer_accepted(question_id, answer_id)
+    return redirect(f'/question/{question_id}')
+
 #====================================================================================================================================================
 
 # DELETING ROUTES: delete question, delete answer, delete comment, delete tag

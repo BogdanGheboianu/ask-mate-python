@@ -304,6 +304,12 @@ def edit_comment_for_answer(cursor, new_comment_info):
     cursor.execute(""" UPDATE comment SET message='{0}', submission_time='{1}' WHERE id={2}; 
                     """.format(message, new_comment_info['submission_time'], new_comment_info['id']))
 
+
+@database_common.connection_handler
+def mark_answer_accepted(cursor, question_id, answer_id):
+    cursor.execute(f""" UPDATE answer SET accepted=True WHERE id={answer_id}; """)
+    cursor.execute(f""" UPDATE question SET acptd_answerid={answer_id} WHERE id={question_id}; """)
+
 #=================================================================================================================================================
 
 # DELETE DATA FROM TABLES: question, answer, comment, question tag

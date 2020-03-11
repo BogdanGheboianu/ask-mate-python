@@ -129,7 +129,8 @@ def rearrange_order_of_keys_for_questions(questions):
             'votes_up': question['votes_up'],
             'votes_down': question['votes_down'],
             'code_snippet': question['code_snippet'],
-            'userid': question['userid']}
+            'userid': question['userid'],
+            'acptd_answerid': question['acptd_answerid']}
         questions_modified_keys_order.append(modified_question)
     return questions_modified_keys_order
 
