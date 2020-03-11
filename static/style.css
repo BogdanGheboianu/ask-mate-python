@@ -143,6 +143,10 @@ input.search-button:hover {
     padding-bottom: 2em;
 } 
 
+a:hover {
+    text-decoration: underline;
+    text-decoration-color: #e19639;
+}
 
 #submit, #add-comment {
   background-color: #1a1b1d;
@@ -211,7 +215,6 @@ hr { display: block; height: 1px;
 
 .question-links {
     color: #eec490;
-    text-decoration:underline;
 }
 
 .ask-question-button {

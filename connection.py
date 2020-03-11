@@ -105,6 +105,22 @@ def get_user_votes(cursor, userid):
     return user_votes
 
 
+@database_common.connection_handler
+def get_user_contributions(cursor, username):
+    userid = get_user(username)['id']
+    contributions = {'questions': None, 'answers': None, 'comments': None}
+    cursor.execute(f""" SELECT * FROM question WHERE userid={userid}; """)
+    contributions['questions'] = cursor.fetchall()
+
+    cursor.execute(f""" SELECT * FROM answer WHERE userid={userid}; """)
+    contributions['answers'] = cursor.fetchall()
+
+    cursor.execute(f""" SELECT * FROM comment WHERE userid={userid}; """)
+    contributions['comments'] = cursor.fetchall()
+
+    return contributions
+
+
 #=============================================================================================================================================
 
 # ADDING DATA TO TABLES: question, answer, comm for question and for answer, tags for question

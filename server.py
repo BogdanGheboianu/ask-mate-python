@@ -213,7 +213,8 @@ def user(_username_):
         user['profile_pic'] = url_for('static', filename=user['profile_pic'])
     else:
         user['profile_pic'] = url_for('static', filename='no_profile_pic.png')
-    return render_template('user.html', user=user, username=username, account_type=account_type)
+    contributions = con.get_user_contributions(_username_)
+    return render_template('user.html', user=user, username=username, account_type=account_type, contributions=contributions)
 
 #===================================================================================================================================================
 
@@ -426,7 +427,7 @@ def unvote_answer(question_id, answer_id, vote):
     con.unvote_answer(answer_id, vote)
     con.user_unvote_answer(answer_id, userid)
     return redirect("/question/{0}".format(question_id))
-    
+
 
 #=====================================================================================================================================================
 

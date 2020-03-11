@@ -24,7 +24,7 @@ Home
                 <div><strong>Email:</strong> <em class="question-info">{{ user['email'] }}</em></div><hr>
                 <div><strong>Profile created:</strong> <em class="question-info">{{ user['created'] }}</em></div><hr>
                 <div><strong>User rank:</strong> <em class="question-info">999</em></div><hr>
-                {% if user['username'] == username %}
+                {% if user['username'] == username or account_type == 'admin' %}
                 <div class="user-button">
                     <button onclick="location.href='#'">CHANGE PASSWORD</button>
                     <button onclick="location.href='/logout'">LOG OUT</button>
@@ -42,8 +42,64 @@ Home
                 </div>
             </div>
             <hr>
-            <div class="user-contrbutions" style="margin-left: 45px;">
-                <h2>Community Contributions</h2>
+            <div class="user-contrbutions" style="margin-left: 45px; font-size: x-small;">
+                <h2 style="font-size: x-large;">Community Contributions</h2><br>
+                {% if contributions['questions'] or contributions['answers'] or contributions['comments'] %}
+                    
+                        {% if contributions['questions'] %}
+                            <p><strong style="font-size: large;">Questions asked:</strong></p><br>
+                            <p>
+                            {% for item in contributions['questions'] %}
+                                <p><a style="font-size: large; color: #eec490;" href="/question/{{ item['id'] }}">{{ item['title'] }}</a></p>
+                                <strong>Question ID:</strong> <em class="question-info">{{ item["id"] }}</em>
+                                <strong>Posted:</strong> <em class="question-info">{{ item["submission_time"] }}</em>
+                                <strong>Views:</strong> <em class="question-info">{{ item["view_number"] }}</em>
+                                {% if item['vote_number'] != None %}
+                                <strong>Votes:</strong> <em class="question-info">{{ item["vote_number"] }}%</em><br><hr>
+                                {% else %}
+                                <strong>Votes:</strong> <em class="question-info">N/A</em><br><hr>
+                                {% endif %}
+                            {% endfor %}
+                            </p>
+                        {% endif %}
+                        <br><br>
+                        {% if contributions['answers'] %}
+                            <p><strong style="font-size: large;">Answers given:</strong></p><br>
+                            <p>
+                            {% for item in contributions['answers'] %}
+                                <p style="font-size: large; color: wheat;">{{ item['message'] }}</p>
+                                <a style="font-size: medium; color: #e19639;" href="/question/{{ item['question_id'] }}">Go to Question</a><br><br>
+                                <strong>Answer ID:</strong> <em class="question-info">{{ item["id"] }}</em>
+                                <strong>Posted:</strong> <em class="question-info">{{ item["submission_time"] }}</em>
+                                {% if item['vote_number'] != None %}
+                                <strong>Votes:</strong> <em class="question-info">{{ item["vote_number"] }}%</em><br><hr>
+                                {% else %}
+                                <strong>Votes:</strong> <em class="question-info">N/A</em><br><hr>
+                                {% endif %}
+                            {% endfor %}
+                            </p>
+                        {% endif %}
+                        <br><br>
+                        {% if contributions['comments'] %}
+                            <p><strong style="font-size: large;">Comments posted:</strong></p><br>
+                            <p>
+                            {% for item in contributions['comments'] %}
+                                <p style="font-size: large; color: wheat;">{{ item['message'] }}</p>
+                                <a style="font-size: medium; color: #e19639;" href="/question/{{ item['question_id'] }}">Go to Question</a><br><br>
+                                <strong>Comment ID:</strong> <em class="question-info">{{ item["id"] }}</em>
+                                <strong>Posted:</strong> <em class="question-info">{{ item["submission_time"] }}</em><hr>
+                            {% endfor %}
+                            </p>
+                        {% endif %}
+                   
+                {% else %}
+                    {% if user['username'] == username %}
+                        <p style="font-size: large;">You don't have any contributions yet.
+                            You can start by <a href="/list/add-question"><em style="color:#eec490;">asking a question</em></a> or by <a href="/"><em style="color: #eec490;">finding questions</em></a> to help with.</p>
+                    {% else %}
+                            <p>This user doesn't have any contributions.</p>
+                    {% endif %}
+                {% endif %}
             
             
             
