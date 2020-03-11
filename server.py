@@ -427,6 +427,7 @@ def unvote_answer(question_id, answer_id, vote):
     con.unvote_answer(answer_id, vote)
     con.user_unvote_answer(answer_id, userid)
     return redirect("/question/{0}".format(question_id))
+    
 
 #=====================================================================================================================================================
 
