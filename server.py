@@ -18,6 +18,7 @@ app.secret_key = os.urandom(16)
 username = None
 account_type = None
 userid = None
+app_theme = 'black&orange'
 
 #===================================================================================================================================================
 
@@ -54,7 +55,8 @@ def index():
                                     show_all_questions=show_all_questions,
                                     empty=False,
                                     username=username,
-                                    account_type=account_type)
+                                    account_type=account_type,
+                                    app_theme=app_theme)
     # Check if there are questions in the database
     if con.get_questions('id', 'ascending') is False: 
         return render_template(WEB_PAGES['home_page'],
@@ -62,7 +64,8 @@ def index():
                                 table_heading='',
                                 empty=True,
                                 username=username,
-                                account_type=account_type)
+                                account_type=account_type,
+                                app_theme=app_theme)
     # Check for sort and for how many questions to display
     if request.args.get('sort-factor') == 'none' or request.args.get('sort-factor') == None:
         if request.args.get('show-all') == 'all':
@@ -92,7 +95,8 @@ def index():
                             default_order=sort_order,
                             show_all_questions=show_all_questions,
                             username=username,
-                            account_type=account_type)
+                            account_type=account_type,
+                            app_theme=app_theme)
     
 
 @app.route("/question/<question_id>")
@@ -166,7 +170,8 @@ def question(question_id):
         user_votes=user_votes,
         userid=userid,
         question_voted=question_voted,
-        vote_type=vote_type)
+        vote_type=vote_type,
+        app_theme=app_theme)
 
 
 @app.route("/question/<question_id>/show/<image_path>")
@@ -183,7 +188,8 @@ def show_image_for_question(question_id, image_path):
                            comments_for_question=comments_for_question,
                            tags_for_question=tags_for_question,
                            username=username,
-                           account_type=account_type)
+                           account_type=account_type,
+                           app_theme=app_theme)
 
 
 @app.route('/search')
@@ -202,12 +208,18 @@ def search():
                                 highlight=utl.highlight,
                                 check_edit=utl.check_specific_question_for_edit,
                                 username=username,
-                                account_type=account_type)
-    else: return render_template(WEB_PAGES['search'], search_results=search_results, search_term=search_term, username=username)
+                                account_type=account_type,
+                                app_theme=app_theme)
+    else: return render_template(WEB_PAGES['search'], search_results=search_results, search_term=search_term, username=username, app_theme=app_theme)
 
 
-@app.route('/user/<_username_>')
+@app.route('/user/<_username_>', methods=['GET', 'POST'])
 def user(_username_):
+    global app_theme
+    if request.method == "POST":
+        app_theme = request.form.get('app_theme')
+        print(app_theme)
+        return redirect(f'/user/{_username_}')
     user = con.get_user(_username_)
     if user['profile_pic'] != None:
         user['profile_pic'] = url_for('static', filename=user['profile_pic'])
@@ -222,20 +234,21 @@ def user(_username_):
         if userid == f['id']:
             following_user = True
     return render_template('user.html', user=user, username=username, account_type=account_type, contributions=contributions, 
-                            user_tags=user_tags, on_page_username=user['username'], user_followers=user_followers, user_num_followers=user_num_followers, following_user=following_user)
+                            user_tags=user_tags, on_page_username=user['username'], user_followers=user_followers, user_num_followers=user_num_followers, following_user=following_user,
+                            app_theme=app_theme)
 
 
 @app.route('/user/<_username_>/choose-interests')
 def list_interests(_username_):
     new_tags = con.get_new_tags_for_user(con.get_user(_username_)['id'])
-    return render_template('show_tags.html', username=_username_, account_type=account_type, new_tags=new_tags)
+    return render_template('show_tags.html', username=_username_, account_type=account_type, new_tags=new_tags, app_theme=app_theme)
 
 
 @app.route('/user/<_username_>/followers')
 def followers(_username_):
     user_followers = con.get_user_followers(con.get_user(_username_)['id'])
     user_num_followers = len(user_followers)
-    return render_template('followers.html', _username_=_username_, user_followers=user_followers, user_num_followers=user_num_followers, username=username)
+    return render_template('followers.html', _username_=_username_, user_followers=user_followers, user_num_followers=user_num_followers, username=username, app_theme=app_theme)
 
 #===================================================================================================================================================
 
@@ -265,7 +278,7 @@ def add_question():
         con.add_tags_for_question(tags_for_question, question_id)
         return redirect("/question/{0}".format(question_id))
     all_tags = con.get_tags()
-    return render_template(WEB_PAGES["add_question_page"], all_tags=all_tags, username=username, account_type=account_type)
+    return render_template(WEB_PAGES["add_question_page"], all_tags=all_tags, username=username, account_type=account_type, app_theme=app_theme)
 
 
 @app.route("/question/<question_id>/add-answer", methods=["GET", "POST"])
@@ -287,7 +300,7 @@ def add_answer(question_id):
                         'userid': userid}
         con.add_answer(answer_info)
         return redirect("/question/{0}".format(question_id))
-    return render_template(WEB_PAGES["new_answer_page"], question=question, username=username, account_type=account_type)
+    return render_template(WEB_PAGES["new_answer_page"], question=question, username=username, account_type=account_type, app_theme=app_theme)
 
 
 @app.route('/question/<question_id>/add-comment', methods=['GET', 'POST'])
@@ -301,7 +314,7 @@ def add_comment_for_question(question_id):
                         'userid': userid}
         con.add_comment_for_question(comment_info)
         return redirect('/question/{0}'.format(question_id))
-    return render_template(WEB_PAGES['add_comm'], question_id=question_id, username=username, account_type=account_type)
+    return render_template(WEB_PAGES['add_comm'], question_id=question_id, username=username, account_type=account_type, app_theme=app_theme)
 
 
 @app.route('/<question_id>/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
@@ -315,7 +328,7 @@ def add_comment_for_answer(question_id, answer_id):
                         'userid': userid}
         con.add_comment_for_answer(comment_info)
         return redirect('/question/{0}'.format(question_id))
-    return render_template(WEB_PAGES['add_comm'], question_id=question_id, username=username, account_type=account_type)
+    return render_template(WEB_PAGES['add_comm'], question_id=question_id, username=username, account_type=account_type, app_theme=app_theme)
 
 
 @app.route('/user/<_username_>/<tagid>/add-interest-to-user')
@@ -354,7 +367,7 @@ def edit_question(question_id):
     tags_for_question = dmg.get_tags_for_question(question_id)
     return render_template(WEB_PAGES['edit_q'], question_info=question_info, 
                                         all_tags=all_tags, tags_for_question=tags_for_question, 
-                                        username=username, account_type=account_type, question=question)
+                                        username=username, account_type=account_type, question=question, app_theme=app_theme)
 
 
 @app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
@@ -369,7 +382,7 @@ def edit_answer(question_id, answer_id):
         con.edit_answer(answer_id, edited_answer_info, new_submission_time)
         return redirect('/question/{0}'.format(question_id))
     answers = con.get_answers()
-    return render_template(WEB_PAGES['edit_ans'], selected_answer=answer, username=username, account_type=account_type)
+    return render_template(WEB_PAGES['edit_ans'], selected_answer=answer, username=username, account_type=account_type, app_theme=app_theme)
 
 
 
@@ -385,7 +398,7 @@ def edit_comment_for_question(question_id, comment_id):
     comments = con.get_comments('no-limit')
     for com in comments:
         if com['id'] == int(comment_id): comment = com
-    return render_template('edit_comment.html', comment=comment, username=username, account_type=account_type)
+    return render_template('edit_comment.html', comment=comment, username=username, account_type=account_type, app_theme=app_theme)
 
 
 @app.route('/answer/<answer_id>/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
@@ -400,7 +413,7 @@ def edit_comment_for_answer(answer_id, question_id, comment_id):
     comments = con.get_comments()
     for com in comments:
         if com['id'] == int(comment_id): comment = com
-    return render_template('edit_comment.html', comment=comment, username=username, account_type=account_type)
+    return render_template('edit_comment.html', comment=comment, username=username, account_type=account_type, app_theme=app_theme)
 
 
 @app.route('/answer/<question_id>/<answer_id>/mark-accepted')
@@ -499,20 +512,20 @@ def signup():
         if not dmg.check_for_unique_email(email): email_error = True
         if username_error == True or email_error == True:
             return render_template('signup.html', username=username, account_type=account_type, 
-                                    username_error=username_error, email_error=email_error, password_match_error=password_match_error)
+                                    username_error=username_error, email_error=email_error, password_match_error=password_match_error, app_theme=app_theme)
         plain_text_password = request.form.get('password')
         repeat_password = request.form.get('repeat_password')
         if plain_text_password != repeat_password:
             password_match_error = True
             return render_template('signup.html', username=username, account_type=account_type, 
-                                        username_error=username_error, email_error=email_error, password_match_error=password_match_error)
+                                        username_error=username_error, email_error=email_error, password_match_error=password_match_error, app_theme=app_theme)
         password = athn.hash_password(plain_text_password)
         created = utl.get_current_time()
         user = {'username': _username_, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0}
         con.add_new_user(user)
         return redirect('/registration/login')
     return render_template('signup.html', username=username, account_type=account_type, 
-                            username_error=username_error, email_error=email_error, password_match_error=password_match_error)
+                            username_error=username_error, email_error=email_error, password_match_error=password_match_error, app_theme=app_theme)
 
 
 @app.route('/registration/login', methods=['GET', 'POST'])
@@ -525,15 +538,15 @@ def login():
         db_hashed_password = con.get_hashed_pass(username)
         if db_hashed_password == None:
             login_error = True
-            return render_template('login.html', login_error=login_error, username=username, account_type=account_type)
+            return render_template('login.html', login_error=login_error, username=username, account_type=account_type, app_theme=app_theme)
         is_matching = athn.verify_password(plain_text_password, db_hashed_password)
         if is_matching:
             session['username'] = username
             return redirect('/')
         else:
             login_error = True
-            return render_template('login.html', login_error=login_error, username=username, account_type=account_type)
-    return render_template('login.html', login_error=login_error, username=username, account_type=account_type)
+            return render_template('login.html', login_error=login_error, username=username, account_type=account_type, app_theme=app_theme)
+    return render_template('login.html', login_error=login_error, username=username, account_type=account_type, app_theme=app_theme)
 
 
 @app.route('/logout')

@@ -95,10 +95,10 @@ def highlight(text, search_phrase):
     Looks for the search phrase and/or search terms in a given text and prepares the results to be highlighted in HTML
     """
     if search_phrase in text.lower():
-        text = text.lower().replace(search_phrase, "<span style='color: white; background-color: seagreen;'>{0}</span>".format(search_phrase))
+        text = text.lower().replace(search_phrase, "<span style='color: white; background-color: #D36582;'>{0}</span>".format(search_phrase))
     else:
         for search_term in search_phrase.split(" "):
-            text = text.lower().replace(search_term, "<span style='color: white; background-color: seagreen;'>{0}</span>".format(search_term))
+            text = text.lower().replace(search_term, "<span style='color: white; background-color: #D36582;'>{0}</span>".format(search_term))
     return text
 
 
