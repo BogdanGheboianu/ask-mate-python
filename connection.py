@@ -208,6 +208,12 @@ def vote_question(cursor, question_id, vote_name):
 
 
 @database_common.connection_handler
+def user_vote_question(cursor, question_id, userid, vote_type):
+    cursor.execute(f""" INSERT INTO user_vote (userid, questionid, vote_type)
+                        VALUES ({userid}, {question_id}, '{vote_type}'); """)
+
+
+@database_common.connection_handler
 def edit_comment_for_question(cursor, new_comment_info):
     message = utl.escape_characters(new_comment_info['message'])
     cursor.execute(""" UPDATE comment SET message='{0}', submission_time='{1}' WHERE id={2}; 
@@ -229,6 +235,12 @@ def vote_answer(cursor, answer_id, vote_name):
     votes = cursor.fetchall()
     vote_percentage = utl.calculate_vote_percentage(votes[0]['votes_up'], votes[0]['votes_down'])
     cursor.execute(""" UPDATE answer SET vote_number={0}; """.format(vote_percentage))
+
+
+@database_common.connection_handler
+def user_vote_answer(cursor, answer_id, userid, vote_type):
+    cursor.execute(f""" INSERT INTO user_vote (userid, answerid, vote_type)
+                        VALUES ({userid}, {answer_id}, '{vote_type}'); """)
 
 
 @database_common.connection_handler

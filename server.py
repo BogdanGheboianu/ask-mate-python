@@ -373,15 +373,17 @@ def delete_tag(question_id, tag_name):
 
 # VOTING ROUTES: vote question, vote answer
 
-@app.route("/question/<question_id>/<vote>")
-def vote_question(question_id, vote):
+@app.route("/question/<question_id>/<vote>/<userid>")
+def vote_question(question_id, vote, userid):
     con.vote_question(question_id, vote)
+    con.user_vote_question(question_id, userid, vote)
     return redirect("/question/{0}".format(question_id))
 
 
-@app.route("/answer/<question_id>/<answer_id>/<vote>")
-def vote_answer(question_id, answer_id, vote):
+@app.route("/answer/<question_id>/<answer_id>/<vote>/<userid>")
+def vote_answer(question_id, answer_id, vote, userid):
     con.vote_answer(answer_id, vote)
+    con.user_vote_answer(answer_id, userid, vote)
     return redirect("/question/{0}".format(question_id))
 
 #=====================================================================================================================================================

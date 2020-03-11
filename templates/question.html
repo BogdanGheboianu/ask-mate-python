@@ -12,8 +12,8 @@ Question
     <div class="voting-area">
         {% if username != None %}
         {% if username != question['username'] or account_type == 'admin' %}
-        <a class="voting-link" href="/question/{{ question_id }}/vote-up"><img src="../static/upvote.png" width="20"
-                height="20"></a> <a class="voting-link" href="/question/{{ question_id }}/vote-down"><img
+        <a class="voting-link" href="/question/{{ question_id }}/vote-up/{{ question['userid'] }}"><img src="../static/upvote.png" width="20"
+                height="20"></a> <a class="voting-link" href="/question/{{ question_id }}/vote-down/{{ question['userid'] }}"><img
                 src="../static/downvote.png" width="20" height="20"></a>
         {% endif %}
         {% else %}
