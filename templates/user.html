@@ -56,9 +56,13 @@ Home
                 {% else %}
                 <div class="follow-button">
                     {% if username != None %}
-                    <button onclick="location.href='#'">FOLOW</button> <em style="font-size: 15px;">24.4k followers</em>
+                    {% if following_user == False %}
+                    <button onclick="location.href='/user/{{ on_page_username }}/follow'">FOLOW</button> <a class="question-links" href="/user/{{ on_page_username }}/followers"><em style="font-size: 15px;margin-left: 10px;">{{ user_num_followers }} followers</em></a>
                     {% else %}
-                    <button onclick="location.href='/registration/login'">FOLOW</button> <em style="font-size: 15px;">24.4k followers</em>
+                    <button style="background-color: white; color: seagreen;" onclick="location.href='/user/{{ on_page_username }}/unfollow'">FOLOWING</button> <a class="question-links" href="/user/{{ on_page_username }}/followers"><em style="font-size: 15px;margin-left: 10px;">{{ user_num_followers }} followers</em></a>
+                    {% endif %}
+                    {% else %}
+                    <button onclick="location.href='/registration/login'">FOLOW</button> <a class="question-links" href="/user/{{ on_page_username }}/followers"><em style="font-size: 15px; margin-left: 10px;">{{ user_num_followers }} followers</em></a>
                     {% endif %}
                 </div>
                 {% endif %}

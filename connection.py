@@ -135,6 +135,17 @@ def get_new_tags_for_user(cursor, userid):
     return new_tags
 
 
+@database_common.connection_handler
+def get_user_followers(cursor, userid):
+    cursor.execute(f""" SELECT userid FROM follow WHERE follow_userid={userid}; """)
+    user_followers_ids = cursor.fetchall()
+    followers = []
+    for ufid in user_followers_ids:
+        follower = get_user_by_id(ufid['userid'])
+        followers.append(follower)
+    return followers
+
+
 #=============================================================================================================================================
 
 # ADDING DATA TO TABLES: question, answer, comm for question and for answer, tags for question
@@ -217,6 +228,11 @@ def add_new_user(cursor, user):
 @database_common.connection_handler
 def add_interest_to_user(cursor, userid, tagid):
     cursor.execute(f""" INSERT INTO user_tag VALUES ({userid}, {tagid}); """)
+
+
+@database_common.connection_handler
+def follow_user(cursor, userid, user_to_follow_id):
+    cursor.execute(f""" INSERT INTO follow VALUES ({userid}, {user_to_follow_id}); """)
 
 #===============================================================================================================================================
 
@@ -386,3 +402,8 @@ def delete_question_tag(cursor, question_id, tag_name):
 @database_common.connection_handler
 def remove_tag_from_user(cursor, userid, tagid):
     cursor.execute(f""" DELETE FROM user_tag WHERE userid={userid} AND tagid={tagid}; """)
+
+
+@database_common.connection_handler
+def unfollow_user(cursor, userid, user_to_unfollow_id):
+    cursor.execute(f""" DELETE FROM follow WHERE userid={userid} AND follow_userid={user_to_unfollow_id}; """)

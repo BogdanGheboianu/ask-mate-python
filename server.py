@@ -215,9 +215,14 @@ def user(_username_):
         user['profile_pic'] = url_for('static', filename='no_profile_pic.png')
     contributions = con.get_user_contributions(_username_)
     user_tags = con.get_user_tags(con.get_user(_username_)['id'])
-    print(user_tags)
-    
-    return render_template('user.html', user=user, username=username, account_type=account_type, contributions=contributions, user_tags=user_tags)
+    user_followers = con.get_user_followers(con.get_user(_username_)['id'])
+    user_num_followers = len(user_followers)
+    following_user = False
+    for f in user_followers:
+        if userid == f['id']:
+            following_user = True
+    return render_template('user.html', user=user, username=username, account_type=account_type, contributions=contributions, 
+                            user_tags=user_tags, on_page_username=user['username'], user_followers=user_followers, user_num_followers=user_num_followers, following_user=following_user)
 
 
 @app.route('/user/<_username_>/choose-interests')
@@ -310,6 +315,12 @@ def add_comment_for_answer(question_id, answer_id):
 def add_interest_to_user(_username_, tagid):
     con.add_interest_to_user(con.get_user(_username_)['id'], tagid)
     return redirect(f'/user/{_username_}/choose-interests')
+
+
+@app.route('/user/<on_page_username>/follow')
+def follow_user(on_page_username):
+    con.follow_user(con.get_user(username)['id'], con.get_user(on_page_username)['id'])
+    return redirect(f'/user/{on_page_username}')
 
 #=====================================================================================================================================================
 
@@ -422,6 +433,12 @@ def delete_tag(question_id, tag_name):
 def remove_tag_from_user(_username_, tagid):
     con.remove_tag_from_user(con.get_user(_username_)['id'], tagid)
     return redirect(f'/user/{_username_}')
+
+
+@app.route('/user/<on_page_username>/unfollow')
+def unfollow_user(on_page_username):
+    con.unfollow_user(con.get_user(username)['id'], con.get_user(on_page_username)['id'])
+    return redirect(f'/user/{on_page_username}')
 
 #==================================================================================================================================================
 
