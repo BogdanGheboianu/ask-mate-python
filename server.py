@@ -17,6 +17,7 @@ app.secret_key = os.urandom(16)
 
 username = None
 account_type = None
+userid = None
 
 #===================================================================================================================================================
 
@@ -25,10 +26,11 @@ account_type = None
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
 def index():
-    global username, account_type
+    global username, account_type, userid
     if 'username' in session:
         username = escape(session['username'])
         account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
     table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
@@ -132,6 +134,17 @@ def question(question_id):
         num_answers = len(answers_for_question)
     show_more_com_for_q = request.args.get('show_more_com_for_q')
     show_more_com_for_ans = request.args.get('show_more_com_for_ans')
+    question_voted = False
+    vote_type = None
+    user_votes = None
+    if userid != None:
+        print("here")
+        user_votes = con.get_user_votes(userid)
+        for uv in user_votes:
+            if uv['questionid'] == question['id']:
+                question_voted = True
+                vote_type = uv['vote_type']
+        print(user_votes)
     return render_template(WEB_PAGES["question_page"],
         question=question,
         answers=answers_for_question,
@@ -146,7 +159,11 @@ def question(question_id):
         show_more_com_for_ans=show_more_com_for_ans,
         comment_id=comment_id,
         username=username,
-        account_type=account_type)
+        account_type=account_type,
+        user_votes=user_votes,
+        userid=userid,
+        question_voted=question_voted,
+        vote_type=vote_type)
 
 
 @app.route("/question/<question_id>/show/<image_path>")
@@ -373,16 +390,25 @@ def delete_tag(question_id, tag_name):
 
 # VOTING ROUTES: vote question, vote answer
 
-@app.route("/question/<question_id>/<vote>/<userid>")
-def vote_question(question_id, vote, userid):
+@app.route("/question/<question_id>/<vote>")
+def vote_question(question_id, vote):
     con.vote_question(question_id, vote)
+    userid = con.get_user(username)['id']
     con.user_vote_question(question_id, userid, vote)
     return redirect("/question/{0}".format(question_id))
 
 
-@app.route("/answer/<question_id>/<answer_id>/<vote>/<userid>")
-def vote_answer(question_id, answer_id, vote, userid):
+@app.route('/question/<question_id>/<vote>/unvote-question')
+def unvote_question(question_id, vote):
+    con.unvote_question(question_id, vote)
+    con.user_unvote_question(question_id, userid)
+    return redirect("/question/{0}".format(question_id))
+
+
+@app.route("/answer/<question_id>/<answer_id>/<vote>")
+def vote_answer(question_id, answer_id, vote):
     con.vote_answer(answer_id, vote)
+    userid = con.get_user(username)['id']
     con.user_vote_answer(answer_id, userid, vote)
     return redirect("/question/{0}".format(question_id))
 

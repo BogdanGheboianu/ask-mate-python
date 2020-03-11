@@ -12,14 +12,22 @@ Question
     <div class="voting-area">
         {% if username != None %}
         {% if username != question['username'] or account_type == 'admin' %}
-        <a class="voting-link" href="/question/{{ question_id }}/vote-up/{{ question['userid'] }}"><img src="../static/upvote.png" width="20"
-                height="20"></a> <a class="voting-link" href="/question/{{ question_id }}/vote-down/{{ question['userid'] }}"><img
-                src="../static/downvote.png" width="20" height="20"></a>
+        {% if question_voted == False %}
+        <a class="voting-link" href="/question/{{ question_id }}/vote-up"><i class="fas fa-thumbs-up" style="color: #e19639;"></i></a> 
+        <a class="voting-link" href="/question/{{ question_id }}/vote-down"><i class="fas fa-thumbs-down" style="color: #e19639;"></i></a>
+        {% else %}
+                {% if vote_type == 'vote-up' %}
+                    <a class="voting-link" href="/question/{{ question_id }}/vote-up/unvote-question"><i class="fas fa-thumbs-up" style="color: #428c40;"></i></a> 
+                    <a class="voting-link" href="#"><i class="fas fa-thumbs-down" style="color: #e19639;"></i></a>
+                {% else %}
+                    <a class="voting-link" href="#"><i class="fas fa-thumbs-up" style="color: #e19639;"></i></a> 
+                        <a class="voting-link" href="/question/{{ question_id }}/vote-down/unvote-question"><i class="fas fa-thumbs-down" style="color: red;"></i></a>
+                {% endif %}
+        {% endif %}
         {% endif %}
         {% else %}
-        <a class="voting-link" href="/registration/login"><img src="../static/upvote.png" width="20"
-            height="20"></a> <a class="voting-link" href="/registration/login"><img
-            src="../static/downvote.png" width="20" height="20"></a>
+        <a class="voting-link" href="/registration/login"><i class="fas fa-thumbs-up" style="color: #e19639;"></i></a> 
+        <a class="voting-link" href="/registration/login"><i class="fas fa-thumbs-down" style="color: #e19639;"></i></a>
         {% endif %}
     </div>
 </div>

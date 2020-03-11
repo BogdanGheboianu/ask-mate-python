@@ -98,6 +98,13 @@ def get_all_users(cursor):
     return users
 
 
+@database_common.connection_handler
+def get_user_votes(cursor, userid):
+    cursor.execute(f""" SELECT * FROM user_vote WHERE userid={userid}; """)
+    user_votes = cursor.fetchall()
+    return user_votes
+
+
 #=============================================================================================================================================
 
 # ADDING DATA TO TABLES: question, answer, comm for question and for answer, tags for question
@@ -208,9 +215,24 @@ def vote_question(cursor, question_id, vote_name):
 
 
 @database_common.connection_handler
+def unvote_question(cursor, question_id, vote_name):
+    if vote_name == 'vote-up': cursor.execute(""" UPDATE question SET votes_up=votes_up - 1 WHERE id={0}; """.format(question_id))
+    elif vote_name == 'vote-down': cursor.execute(""" UPDATE question SET votes_down=votes_down - 1 WHERE id={0}; """.format(question_id))
+    cursor.execute(""" SELECT votes_up, votes_down FROM question WHERE id={0}; """.format(question_id))
+    votes = cursor.fetchall()
+    vote_percentage = utl.calculate_vote_percentage(votes[0]['votes_up'], votes[0]['votes_down'])
+    cursor.execute(""" UPDATE question SET vote_number={0} WHERE id={1}; """.format(vote_percentage, question_id))
+
+
+@database_common.connection_handler
 def user_vote_question(cursor, question_id, userid, vote_type):
     cursor.execute(f""" INSERT INTO user_vote (userid, questionid, vote_type)
                         VALUES ({userid}, {question_id}, '{vote_type}'); """)
+
+
+@database_common.connection_handler
+def user_unvote_question(cursor, question_id, userid):
+    cursor.execute(f""" DELETE FROM user_vote WHERE userid={userid} AND questionid={question_id}; """)
 
 
 @database_common.connection_handler
