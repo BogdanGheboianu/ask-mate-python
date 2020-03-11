@@ -121,6 +121,20 @@ def get_user_contributions(cursor, username):
     return contributions
 
 
+@database_common.connection_handler
+def get_user_tags(cursor, userid):
+    cursor.execute(f""" SELECT name, tagid FROM tag LEFT JOIN user_tag ON tag.id = user_tag.tagid WHERE userid={userid}; """)
+    user_tags = cursor.fetchall()
+    return user_tags
+
+
+@database_common.connection_handler
+def get_new_tags_for_user(cursor, userid):
+    cursor.execute(f""" SELECT name, tagid FROM tag LEFT JOIN user_tag ON tag.id = user_tag.tagid WHERE userid!={userid} OR userid IS NULL; """)
+    new_tags = cursor.fetchall()
+    return new_tags
+
+
 #=============================================================================================================================================
 
 # ADDING DATA TO TABLES: question, answer, comm for question and for answer, tags for question
@@ -362,3 +376,8 @@ def delete_question_tag(cursor, question_id, tag_name):
         if tag_name == tag['name']:
             tag_id_to_del = tag['id']
     cursor.execute(""" DELETE FROM question_tag WHERE question_id={0} AND tag_id={1}; """.format(question_id, tag_id_to_del))
+
+
+@database_common.connection_handler
+def remove_tag_from_user(cursor, userid, tagid):
+    cursor.execute(f""" DELETE FROM user_tag WHERE userid={userid} AND tagid={tagid}; """)

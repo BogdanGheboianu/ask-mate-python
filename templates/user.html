@@ -22,13 +22,34 @@ Home
             <div class="profile-info">
                 <div><strong>Username:</strong> <em class="question-info">{{ user['username'] }}</em></div><hr>
                 <div><strong>Email:</strong> <em class="question-info">{{ user['email'] }}</em></div><hr>
-                <div><strong>Profile created:</strong> <em class="question-info">{{ user['created'] }}</em></div><hr>
-                <div><strong>User rank:</strong> <em class="question-info">999</em></div><hr>
+                <div><strong>Member since:</strong> <em class="question-info">{{ user['created'] }}</em></div><hr>
+                <div><strong>Rank:</strong> <em class="question-info">999</em></div><hr>
+
+                {% if user_tags  %}
+                <div><strong>Interests:</strong> 
+                    {% for tag in user_tags %}
+                        {% if username == user['username'] or account_type == 'admin' %}
+                        <a href="/user/{{ username }}/{{ tag['tagid'] }}/remove-tag"><em class="user-interest">{{ tag['name'] }}</em></a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if username == user['username'] or account_type == 'admin' %}
+                        <button class="interests-button" onclick="location.href='/user/{{ username }}/choose-interests'">+</button><hr>
+                    {% else %}
+                    <hr>
+                    {% endif%}
+                {% else %}
+                    <div><strong>Interests:</strong> <em class="question-info">No saved interests</em>
+                        {% if username == user['username'] or account_type == 'admin' %}
+                            <button class="interests-button" onclick="location.href='/user/{{ username }}/choose-interests'">+</button><hr>
+                        {% else %}
+                        <hr>
+                        {% endif%}
+                {% endif %}
+                        </div>
                 {% if user['username'] == username or account_type == 'admin' %}
                 <div class="user-button">
                     <button onclick="location.href='#'">CHANGE PASSWORD</button>
-                    <button onclick="location.href='/logout'">LOG OUT</button>
-                    <button onclick="location.href='#'">DELETE ACCOUNT</button>
+                    <button onclick="location.href='#'" style="color: red; border-color: red;">DELETE ACCOUNT</button>
                 </div>
                 {% else %}
                 <div class="follow-button">

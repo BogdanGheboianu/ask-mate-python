@@ -28,6 +28,9 @@
                 <a href="/registration/login"><i class="user fas fa-user"> Log In/Sign Up</i></a>
                 {% endif %}
             </div> 
+            {% if username != None %}
+            <a href="/logout"><i class="logout fas fa-sign-out-alt"></i></a>
+            {% endif %}
         </div>
 
 

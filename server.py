@@ -214,7 +214,16 @@ def user(_username_):
     else:
         user['profile_pic'] = url_for('static', filename='no_profile_pic.png')
     contributions = con.get_user_contributions(_username_)
-    return render_template('user.html', user=user, username=username, account_type=account_type, contributions=contributions)
+    user_tags = con.get_user_tags(con.get_user(_username_)['id'])
+    print(user_tags)
+    
+    return render_template('user.html', user=user, username=username, account_type=account_type, contributions=contributions, user_tags=user_tags)
+
+
+@app.route('/user/<_username_>/choose-interests')
+def list_interests(_username_):
+    new_tags = con.get_new_tags_for_user(con.get_user(_username_)['id'])
+    return render_template('show_tags.html', username=username, account_type=account_type, new_tags=new_tags)
 
 #===================================================================================================================================================
 
@@ -401,6 +410,12 @@ def delete_comments(comment_id):
 def delete_tag(question_id, tag_name):
     con.delete_question_tag(question_id, tag_name)
     return redirect('/question/{0}/edit'.format(question_id))
+
+
+@app.route('/user/<_username_>/<tagid>/remove-tag')
+def remove_tag_from_user(_username_, tagid):
+    con.remove_tag_from_user(con.get_user(_username_)['id'], tagid)
+    return redirect(f'/user/{_username_}')
 
 #==================================================================================================================================================
 
