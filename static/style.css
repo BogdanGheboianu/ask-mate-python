@@ -739,3 +739,36 @@ footer {
     grid-template-columns: repeat(1, 4fr);
     grid-gap: 10px;
 }
+
+.user-list-header {
+    margin-top: 2em;
+}
+
+.users-main-content {
+    min-height: 800px;
+    margin-bottom: -2em;
+    text-align: center;
+}
+
+.users-table {
+    min-height: 800px;
+    padding: 20px;
+    text-align: center;
+    text-align: center;
+}
+
+.table-users {
+    margin: 0 auto;
+    width: 100%;
+    border-spacing: 0px;
+}
+
+
+.all-users-link {
+    text-decoration: none;
+    color: seagreen;
+}
+
+.all-users-link:hover {
+    text-decoration: none;
+}

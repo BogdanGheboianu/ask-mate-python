@@ -1,0 +1,35 @@
+{% extends 'framework.html' %}
+
+{% block title %}
+Question
+{% endblock %}
+
+{%block content%}
+<div class="users-main-content">
+    <h1 class='user-list-header'>Users List</h1>
+    <div class="users-table">
+        <table class="table-users">
+            <thead>
+                {% for header in users_table_headers %}
+                <th style="background-color: #1a1b1d;" style="text-transform: uppercase;">{{header}}</th>
+                {% endfor %}
+            </thead>
+            
+            <tbody>
+            {% for user in all_users %}
+             <tr>
+                {% for column in user %}
+                    {% if column == 'username'%}
+                    <td style="border-top: 1px solid #444"><a class="question-links" href="/user/{{user[column]}}">{{user[column]}}</a></td>
+                    {% elif column != 'password' and column != 'username' %}
+                        <td style="border-top: 1px solid #444">{{user[column]}}</td>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+           
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -36,6 +36,9 @@
             {% if username != None %}
             <a href="/logout"><i class="logout fas fa-sign-out-alt"></i></a>
             {% endif %}
+            {% if account_type == 'admin'%}
+            <a class='all-users-link' style="margin-left: 6em" href="{{url_for('list_all_users')}}">Show all users</a>
+            {% endif %}
         </div>
 
 
