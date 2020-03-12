@@ -221,8 +221,23 @@ def add_tags_for_question(cursor, tags, question_id):
 
 @database_common.connection_handler
 def add_new_user(cursor, user):
-    cursor.execute(f""" INSERT INTO user_info (username, email, password, created, role, rank)
-                        VALUES ('{user['username']}', '{user['email']}', '{user['password']}', '{user['created']}', '{user['role']}', {user['rank']}); """)
+    query = """
+            INSERT INTO user_info (username, email, password, created, role, rank, app_theme)
+            VALUES (%(username)s, %(email)s, %(password)s, %(created)s, %(role)s, %(rank)s, %(app_theme)s);
+            """
+    data = {
+        'username': user['username'],
+        'email': user['email'],
+        'password': user['password'],
+        'created': user['created'],
+        'role': user['role'],
+        'rank': user['rank'],
+        'app_theme': user['app_theme']
+    }
+    cursor.execute(query, data)
+
+    # cursor.execute(f""" INSERT INTO user_info (username, email, password, created, role, rank, app_theme)
+    #                     VALUES ('{user['username']}', '{user['email']}', '{user['password']}', '{user['created']}', '{user['role']}', {user['rank']}), '{user['app_theme']}'; """)
 
 
 @database_common.connection_handler
@@ -344,6 +359,11 @@ def edit_comment_for_answer(cursor, new_comment_info):
 def mark_answer_accepted(cursor, question_id, answer_id):
     cursor.execute(f""" UPDATE answer SET accepted=True WHERE id={answer_id}; """)
     cursor.execute(f""" UPDATE question SET acptd_answerid={answer_id} WHERE id={question_id}; """)
+
+
+@database_common.connection_handler
+def update_user_app_theme(cursor, userid, app_theme):
+    cursor.execute(f""" UPDATE user_info SET app_theme='{app_theme}' WHERE id={userid}; """)
 
 #=================================================================================================================================================
 
