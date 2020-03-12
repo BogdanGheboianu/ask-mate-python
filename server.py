@@ -4,6 +4,7 @@ import os, uuid
 import data_manager as dmg
 import connection as con
 import util as utl
+from flask_ngrok import run_with_ngrok
 
 WEB_PAGES = {"home_page": "home.html", "question_page": "question.html", "add_question_page": "add_question.html",
              "new_answer_page": "new_answer.html", "show_image_page": "show_image.html", 'search': 'search.html',
@@ -14,24 +15,34 @@ UPLOAD_FOLDER = "static"
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.urandom(16) 
+run_with_ngrok(app)
 
-username = None
-account_type = None
-userid = None
-app_theme = 'black&orange'
 
 #===================================================================================================================================================
 
 # DISPLAY ROUTES: index, question, show_image, search
 
+def is_logged_in():
+    if 'username' in session:
+        return True
+    else:
+        return False
+        
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
 def index():
-    global username, account_type, userid
-    if 'username' in session:
+    if is_logged_in():
         username = escape(session['username'])
         account_type = con.get_user(username)['role']
         userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
@@ -101,6 +112,16 @@ def index():
 
 @app.route("/question/<question_id>")
 def question(question_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     if request.args.get('view') == 'add': con.add_view(question_id)
     empty = False
     num_answers = 0
@@ -176,6 +197,16 @@ def question(question_id):
 
 @app.route("/question/<question_id>/show/<image_path>")
 def show_image_for_question(question_id, image_path):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     question = utl.check_specific_question_for_edit(
         dmg.get_question_by_id(question_id))
     image = url_for('static', filename=question['image'])
@@ -194,6 +225,16 @@ def show_image_for_question(question_id, image_path):
 
 @app.route('/search')
 def search():
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     search_term = request.args.get('q')
     search_results = dmg.search(search_term)
     if search_results != None:
@@ -215,10 +256,19 @@ def search():
 
 @app.route('/user/<_username_>', methods=['GET', 'POST'])
 def user(_username_):
-    global app_theme
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     if request.method == "POST":
         app_theme = request.form.get('app_theme')
-        print(app_theme)
+        con.update_user_app_theme(userid, app_theme)
         return redirect(f'/user/{_username_}')
     user = con.get_user(_username_)
     if user['profile_pic'] != None:
@@ -240,12 +290,32 @@ def user(_username_):
 
 @app.route('/user/<_username_>/choose-interests')
 def list_interests(_username_):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     new_tags = con.get_new_tags_for_user(con.get_user(_username_)['id'])
     return render_template('show_tags.html', username=_username_, account_type=account_type, new_tags=new_tags, app_theme=app_theme)
 
 
 @app.route('/user/<_username_>/followers')
 def followers(_username_):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     user_followers = con.get_user_followers(con.get_user(_username_)['id'])
     user_num_followers = len(user_followers)
     return render_template('followers.html', _username_=_username_, user_followers=user_followers, user_num_followers=user_num_followers, username=username, app_theme=app_theme)
@@ -256,6 +326,16 @@ def followers(_username_):
 
 @app.route("/list/add-question", methods=["GET", "POST"])
 def add_question():
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     if request.method == "POST":
         question_id = con.get_next_id('question')
         f = save_image(request.files['image'])
@@ -283,6 +363,16 @@ def add_question():
 
 @app.route("/question/<question_id>/add-answer", methods=["GET", "POST"])
 def add_answer(question_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     code_snippet = request.form.get('code_snippet')
     if code_snippet == None: code_snippet = ''
@@ -305,6 +395,16 @@ def add_answer(question_id):
 
 @app.route('/question/<question_id>/add-comment', methods=['GET', 'POST'])
 def add_comment_for_question(question_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     if request.method == 'POST':
         userid = con.get_user(username)['id']
         comment_info = {'id': con.get_next_id('comment'), 
@@ -319,6 +419,16 @@ def add_comment_for_question(question_id):
 
 @app.route('/<question_id>/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
 def add_comment_for_answer(question_id, answer_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     if request.method == 'POST':
         userid = con.get_user(username)['id']
         comment_info = {'id': con.get_next_id('comment'), 
@@ -333,12 +443,32 @@ def add_comment_for_answer(question_id, answer_id):
 
 @app.route('/user/<_username_>/<tagid>/add-interest-to-user')
 def add_interest_to_user(_username_, tagid):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.add_interest_to_user(con.get_user(_username_)['id'], tagid)
     return redirect(f'/user/{_username_}/choose-interests')
 
 
 @app.route('/user/<on_page_username>/follow')
 def follow_user(on_page_username):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.follow_user(con.get_user(username)['id'], con.get_user(on_page_username)['id'])
     return redirect(f'/user/{on_page_username}')
 
@@ -348,6 +478,16 @@ def follow_user(on_page_username):
 
 @app.route("/question/<question_id>/edit", methods=["GET", "POST"])
 def edit_question(question_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     question.update({'username': con.get_user_by_id(question['userid'])['username']})
     question['image'] = url_for('static', filename=question['image'])
@@ -372,6 +512,16 @@ def edit_question(question_id):
 
 @app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(question_id, answer_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     answer = dmg.get_answer_by_id(answer_id)
     answer['image'] = url_for('static', filename=answer['image'])
     if request.method == "POST":
@@ -388,6 +538,16 @@ def edit_answer(question_id, answer_id):
 
 @app.route('/question/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
 def edit_comment_for_question(question_id, comment_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     if request.method == 'POST':
         new_comment_info = {'id': comment_id, 
                             'question_id': question_id, 
@@ -403,6 +563,16 @@ def edit_comment_for_question(question_id, comment_id):
 
 @app.route('/answer/<answer_id>/<question_id>/<comment_id>/edit-comment', methods=['GET', 'POST'])
 def edit_comment_for_answer(answer_id, question_id, comment_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     if request.method == 'POST':
         new_comment_info = {'id': comment_id, 
                             'answer_id': answer_id, 
@@ -418,6 +588,16 @@ def edit_comment_for_answer(answer_id, question_id, comment_id):
 
 @app.route('/answer/<question_id>/<answer_id>/mark-accepted')
 def mark_answer_accepted(question_id, answer_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.mark_answer_accepted(question_id, answer_id)
     return redirect(f'/question/{question_id}')
 
@@ -427,36 +607,96 @@ def mark_answer_accepted(question_id, answer_id):
 
 @app.route("/question/<question_id>/delete")
 def delete_question(question_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.delete_question(question_id)
     return redirect("/")
 
 
 @app.route("/answer/<question_id>/<answer_id>/delete")
 def delete_answer(question_id, answer_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.delete_answer(answer_id)
     return redirect("/question/{0}".format(question_id))
 
 
 @app.route('/comments/<comment_id>/delete')
 def delete_comments(comment_id):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     question_id = con.delete_comment(comment_id)['question_id']
     return redirect('/question/{0}'.format(question_id))
 
 
 @app.route('/question/<question_id>/<tag_name>/delete-tag')
 def delete_tag(question_id, tag_name):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.delete_question_tag(question_id, tag_name)
     return redirect('/question/{0}/edit'.format(question_id))
 
 
 @app.route('/user/<_username_>/<tagid>/remove-tag')
 def remove_tag_from_user(_username_, tagid):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.remove_tag_from_user(con.get_user(_username_)['id'], tagid)
     return redirect(f'/user/{_username_}')
 
 
 @app.route('/user/<on_page_username>/unfollow')
 def unfollow_user(on_page_username):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.unfollow_user(con.get_user(username)['id'], con.get_user(on_page_username)['id'])
     return redirect(f'/user/{on_page_username}')
 
@@ -466,6 +706,16 @@ def unfollow_user(on_page_username):
 
 @app.route("/question/<question_id>/<vote>")
 def vote_question(question_id, vote):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.vote_question(question_id, vote)
     userid = con.get_user(username)['id']
     con.user_vote_question(question_id, userid, vote)
@@ -474,6 +724,16 @@ def vote_question(question_id, vote):
 
 @app.route('/question/<question_id>/<vote>/unvote-question')
 def unvote_question(question_id, vote):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.unvote_question(question_id, vote)
     con.user_unvote_question(question_id, userid)
     return redirect("/question/{0}".format(question_id))
@@ -481,6 +741,16 @@ def unvote_question(question_id, vote):
 
 @app.route("/answer/<question_id>/<answer_id>/<vote>")
 def vote_answer(question_id, answer_id, vote):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.vote_answer(answer_id, vote)
     userid = con.get_user(username)['id']
     con.user_vote_answer(answer_id, userid, vote)
@@ -489,6 +759,16 @@ def vote_answer(question_id, answer_id, vote):
 
 @app.route("/answer/<question_id>/<answer_id>/<vote>/unvote-answer")
 def unvote_answer(question_id, answer_id, vote):
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     con.unvote_answer(answer_id, vote)
     con.user_unvote_answer(answer_id, userid)
     return redirect("/question/{0}".format(question_id))
@@ -501,7 +781,16 @@ import authentication as athn
 
 @app.route('/registration/signup', methods=['GET', 'POST'])
 def signup():
-    global username
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     username_error = False
     email_error = False
     password_match_error = False
@@ -521,7 +810,7 @@ def signup():
                                         username_error=username_error, email_error=email_error, password_match_error=password_match_error, app_theme=app_theme)
         password = athn.hash_password(plain_text_password)
         created = utl.get_current_time()
-        user = {'username': _username_, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0}
+        user = {'username': _username_, 'email': email, 'password': password, 'role': 'normal_user', 'created': created, 'rank': 0, 'app_theme': 'black_orange'}
         con.add_new_user(user)
         return redirect('/registration/login')
     return render_template('signup.html', username=username, account_type=account_type, 
@@ -530,7 +819,16 @@ def signup():
 
 @app.route('/registration/login', methods=['GET', 'POST'])
 def login():
-    global username
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     login_error = False
     if request.method == 'POST':
         username = request.form.get('username')
@@ -551,7 +849,16 @@ def login():
 
 @app.route('/logout')
 def logout():
-    global username
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     session.pop('username', None)
     username = None
     return redirect('/')
@@ -571,4 +878,4 @@ def save_image(file):
 #=================================================================================================================================================
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run()
