@@ -514,7 +514,8 @@ def edit_question(question_id):
     question['image'] = url_for('static', filename=question['image'])
     if request.method == "POST":
         edited_question_info = dict(request.form)
-        edited_question_info['image'] = save_image(request.files['image'])
+        if request.files['image'].filename != '':
+            edited_question_info['image'] = save_image(request.files['image'])
         edited_question_info['title'] = edited_question_info['title'] + "(Edited)"
         new_submission_time = utl.get_current_time()
         con.edit_question(question_id, edited_question_info, new_submission_time)

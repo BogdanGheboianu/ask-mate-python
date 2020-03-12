@@ -258,9 +258,13 @@ def edit_question(cursor, question_id, edited_question_info, new_submission_time
     title = utl.escape_characters(edited_question_info['title'])
     message = utl.escape_characters(edited_question_info['message'])
     code_snippet = edited_question_info['code_snippet']
-    image = edited_question_info['image']
-    cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}', code_snippet='{3}', image='{4}' where id={5};
-                    """.format(title, message, new_submission_time, code_snippet, image, question_id))
+    try:
+        image = edited_question_info['image']
+        cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}', code_snippet='{3}', image='{4}' where id={5};
+                        """.format(title, message, new_submission_time, code_snippet, image, question_id))
+    except KeyError:
+        cursor.execute(""" UPDATE question SET title='{0}', message='{1}', submission_time='{2}', code_snippet='{3}' where id={4};
+                        """.format(title, message, new_submission_time, code_snippet, question_id))
 
 
 @database_common.connection_handler
