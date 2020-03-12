@@ -48,7 +48,8 @@ User Profile
                         {% endif%}
                 {% endif %}
                         </div>
-                {% if user['username'] == username or account_type == 'admin' %}
+                <div><a href="/user/{{ on_page_username }}/followers"><strong class="profile-info">Followers: </strong></a><em class="question-links">{{ user_num_followers }}</em></div>
+                {% if user['username'] == username %}
                 
                 <div class="user-button">
                     <div class="sort-area">
@@ -70,24 +71,31 @@ User Profile
                             <button id="submit" type="submit">change app theme</button>
                         </form>
                     </div>
-                    <button onclick="location.href='#'">CHANGE PASSWORD</button>
-                    <button onclick="location.href='#'" style="color: red; border-color: red;">DELETE ACCOUNT</button>
+                    
+                    <!-- <button onclick="location.href='#'">CHANGE PASSWORD</button>
+                    <button onclick="location.href='#'" style="color: red; border-color: red;">DELETE ACCOUNT</button> -->
                 </div>
                 
                 {% else %}
                 
                 <div class="follow-button">
                     {% if username != None %}
-                    {% if following_user == False %}
+                    {% if following_user == False%}
                     <button onclick="location.href='/user/{{ on_page_username }}/follow'">FOLOW</button> 
-                    <a class="question-links" href="/user/{{ on_page_username }}/followers"><em style="font-size: 15px;margin-left: 10px;">{{ user_num_followers }} followers</em></a>
+                    
                     {% else %}
+
+                    {% if app_theme == 'blue_cream' %}
                     <button style="background-color: white; color: #D36582;" onclick="location.href='/user/{{ on_page_username }}/unfollow'">FOLOWING</button> 
-                    <a class="question-links" href="/user/{{ on_page_username }}/followers"><em style="font-size: 15px;margin-left: 10px;">{{ user_num_followers }} followers</em></a>
+                    {% endif %}
+                    {% if app_theme == 'black_orange' %}
+                    <button style="background-color: white; color: seagreen;" onclick="location.href='/user/{{ on_page_username }}/unfollow'">FOLOWING</button> 
+                    {% endif %}
+                    
                     {% endif %}
                     {% else %}
                     <button onclick="location.href='/registration/login'">FOLOW</button> 
-                    <a class="question-links" href="/user/{{ on_page_username }}/followers"><em style="font-size: 15px; margin-left: 10px;">{{ user_num_followers }} followers</em></a>
+                    
                     {% endif %}
                 </div>
                 {% endif %}

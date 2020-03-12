@@ -322,6 +322,16 @@ def followers(_username_):
 
 @app.route('/list-users')
 def list_all_users():
+    if is_logged_in():
+        username = escape(session['username'])
+        account_type = con.get_user(username)['role']
+        userid = con.get_user(username)['id']
+        app_theme = con.get_user(username)['app_theme']
+    else:
+        username = None
+        account_type = None
+        userid = None
+        app_theme = 'black_orange'
     USERS_TABLE_HEADERS = ['Username', 'Email', 'ID', 'Date Created', 'User Role', 'Profile Photo', 'Rank', 'Theme']
     all_users = con.get_all_users()
     return render_template('list_users.html', all_users=all_users,
