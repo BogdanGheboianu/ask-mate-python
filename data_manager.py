@@ -20,7 +20,14 @@ def get_answers_for_question(question_id):
         if answer['question_id'] == int(question_id):
             answers_for_question.append(answer)
     if len(answers_for_question) == 0: return None
-    else: return answers_for_question
+    else: 
+        accepted_answer = []
+        for ans in answers_for_question:
+            if ans['accepted'] == True:
+                accepted_answer.append(ans)
+                answers_for_question.remove(ans)
+        answers_for_question = accepted_answer + answers_for_question
+        return answers_for_question
 
 
 def get_comments_for_question(question_id, limit):
