@@ -23,7 +23,7 @@ User Profile
                 <div><strong>Username:</strong> <em class="question-info">{{ user['username'] }}</em></div><hr>
                 <div><strong>Email:</strong> <em class="question-info">{{ user['email'] }}</em></div><hr>
                 <div><strong>Member since:</strong> <em class="question-info">{{ user['created'] }}</em></div><hr>
-                <div><strong>Rank:</strong> <em class="question-info">999</em></div><hr>
+                <div><strong>Rank:</strong> <em class="question-info">{{ user['rank'] }}</em></div><hr>
 
                 {% if user_tags  %}
                 <div><strong>Interests:</strong> 

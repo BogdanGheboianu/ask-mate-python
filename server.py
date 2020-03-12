@@ -620,6 +620,8 @@ def mark_answer_accepted(question_id, answer_id):
         userid = None
         app_theme = 'black_orange'
     con.mark_answer_accepted(question_id, answer_id)
+    answer_userid = dmg.get_answer_by_id(answer_id)['userid']
+    con.increase_rank(answer_id, 15)
     return redirect(f'/question/{question_id}')
 
 #====================================================================================================================================================
@@ -740,6 +742,9 @@ def vote_question(question_id, vote):
     con.vote_question(question_id, vote)
     userid = con.get_user(username)['id']
     con.user_vote_question(question_id, userid, vote)
+    question_userid = dmg.get_question_by_id(question_id)['userid']
+    if vote == 'vote-up': con.increase_rank(question_userid, 5)
+    elif vote == 'vote-down': con.decrease_rank(question_userid, 2)
     return redirect("/question/{0}".format(question_id))
 
 
@@ -757,6 +762,9 @@ def unvote_question(question_id, vote):
         app_theme = 'black_orange'
     con.unvote_question(question_id, vote)
     con.user_unvote_question(question_id, userid)
+    question_userid = dmg.get_question_by_id(question_id)['userid']
+    if vote == 'vote-up': con.decrease_rank(question_userid, 5)
+    elif vote == 'vote-down': con.increase_rank(question_userid, 2)
     return redirect("/question/{0}".format(question_id))
 
 
@@ -775,6 +783,9 @@ def vote_answer(question_id, answer_id, vote):
     con.vote_answer(answer_id, vote)
     userid = con.get_user(username)['id']
     con.user_vote_answer(answer_id, userid, vote)
+    answer_userid = dmg.get_answer_by_id(answer_id)['userid']
+    if vote == 'vote-up': con.increase_rank(answer_userid, 10)
+    elif vote == 'vote-down': con.decrease_rank(answer_userid, 2)
     return redirect("/question/{0}".format(question_id))
 
 
@@ -792,6 +803,9 @@ def unvote_answer(question_id, answer_id, vote):
         app_theme = 'black_orange'
     con.unvote_answer(answer_id, vote)
     con.user_unvote_answer(answer_id, userid)
+    answer_userid = dmg.get_answer_by_id(answer_id)['userid']
+    if vote == 'vote-up': con.decrease_rank(answer_userid, 10)
+    elif vote == 'vote-down': con.increase_rank(answer_userid, 2)
     return redirect("/question/{0}".format(question_id))
 
 

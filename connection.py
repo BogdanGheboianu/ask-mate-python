@@ -365,6 +365,16 @@ def mark_answer_accepted(cursor, question_id, answer_id):
 def update_user_app_theme(cursor, userid, app_theme):
     cursor.execute(f""" UPDATE user_info SET app_theme='{app_theme}' WHERE id={userid}; """)
 
+
+@database_common.connection_handler
+def increase_rank(cursor, userid, amount):
+    cursor.execute(f""" UPDATE user_info SET rank=rank + {amount} WHERE id={userid}; """)
+
+
+@database_common.connection_handler
+def decrease_rank(cursor, userid, amount):
+    cursor.execute(f""" UPDATE user_info SET rank=rank - {amount} WHERE id={userid}; """)
+
 #=================================================================================================================================================
 
 # DELETE DATA FROM TABLES: question, answer, comment, question tag
