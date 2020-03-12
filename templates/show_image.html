@@ -18,9 +18,15 @@ Question Img
         {% else %}
             <strong>Votes:</strong> <em class="question-info">N/A</em>
         {% endif %}
-
+        {% if username != question['username'] %}
+    <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info" style="color: seagreen;">{{ question['username'] }}</em></a>
+    {% else %}
+    <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info" style="color: seagreen;">YOU</em></a>
+    {% endif %}
+        {% if userid == question['userid'] or account_type == 'admin' %}
         <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>
         <button id="submit" onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button>
+        {% endif %}
         {% if tags_for_question != None %}
         <p><strong>TAGS:</strong>
         {% for tag in tags_for_question %}
@@ -36,7 +42,7 @@ Question Img
     </div>
 </p>
 <hr>
-{% if username != None %}
+{% if username != None  %}
 <p>
     <button class="ask-question-button" onclick="location.href='/question/{{ question_id }}/new-answer'">post
         answer</button>

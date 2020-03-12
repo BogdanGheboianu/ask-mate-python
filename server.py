@@ -207,8 +207,8 @@ def show_image_for_question(question_id, image_path):
         account_type = None
         userid = None
         app_theme = 'black_orange'
-    question = utl.check_specific_question_for_edit(
-        dmg.get_question_by_id(question_id))
+    question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
+    question.update({'username': con.get_user_by_id(question['userid'])['username']})
     image = url_for('static', filename=question['image'])
     comments_for_question = dmg.get_comments_for_question(question_id, 'no-limit')
     tags_for_question = dmg.get_tags_for_question(question_id)
@@ -353,10 +353,7 @@ def add_question():
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     if request.method == "POST":
         question_id = con.get_next_id('question')
         f = save_image(request.files['image'])
@@ -390,10 +387,7 @@ def add_answer(question_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     code_snippet = request.form.get('code_snippet')
     if code_snippet == None: code_snippet = ''
@@ -422,10 +416,7 @@ def add_comment_for_question(question_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     if request.method == 'POST':
         userid = con.get_user(username)['id']
         comment_info = {'id': con.get_next_id('comment'), 
@@ -446,10 +437,7 @@ def add_comment_for_answer(question_id, answer_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     if request.method == 'POST':
         userid = con.get_user(username)['id']
         comment_info = {'id': con.get_next_id('comment'), 
@@ -470,10 +458,7 @@ def add_interest_to_user(_username_, tagid):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.add_interest_to_user(con.get_user(_username_)['id'], tagid)
     return redirect(f'/user/{_username_}/choose-interests')
 
@@ -486,10 +471,7 @@ def follow_user(on_page_username):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.follow_user(con.get_user(username)['id'], con.get_user(on_page_username)['id'])
     return redirect(f'/user/{on_page_username}')
 
@@ -505,10 +487,7 @@ def edit_question(question_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     question = utl.check_specific_question_for_edit(dmg.get_question_by_id(question_id))
     question.update({'username': con.get_user_by_id(question['userid'])['username']})
     question['image'] = url_for('static', filename=question['image'])
@@ -540,10 +519,7 @@ def edit_answer(question_id, answer_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     answer = dmg.get_answer_by_id(answer_id)
     answer['image'] = url_for('static', filename=answer['image'])
     if request.method == "POST":
@@ -566,10 +542,7 @@ def edit_comment_for_question(question_id, comment_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     if request.method == 'POST':
         new_comment_info = {'id': comment_id, 
                             'question_id': question_id, 
@@ -591,10 +564,7 @@ def edit_comment_for_answer(answer_id, question_id, comment_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     if request.method == 'POST':
         new_comment_info = {'id': comment_id, 
                             'answer_id': answer_id, 
@@ -616,10 +586,7 @@ def mark_answer_accepted(question_id, answer_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.mark_answer_accepted(question_id, answer_id)
     answer_userid = dmg.get_answer_by_id(answer_id)['userid']
     con.increase_rank(answer_id, 15)
@@ -637,10 +604,7 @@ def delete_question(question_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.delete_question(question_id)
     return redirect("/")
 
@@ -653,10 +617,7 @@ def delete_answer(question_id, answer_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.delete_answer(answer_id)
     return redirect("/question/{0}".format(question_id))
 
@@ -669,10 +630,7 @@ def delete_comments(comment_id):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     question_id = con.delete_comment(comment_id)['question_id']
     return redirect('/question/{0}'.format(question_id))
 
@@ -685,10 +643,7 @@ def delete_tag(question_id, tag_name):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.delete_question_tag(question_id, tag_name)
     return redirect('/question/{0}/edit'.format(question_id))
 
@@ -701,10 +656,7 @@ def remove_tag_from_user(_username_, tagid):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.remove_tag_from_user(con.get_user(_username_)['id'], tagid)
     return redirect(f'/user/{_username_}')
 
@@ -717,10 +669,7 @@ def unfollow_user(on_page_username):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.unfollow_user(con.get_user(username)['id'], con.get_user(on_page_username)['id'])
     return redirect(f'/user/{on_page_username}')
 
@@ -736,10 +685,7 @@ def vote_question(question_id, vote):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.vote_question(question_id, vote)
     userid = con.get_user(username)['id']
     con.user_vote_question(question_id, userid, vote)
@@ -757,10 +703,7 @@ def unvote_question(question_id, vote):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.unvote_question(question_id, vote)
     con.user_unvote_question(question_id, userid)
     question_userid = dmg.get_question_by_id(question_id)['userid']
@@ -777,10 +720,7 @@ def vote_answer(question_id, answer_id, vote):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.vote_answer(answer_id, vote)
     userid = con.get_user(username)['id']
     con.user_vote_answer(answer_id, userid, vote)
@@ -798,10 +738,7 @@ def unvote_answer(question_id, answer_id, vote):
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     con.unvote_answer(answer_id, vote)
     con.user_unvote_answer(answer_id, userid)
     answer_userid = dmg.get_answer_by_id(answer_id)['userid']
@@ -891,10 +828,7 @@ def logout():
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
     else:
-        username = None
-        account_type = None
-        userid = None
-        app_theme = 'black_orange'
+        return redirect('/registration/login')
     session.pop('username', None)
     username = None
     return redirect('/')
