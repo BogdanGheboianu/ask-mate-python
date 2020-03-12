@@ -250,6 +250,17 @@ def followers(_username_):
     user_num_followers = len(user_followers)
     return render_template('followers.html', _username_=_username_, user_followers=user_followers, user_num_followers=user_num_followers, username=username, app_theme=app_theme)
 
+@app.route('/list-users')
+def list_all_users():
+    USERS_TABLE_HEADERS = ['Username', 'Email', 'ID', 'Date Created', 'User Role', 'Profile Photo', 'Rank', 'Theme']
+    all_users = con.get_all_users()
+    return render_template('list_users.html', all_users=all_users,
+    app_theme=app_theme,
+    users_table_headers=USERS_TABLE_HEADERS,
+    username=username)
+
+
+
 #===================================================================================================================================================
 
 # ADDING ROUTES: add question, add answer, add comment for question, add comment for answer, add view for question
