@@ -379,6 +379,12 @@ def increase_rank(cursor, userid, amount):
 def decrease_rank(cursor, userid, amount):
     cursor.execute(f""" UPDATE user_info SET rank=rank - {amount} WHERE id={userid}; """)
 
+
+@database_common.connection_handler
+def update_profile_picture(cursor, profile_picture, userid):
+    print(profile_picture)
+    cursor.execute(f""" UPDATE user_info SET profile_pic='{profile_pic}' WHERE userid={userid}; """)
+
 #=================================================================================================================================================
 
 # DELETE DATA FROM TABLES: question, answer, comment, question tag

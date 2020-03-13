@@ -15,7 +15,7 @@ UPLOAD_FOLDER = "static"
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.urandom(16) 
-# run_with_ngrok(app)
+run_with_ngrok(app)
 
 
 #===================================================================================================================================================
@@ -57,8 +57,8 @@ def index():
             show_all_questions = False
             first_q = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
             first_questions = dmg.custom_questions(user_tags, first_q)
-            # if first_questions != False: num_all_questions = len(dmg.custom_questions(user_tags, con.get_questions(sort_factor, sort_order)))
-            # if num_all_questions > 5: show_all_questions = True
+            if first_questions != False: num_all_questions = len(dmg.custom_questions(user_tags, con.get_questions(sort_factor, sort_order)))
+            if num_all_questions > 5: show_all_questions = True
             empty = False
             if len(first_questions) == 0: empty = True
             return render_template(WEB_PAGES['home_page'],
@@ -275,7 +275,14 @@ def user(_username_):
         app_theme = 'black_orange'
     if request.method == "POST":
         app_theme = request.form.get('app_theme')
-        con.update_user_app_theme(userid, app_theme)
+        if app_theme != None: con.update_user_app_theme(userid, app_theme)
+        try:
+            if request.files['image'].filename != '':
+                profile_picture = save_image(request.files['image'])
+                con.update_profile_picture(profile_picture, userid)
+        except KeyError:
+            print('here')
+            pass
         return redirect(f'/user/{_username_}')
     user = con.get_user(_username_)
     if user['profile_pic'] != None:
@@ -855,4 +862,4 @@ def save_image(file):
 #=================================================================================================================================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
