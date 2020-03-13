@@ -43,10 +43,19 @@ Question
     {% else %}
     <strong>Votes:</strong> <em class="question-info">N/A</em>
     {% endif %}
+    {% if app_theme != 'some-color' %}
+
     {% if username != question['username'] %}
     <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info" style="color: seagreen;">{{ question['username'] }}</em></a>
     {% else %}
     <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info" style="color: seagreen;">YOU</em></a>
+    {% endif %}
+    {% else %}
+    {% if username != question['username'] %}
+    <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info" style="color: #ff3465;">{{ question['username'] }}</em></a>
+    {% else %}
+    <strong>Asked by </strong><a href="/user/{{ question['username'] }}"><em class="question-info" style="color: #ff3465;">YOU</em></a>
+    {% endif %}
     {% endif %}
     {% if username == question['username'] or account_type == 'admin' %}
     <button id="submit" onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button>

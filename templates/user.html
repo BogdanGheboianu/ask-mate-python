@@ -20,10 +20,10 @@ User Profile
             {% endif %}
 
             <div class="profile-info">
-                <div><strong>Username:</strong> <em class="question-info">{{ user['username'] }}</em></div><hr>
-                <div><strong>Email:</strong> <em class="question-info">{{ user['email'] }}</em></div><hr>
-                <div><strong>Member since:</strong> <em class="question-info">{{ user['created'] }}</em></div><hr>
-                <div><strong>Rank:</strong> <em class="question-info">{{ user['rank'] }}</em></div><hr>
+                <div><strong>Username:</strong> <em class="question-links">{{ user['username'] }}</em></div><hr>
+                <div><strong>Email:</strong> <em class="question-links">{{ user['email'] }}</em></div><hr>
+                <div><strong>Member since:</strong> <em class="question-links">{{ user['created'] }}</em></div><hr>
+                <div><strong>Rank:</strong> <em class="question-links">{{ user['rank'] }}</em></div><hr>
 
                 {% if user_tags  %}
                 <div><strong>Interests:</strong> 
@@ -40,7 +40,7 @@ User Profile
                     <hr>
                     {% endif%}
                 {% else %}
-                    <div><strong>Interests:</strong> <em class="question-info">No saved interests</em>
+                    <div><strong>Interests:</strong> <em class="question-links">No saved interests</em>
                         {% if username == user['username'] or account_type == 'admin' %}
                             <button class="interests-button" onclick="location.href='/user/{{ username }}/choose-interests'">+</button><hr>
                         {% else %}
@@ -67,6 +67,12 @@ User Profile
                                 {% else %}
                                 <option value="blue_cream">Blue & Cream</option>
                                 {% endif %}
+
+                                {% if app_theme == 'some-color' %}
+                                <option value="some-color" selected>White & Pink</option>
+                                {% else %}
+                                <option value="some-color">White & Pink</option>
+                                {% endif %}
                             </select>
                             <button id="submit" type="submit">change app theme</button>
                         </form>
@@ -91,6 +97,9 @@ User Profile
                     {% if app_theme == 'black_orange' %}
                     <button style="background-color: white; color: seagreen;" onclick="location.href='/user/{{ on_page_username }}/unfollow'">FOLOWING</button> 
                     {% endif %}
+                    {% if app_theme == 'some-color' %}
+                    <button style="background-color: white; color: #ff99af;" onclick="location.href='/user/{{ on_page_username }}/unfollow'">FOLOWING</button> 
+                    {% endif %}
                     
                     {% endif %}
                     {% else %}
@@ -110,7 +119,11 @@ User Profile
                             <p><strong style="font-size: large;">Questions asked:</strong></p><br>
                             <p>
                             {% for item in contributions['questions'] %}
+                            {% if app_theme != 'some-color' %}
                                 <p><a style="font-size: large; color: #eec490;" href="/question/{{ item['id'] }}">{{ item['title'] }}</a></p>
+                            {% else %}
+                            <p><a style="font-size: large; color: black;" href="/question/{{ item['id'] }}">{{ item['title'] }}</a></p>
+                            {% endif %}
                                 <strong>Question ID:</strong> <em class="question-info">{{ item["id"] }}</em>
                                 <strong>Posted:</strong> <em class="question-info">{{ item["submission_time"] }}</em>
                                 <strong>Views:</strong> <em class="question-info">{{ item["view_number"] }}</em>
@@ -128,13 +141,24 @@ User Profile
                             <p><strong style="font-size: large;">Answers given:</strong></p><br>
                             <p>
                             {% for item in contributions['answers'] %}
+                                
+
+                                {% if app_theme != 'some-color' %}
                                 {% if item['accepted'] == True %}
-                    
                                 <p style="font-size: large; color: wheat;"><i style="color: seagreen; font-size: x-large; margin-right: 10px; border-style: solid; border-radius: 4px; border-color: seagreen;" class="fas fa-check"></i>{{item['message']}}</p>
                                 {% else %}
                                 <p style="font-size: large; color: wheat;">{{ item['message'] }}</p>
                                 {% endif %}
                                 <a style="font-size: medium; color: #e19639;" href="/question/{{ item['question_id'] }}">Go to Question</a><br><br>
+
+                                {% else %}
+                                {% if app_theme != 'some-color' %}
+                                <p style="font-size: large; color: black;"><i style="color: #ff3465; font-size: x-large; margin-right: 10px; border-style: solid; border-radius: 4px; border-color: seagreen;" class="fas fa-check"></i>{{item['message']}}</p>
+                                {% else %}
+                                <p style="font-size: large; color: black;">{{ item['message'] }}</p>
+                                {% endif %}
+                                <a style="font-size: medium; color: #ff3465;" href="/question/{{ item['question_id'] }}">Go to Question</a><br><br>
+                                {% endif %}
                                 <strong>Answer ID:</strong> <em class="question-info">{{ item["id"] }}</em>
                                 <strong>Posted:</strong> <em class="question-info">{{ item["submission_time"] }}</em>
                                 {% if item['vote_number'] != None %}
@@ -151,19 +175,30 @@ User Profile
                             <p><strong style="font-size: large;">Comments posted:</strong></p><br>
                             <p>
                             {% for item in contributions['comments'] %}
+                            {% if app_theme != 'some-color' %}
                                 <p style="font-size: large; color: wheat;">{{ item['message'] }}</p>
                                 <a style="font-size: medium; color: #e19639;" href="/question/{{ item['question_id'] }}">Go to Question</a><br><br>
+
+                            {% else %}
+                            <p style="font-size: large; color: black;">{{ item['message'] }}</p>
+                                <a style="font-size: medium; color: #ff3465;" href="/question/{{ item['question_id'] }}">Go to Question</a><br><br>
                                 <strong>Comment ID:</strong> <em class="question-info">{{ item["id"] }}</em>
                                 <strong>Posted:</strong> <em class="question-info">{{ item["submission_time"] }}</em><hr>
-                            {% endfor %}
+                            {% endif %}
+                                {% endfor %}
                             </p>
                         {% endif %}
                    
                 {% else %}
                     {% if user['username'] == username %}
                         <p style="font-size: large;">You don't have any contributions yet.
-                            You can start by <a href="/list/add-question"><em style="color:#eec490;">asking a question</em></a> or by <a href="/"><em style="color: #eec490;">finding questions</em></a> to help with.</p>
-                    {% else %}
+                            You can start by <a href="/list/add-question">
+                                {% if app_theme != 'some-color' %}
+                                <em style="color:#eec490;">asking a question</em></a> or by <a href="/"><em style="color: #eec490;">finding questions</em></a> to help with.</p>
+                                {% else %}
+                                <em style="color:black;">asking a question</em></a> or by <a href="/"><em style="color: black;">finding questions</em></a> to help with.</p>
+                                {% endif %}
+                                {% else %}
                             <p>This user doesn't have any contributions.</p>
                     {% endif %}
                 {% endif %}

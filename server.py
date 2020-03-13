@@ -38,11 +38,13 @@ def index():
         account_type = con.get_user(username)['role']
         userid = con.get_user(username)['id']
         app_theme = con.get_user(username)['app_theme']
+        user_tags = con.get_user_tags(con.get_user(username)['id'])
     else:
         username = None
         account_type = None
         userid = None
         app_theme = 'black_orange'
+        user_tags = 'all'
     table_heading = ['Title', 'Question', 'Votes', 'Views', 'Posted', 'ID', 'Image']
     sort_options = {"none": "Choose option", "title": "title", "message": "question",
                     "submission_time": "submission time", "vote_number": "votes", "view_number": "views"}
@@ -53,9 +55,12 @@ def index():
         sort_order = request.form.get('order')
         if sort_factor != 'none' and sort_order != 'none':
             show_all_questions = False
-            first_questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
-            if first_questions != False: num_all_questions = len(con.get_questions(sort_factor, sort_order))
-            if num_all_questions > 5: show_all_questions = True
+            first_q = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
+            first_questions = dmg.custom_questions(user_tags, first_q)
+            # if first_questions != False: num_all_questions = len(dmg.custom_questions(user_tags, con.get_questions(sort_factor, sort_order)))
+            # if num_all_questions > 5: show_all_questions = True
+            empty = False
+            if len(first_questions) == 0: empty = True
             return render_template(WEB_PAGES['home_page'],
                                     questions=first_questions,
                                     table_heading=table_heading,
@@ -64,7 +69,7 @@ def index():
                                     default_sort=sort_factor,
                                     default_order=sort_order,
                                     show_all_questions=show_all_questions,
-                                    empty=False,
+                                    empty=empty,
                                     username=username,
                                     account_type=account_type,
                                     app_theme=app_theme)
@@ -80,25 +85,27 @@ def index():
     # Check for sort and for how many questions to display
     if request.args.get('sort-factor') == 'none' or request.args.get('sort-factor') == None:
         if request.args.get('show-all') == 'all':
-            questions = utl.check_questions_for_edit(con.get_questions('submission_time', 'descending'))
+            questions = dmg.custom_questions(user_tags, utl.check_questions_for_edit(con.get_questions('submission_time', 'descending')))
         elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
-            questions = utl.check_questions_for_edit(con.get_latest_questions('submission_time', 'descending'))
+            questions = dmg.custom_questions(user_tags, utl.check_questions_for_edit(con.get_latest_questions('submission_time', 'descending')))
         sort_factor = 'none'
         sort_order = 'none'
     elif request.args.get('sort-factor') != 'none' or request.args.get('sort-factor') != None:
         sort_factor = request.args.get('sort-factor')
         sort_order = request.args.get('sort-order')
         if request.args.get('show-all') == 'all':
-            questions = utl.check_questions_for_edit(con.get_questions(sort_factor, sort_order))
+            questions = dmg.custom_questions(user_tags, utl.check_questions_for_edit(con.get_questions(sort_factor, sort_order)))
         elif request.args.get('show-all') != 'all' or request.args.get('show-all') != None:
-            questions = utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order))
-    all_questions = con.get_questions('id', 'ascending')
+            questions = dmg.custom_questions(user_tags, utl.check_questions_for_edit(con.get_latest_questions(sort_factor, sort_order)))
+    all_questions = dmg.custom_questions(user_tags, con.get_questions('id', 'ascending'))
     if all_questions != False: num_all_questions = len(all_questions)
     show_all_questions = False
     if num_all_questions > 5 and request.args.get('show-all') != 'all': show_all_questions = True
+    empty = False
+    if len(questions) == 0: empty = True
     return render_template(WEB_PAGES['home_page'],
                             questions=questions,
-                            empty=False,
+                            empty=empty,
                             table_heading=table_heading,
                             sort_options=sort_options,
                             order_options=order_options,

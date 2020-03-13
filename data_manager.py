@@ -181,3 +181,19 @@ def check_for_unique_email(email):
         if email == user['email']:
             unique = False
     return unique
+
+
+def custom_questions(user_tags, questions):
+    if user_tags != 'all':
+        if user_tags != []:
+            user_custom_questions = []
+            for q in questions:
+                questions_tags = get_tags_for_question(q['id'])
+                for ut in user_tags:
+                    if ut['name'] in questions_tags:
+                        if q not in user_custom_questions:
+                            user_custom_questions.append(q)
+            return user_custom_questions
+        else: return questions
+    else: return questions
+

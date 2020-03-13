@@ -11,6 +11,9 @@
     {% if app_theme == 'blue_cream' %}
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style_blue.css')}}">
     {% endif %}
+    {% if app_theme == 'some-color' %}
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='some-color.css')}}">
+    {% endif %}
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Galindo&display=swap" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
