@@ -6,6 +6,7 @@ import connection as con
 import util as utl
 from flask_ngrok import run_with_ngrok
 
+
 WEB_PAGES = {"home_page": "home.html", "question_page": "question.html", "add_question_page": "add_question.html",
              "new_answer_page": "new_answer.html", "show_image_page": "show_image.html", 'search': 'search.html',
              'add_comm': 'add_comm.html', 'edit_q': 'edit_question.html', 'edit_ans': 'edit_answer.html'
@@ -16,6 +17,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.urandom(16) 
 run_with_ngrok(app)
+
 
 
 #===================================================================================================================================================

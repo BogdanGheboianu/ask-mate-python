@@ -190,9 +190,11 @@ def custom_questions(user_tags, questions):
             for q in questions:
                 questions_tags = get_tags_for_question(q['id'])
                 for ut in user_tags:
-                    if ut['name'] in questions_tags:
-                        if q not in user_custom_questions:
-                            user_custom_questions.append(q)
+                    try:
+                        if ut['name'] in questions_tags:
+                            if q not in user_custom_questions:
+                                user_custom_questions.append(q)
+                    except TypeError: pass
             return user_custom_questions
         else: return questions
     else: return questions
